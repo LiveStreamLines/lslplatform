@@ -1,0 +1,26 @@
+<app-header></app-header>  <!-- Header remains at the top -->
+
+<div class="camera-page-layout">
+  <app-sidenav></app-sidenav>  <!-- Sidebar stays on the left -->
+
+  <div class="camera-content">
+    <button (click)="goBack()" class="back-button">← Back to Projects</button>  <!-- Back Button -->
+
+    <div *ngIf="loading">
+      <p>Loading cameras...</p>
+    </div>
+
+    <div *ngIf="!loading && cameras.length > 0" class="cameras-container">
+      <div class="camera-card" *ngFor="let camera of cameras">
+        <h3>{{ camera.cameraDescription }}</h3>
+        <p>Camera ID: {{ camera.camera }}</p>
+        <p>Created Date: {{ camera.createdDate | date }}</p>
+      </div>
+    </div>
+    
+    <div *ngIf="!loading && cameras.length === 0">
+      <p>No cameras found for this project.</p>
+    </div>
+
+  </div>
+</div>

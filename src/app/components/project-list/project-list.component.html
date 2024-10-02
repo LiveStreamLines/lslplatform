@@ -1,0 +1,25 @@
+<app-header></app-header>  <!-- Header remains at the top -->
+
+<div class="project-page-layout">
+  <app-sidenav></app-sidenav>  <!-- Sidebar stays on the left -->
+
+  <div class="project-content">
+    <button (click)="goBack()" class="back-button">← Back to Developers</button>
+
+    <div *ngIf="loading">
+      <p>Loading projects...</p>
+    </div>
+    
+    <div *ngIf="!loading && projects.length > 0" class="projects-container">
+      <div class="project-card" *ngFor="let project of projects" (click)="onProjectClick(project)">
+        <img [src]="project.logo" alt="{{ project.projectName }}" />
+        <h3>{{ project.projectName }}</h3>
+        <p>{{ project.description }}</p>
+      </div>
+    </div>
+    
+    <div *ngIf="!loading && projects.length === 0">
+      <p>No projects found for this developer.</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,77 @@
+.home-layout {
+    display: flex;
+  }
+  
+  .content {
+    margin-left: 220px;  /* Adjust based on the width of the sidenav */
+    padding: 20px;
+    width: calc(100% - 220px);  /* Content should take up remaining width */
+  }
+  
+  @media (max-width: 768px) {
+    .content {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+
+  .developers-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    /* justify-content: space-between; */
+  }
+  
+  .developer-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: calc(30% - 20px);  /* 3 cards per row with a 20px gap */
+    margin-bottom: 20px;
+    transition: transform 0.2s ease-in-out;
+  
+    &:hover {
+      transform: scale(1.05);  /* Scale the card on hover */
+    }
+  }
+  
+  .developer-card img {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 15px;
+  }
+  
+  .developer-card h3 {
+    font-size: 1.25rem;
+    margin: 10px 0;
+    color: #333;
+  }
+  
+  .developer-card p {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 900px) {
+    .developer-card {
+      width: calc(50% - 20px);  /* 2 cards per row on medium screens */
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .developer-card {
+      width: 100%;  /* 1 card per row on small screens */
+    }
+  }
+  
+
+
+  
+  

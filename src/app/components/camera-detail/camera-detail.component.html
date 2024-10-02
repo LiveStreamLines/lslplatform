@@ -1,0 +1,15 @@
+<div class="date-picker">
+    <label for="date">Select Date: </label>
+    <input type="date" [(ngModel)]="selectedDate" (change)="onDateChange($event)">
+  </div>
+  
+  <div class="selected-image">
+    <img [src]="selectedLargeImage" alt="Selected Image" class="large-image" />
+  </div>
+  
+  <div class="thumbnail-strip">
+    <div *ngFor="let image of imageUrls" class="thumbnail" (click)="selectImage(image.largeUrl)">
+      <img [src]="image.thumbUrl" alt="Thumbnail" />
+    </div>
+  </div>
+  

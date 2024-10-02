@@ -1,0 +1,7 @@
+<nav class="side-menu">
+  <ul>
+    <li><a routerLink="/home">Home</a></li>
+    <li><a routerLink="/download">Download</a></li>
+    <li *ngIf="isAdmin"><a routerLink="/admin">Admin</a></li>
+  </ul>
+</nav>

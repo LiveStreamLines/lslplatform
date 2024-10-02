@@ -1,0 +1,16 @@
+import { Routes } from '@angular/router';
+import { LoginComponent } from './components/login/login.component';
+import { HomeComponent } from './components/home/home.component';
+import { AuthGuard } from './services/auth.guard';  // Import the AuthGuard
+import { ProjectListComponent } from './components/project-list/project-list.component';
+import { CameraListComponent } from './components/camera-list/camera-list.component';
+import { CameraDetailComponent } from './components/camera-detail/camera-detail.component';
+
+export const routes: Routes = [
+  { path: 'login', component: LoginComponent },
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },  // Protect home with AuthGuard
+  { path: 'projects/:id', component: ProjectListComponent },  // Project list for a specific developer
+  { path: 'project/:projectId/cameras', component: CameraListComponent },  // Camera list for a specific project
+  { path: 'project/:projectId/:cameraTag', component: CameraDetailComponent },  // Route for camera detail
+  { path: '', redirectTo: '/login', pathMatch: 'full' }
+];

@@ -1,0 +1,22 @@
+<app-header></app-header>
+
+<div class="home-layout">
+  <app-sidenav></app-sidenav>  <!-- Sidenav only shows in home page -->
+  <div class="content">
+    <div *ngIf="loading">
+      <p>Loading developers...</p>
+    </div>
+    
+    <div *ngIf="!loading && developers.length > 0" class="developers-container">
+      <div class="developer-card" *ngFor="let developer of developers" (click)="onDeveloperClick(developer)">
+        <img [src]="developer.logo" alt="{{ developer.developerName }}" />
+        <h3>{{ developer.developerName }}</h3>
+        <p>{{ developer.description }}</p>
+      </div>
+    </div>
+    
+    <div *ngIf="!loading && developers.length === 0">
+      <p>No developers found.</p>
+    </div>
+  </div>
+</div>

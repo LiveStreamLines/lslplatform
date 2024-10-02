@@ -1,0 +1,52 @@
+<div class="login-container">
+  <h2>Login</h2>
+
+  <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+    <!-- Username Field -->
+    <div>
+      <label for="username">Username</label>
+      <input 
+        type="text" 
+        id="username" 
+        [(ngModel)]="username" 
+        name="username" 
+        required 
+        placeholder="Enter your username"
+      />
+    </div>
+
+    <!-- Password Field -->
+    <div>
+      <label for="password">Password</label>
+      <input 
+        type="password" 
+        id="password" 
+        [(ngModel)]="password" 
+        name="password" 
+        required 
+        placeholder="Enter your password"
+      />
+    </div>
+
+    <!-- Remember Me Checkbox -->
+    <div>
+      <label for="rememberMe">
+        <input 
+          type="checkbox" 
+          id="rememberMe" 
+          [(ngModel)]="rememberMe" 
+          name="rememberMe"
+        />
+        Remember Me
+      </label>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" [disabled]="loginForm.invalid">Login</button>
+
+    <!-- Error Message -->
+    <div *ngIf="loginError" class="error-message">
+      {{ loginError }}
+    </div>
+  </form>
+</div>

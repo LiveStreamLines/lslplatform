@@ -1,0 +1,72 @@
+.project-page-layout {
+  display: flex;
+  height: 100vh;  /* Full viewport height */
+}
+
+app-sidenav {
+  flex: 0 0 220px;  /* Fix the sidenav width */
+}
+
+.project-content {
+  flex-grow: 1;  /* Take up the remaining space */
+  padding: 20px;
+  overflow-y: auto;  /* Make sure the content can scroll if it's long */
+}
+
+.back-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}
+
+.projects-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  /* justify-content: space-between; */
+}
+
+.project-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: calc(30% - 20px);  /* 3 cards per row */
+  margin-bottom: 20px;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.project-card img {
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+
+.project-card h3 {
+  font-size: 1.25rem;
+  margin: 10px 0;
+  color: #333;
+}
+
+.project-card p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
