@@ -4,13 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
 import { Project } from '../../models/project.model';
-import { SidenavComponent } from '../sidenav/sidenav.component';  // Import Sidenav
-import { HeaderComponent } from '../header/header.component';  // Import Header
 
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [CommonModule, SidenavComponent, HeaderComponent],
+  imports: [CommonModule],
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.scss']
 })

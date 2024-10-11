@@ -1,0 +1,35 @@
+.main-container {
+  height: 100vh;
+  display: flex;
+}
+
+.logo-container {
+  text-align: center;
+  padding: 16px;
+}
+
+.logo {
+  max-width: 150px;
+  height: auto;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.content {
+  padding: 16px;
+  flex-grow: 1;
+}
+
+mat-sidenav {
+  width: 250px;
+}
+
+mat-sidenav-content {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}

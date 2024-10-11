@@ -1,6 +1,17 @@
-<header class="app-header">
-    <div class="profile-control">
-      <span>Welcome, {{username}}</span>
-      <button (click)="logout()">Logout</button>
-    </div>
-  </header>
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="toggleSidenav()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <div class="breadcrumbs">
+    <span>Home / Developers</span>
+  </div>
+
+  <span class="spacer"></span>
+
+  <div class="user-info">
+    <span>Welcome, User</span>
+    <mat-icon>account_circle</mat-icon>
+    <button mat-button>Logout</button>
+  </div>
+</mat-toolbar>

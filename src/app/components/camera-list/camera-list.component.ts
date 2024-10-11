@@ -3,14 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CameraService } from '../../services/camera.service';
 import { Camera } from '../../models/camera.model';
-import { SidenavComponent } from '../../components/sidenav/sidenav.component';  // Import Sidenav
-import { HeaderComponent } from '../../components/header/header.component';    // Import Header
 import { GoogleMapsModule } from '@angular/google-maps';  // Google Maps module
 
 @Component({
   selector: 'app-camera-list',
   standalone: true,
-  imports: [CommonModule, SidenavComponent, HeaderComponent, GoogleMapsModule],  // Import Sidenav, Header, and GoogleMapsModule
+  imports: [CommonModule, GoogleMapsModule],  // Import Sidenav, Header, and GoogleMapsModule
   templateUrl: './camera-list.component.html',
   styleUrls: ['./camera-list.component.scss']
 })

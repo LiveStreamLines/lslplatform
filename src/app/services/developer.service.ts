@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';  // Import AuthService to access t
 })
 export class DeveloperService {
   private apiUrl = 'https://lslcloud.com/api/main/developers';  // API URL for fetching developers
+  //private apiUrl = 'http://192.168.8.73:5000/api/main/developers';  // API URL for fetching developers
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+
+/* Global font size */
+body {
+    margin: 0;
+    font-size: 10px; /* Adjust this value to your preferred font size */
+    font-family: 'Roboto', sans-serif; /* Ensure you're using a consistent font */
+  }
+  
+  mat-toolbar,
+  mat-sidenav,
+  mat-nav-list,
+  mat-card,
+  button {
+    font-size: 10px !important;  /* Ensure consistency for Material components */
+  }

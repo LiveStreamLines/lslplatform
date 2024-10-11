@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';  // Import CommonModule for ngFor and ngIf
-import { HeaderComponent } from '../header/header.component';  // Import HeaderComponent
-import { SidenavComponent } from '../sidenav/sidenav.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 import { DeveloperService } from '../../services/developer.service';
 import { Developer } from '../../models//developer.model';
-import { Router } from '@angular/router';
+
 
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeaderComponent,SidenavComponent,CommonModule],  // Add the HeaderComponent to imports
+  imports: [CommonModule, MatCardModule, MatButtonModule],  // Add the HeaderComponent to imports
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })

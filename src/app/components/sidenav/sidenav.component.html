@@ -1,7 +1,46 @@
-<nav class="side-menu">
-  <ul>
-    <li><a routerLink="/home">Home</a></li>
-    <li><a routerLink="/download">Download</a></li>
-    <li *ngIf="isAdmin"><a routerLink="/admin">Admin</a></li>
-  </ul>
-</nav>
+<!-- Sidenav menu with icons in front of each menu item -->
+<mat-nav-list>
+  <h3>Platform</h3>
+  <a mat-list-item routerLink="/home">
+    <mat-icon>home</mat-icon>
+    <span>Home</span>
+  </a>
+  <a mat-list-item routerLink="/gallery">
+    <mat-icon>photo</mat-icon>
+    <span>Gallery</span>
+  </a>
+  <a mat-list-item routerLink="/users">
+    <mat-icon>people</mat-icon>
+    <span>Users</span>
+  </a>
+
+  <h3 *ngIf="isAdmin">Admin</h3>
+  <a mat-list-item *ngIf="isAdmin" routerLink="/developers">
+    <mat-icon>build</mat-icon>
+    <span>Developers</span>
+  </a>
+  <a mat-list-item *ngIf="isAdmin" routerLink="/projects">
+    <mat-icon>folder</mat-icon>
+    <span>Projects</span>
+  </a>
+  <a mat-list-item *ngIf="isAdmin" routerLink="/cameras">
+    <mat-icon>videocam</mat-icon>
+    <span>Cameras</span>
+  </a>
+  <a mat-list-item *ngIf="isAdmin" routerLink="/notifications">
+    <mat-icon>notifications</mat-icon>
+    <span>Notifications</span>
+  </a>
+  <a mat-list-item *ngIf="isAdmin" routerLink="/gallery-admin">
+    <mat-icon>collections</mat-icon>
+    <span>Gallery</span>
+  </a>
+  <a mat-list-item *ngIf="isAdmin" routerLink="/login-history">
+    <mat-icon>history</mat-icon>
+    <span>Login History</span>
+  </a>
+  <a mat-list-item *ngIf="isAdmin" routerLink="/permissions">
+    <mat-icon>lock</mat-icon>
+    <span>Permissions</span>
+  </a>
+</mat-nav-list>

@@ -1,18 +1,18 @@
-<app-header></app-header>
-
 <div class="home-layout">
-  <app-sidenav></app-sidenav>  <!-- Sidenav only shows in home page -->
   <div class="content">
     <div *ngIf="loading">
       <p>Loading developers...</p>
     </div>
     
     <div *ngIf="!loading && developers.length > 0" class="developers-container">
-      <div class="developer-card" *ngFor="let developer of developers" (click)="onDeveloperClick(developer)">
-        <img [src]="developer.logo" alt="{{ developer.developerName }}" />
-        <h3>{{ developer.developerName }}</h3>
-        <p>{{ developer.description }}</p>
-      </div>
+      <mat-card class="developer-card" *ngFor="let developer of developers" (click)="onDeveloperClick(developer)">
+        <img mat-card-image [src]="developer.logo" alt="{{ developer.developerName }}" />
+        <mat-card-title>{{ developer.developerName }}</mat-card-title>
+        <mat-card-content>{{ developer.description }}</mat-card-content>
+        <mat-card-actions>
+          <button mat-button>View Projects</button>
+        </mat-card-actions>
+      </mat-card>
     </div>
     
     <div *ngIf="!loading && developers.length === 0">
