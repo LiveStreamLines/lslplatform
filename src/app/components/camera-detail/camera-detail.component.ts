@@ -1,69 +1,113 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';  // Import FormsModule
-import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { SidenavComponent } from '../../components/sidenav/sidenav.component';  // Import Sidenav
-import { HeaderComponent } from '../../components/header/header.component';    // Import Header
+import { ActivatedRoute, Router } from '@angular/router';
+import { DeveloperService } from '../../services/developer.service';
+import { ProjectService } from '../../services/project.service';
+import { CameraDetailService } from '../../services/camera-detail.service';
+import { CameraDetail } from '../../models/camera-detail.model';
 
 @Component({
   selector: 'app-camera-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, SidenavComponent, HeaderComponent],
-  templateUrl: './camera-detail.component.html',
-  styleUrl: './camera-detail.component.css'
+  imports: [CommonModule],
+  templateUrl: './camera-detail.component.html',  
+  styleUrls: ['./camera-detail.component.scss']
 })
-export class CameraDetailComponent implements OnInit{
+export class CameraDetailComponent implements OnInit {
+  projectId!: any;
+  projectTag!: string;
+  developerId!: any;  // Developer ID to be passed as a query param
+  developerTag!: string;
+  cameraName!: string;
+  cameraDetails!: CameraDetail;
+  firstPhoto!: string;
+  lastPhoto!: string;
+  lastPictureUrl!: string;
+  selectedPictureUrl!: string;
+  photosByDate: any = {};
+  date1Pictures: string[] = [];
+  date2Pictures: string[] = [];
+  loadingLargePicture: boolean = false;  // Add loading state for large picture
+  selectedThumbnail: string = '';  // Add state for selected thumbnail
 
-  selectedDate: string = new Date().toISOString().split('T')[0];  // Default to today’s date
-  imageUrls: any[] = [];  // To store the list of thumbnails and large image URLs
-  selectedLargeImage: string = '';  // To hold the selected large image URL
-  developer: string = '';  // Retrieved dynamically from route
-  project: string = '';  // Retrieved dynamically from route
-  cameraTag: string = '';  // Retrieved dynamically from route
-
-  constructor(private http: HttpClient, private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private developerService: DeveloperService,
+    private projectService: ProjectService,
+    private cameraService: CameraDetailService
+  ) {}
 
   ngOnInit(): void {
-    // Get the dynamic parameters from the URL
-    this.route.paramMap.subscribe(params => {
-      this.project = params.get('projectId')!;  // Get projectId from route
-      this.cameraTag = params.get('cameraTag')!;  // Get cameraTag from route
-
-      // Load the images for the default date (today)
-      this.loadImages();
-    });
+    this.cameraName = this.route.snapshot.params['cameraName'];
+    this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;
+    this.projectTag = this.route.snapshot.paramMap.get('projectTag')!;
+    this.developerId = this.developerService.getDeveloperIdByTag(this.developerTag);
+    this.projectId = this.projectService.getProjectIdByTag(this.projectTag, this.developerId);
+    
+    this.getCameraDetails();
   }
 
-  // Method to call the API and fetch images for the camera and selected date
-  loadImages(): void {
-    const formattedDate = this.selectedDate.replace(/-/g, '');  // Format date as yyyymmdd
-    const apiUrl = `https://liveview.lslcloud.com/api2/v2/getCameraFiles/${this.developer}/${this.project}/${this.cameraTag}/${formattedDate}`;
-
-    // Fetch the list of images for the selected camera
-    this.http.get<string[]>(apiUrl).subscribe((imageFiles: string[]) => {
-      // Map the API response to URLs for thumbnails and large images
-      this.imageUrls = imageFiles.map(file => ({
-        thumbUrl: `https://liveview.lslcloud.com/photos/${this.developer}/${this.project}/${this.cameraTag}/thumbs/${file}`,
-        largeUrl: `https://liveview.lslcloud.com/photos/${this.developer}/${this.project}/${this.cameraTag}/large/${file}`
-      }));
-
-      // Set the first image as the default large image
-      if (this.imageUrls.length > 0) {
-        this.selectedLargeImage = this.imageUrls[0].largeUrl;
+  getCameraDetails(): void {
+    this.cameraService.getCameraDetails(this.projectId, this.cameraName)
+    .subscribe({
+      next: (data: CameraDetail) => {
+        this.date2Pictures = data.date2Photos.map(photo => photo.toString());
+  
+        // Set the last picture from the `large` folder as the initially displayed picture
+        const lastPhoto = this.date2Pictures[this.date2Pictures.length - 1];
+        this.lastPictureUrl = this.getLargePictureUrl(lastPhoto);
+        this.selectedPictureUrl = this.lastPictureUrl;
+        this.selectedThumbnail = lastPhoto;  // Set the last photo as selected by default
+      },
+      error: (err: any) => {
+        console.error('Error fetching camera details:', err);
+      },
+      complete: () => {
+        console.log('Camera details loaded successfully.');
       }
     });
   }
 
-  // Handle date change and reload images
-  onDateChange(event: any): void {
-    this.selectedDate = event.target.value;  // Update selected date
-    this.loadImages();  // Reload images for the new date
+ 
+  // Get the full URL for the large picture
+  getLargePictureUrl(picture: string): string {
+    return `https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${this.cameraName}/large/${picture}.jpg`;
   }
 
-  // Set the large image when a thumbnail is clicked
-  selectImage(largeImageUrl: string): void {
-    this.selectedLargeImage = largeImageUrl;
+  // Get the full URL for the thumbnail picture
+  getThumbPictureUrl(picture: string): string {
+    return `https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${this.cameraName}/thumbs/${picture}.jpg`;
+  }
+
+  // Handle click on thumbnail to show the large picture
+  onThumbnailClick(picture: string): void {
+    this.loadingLargePicture = true;  // Start loading state
+    this.selectedPictureUrl = '';  // This will temporarily "hide" the image
+
+    setTimeout(() => {
+      this.selectedPictureUrl = this.getLargePictureUrl(picture);  // Set the large picture URL
+      this.selectedThumbnail = picture;  // Mark the selected thumbnail
+    }, 100);  // Adding a small delay can help with a smooth transition
+
+  }
+
+  // Called when the large picture is fully loaded
+  onLargePictureLoad(): void {
+    console.log('Large picture loaded.');  // Debug log
+    this.loadingLargePicture = false;  // Stop loading state
+    const imgElement = document.querySelector('.large-picture') as HTMLElement;
+    imgElement.classList.add('loaded');
+  }
+
+  // Handle image loading error
+  onLargePictureError(): void {
+    console.error('Failed to load large picture:', this.selectedPictureUrl);
+    this.loadingLargePicture = false;
+  }
+
+  goBack(): void {
+    this.router.navigate([`/main/${this.developerTag}/${this.projectTag}`]);
   }
 
 }

@@ -18,3 +18,13 @@ mat-toolbar {
   width: 100%;
   z-index: 1000;
 }
+
+.breadcrumbs {
+  font-size: 1.2rem;
+  margin-left: 10px;
+}
+
+.breadcrumbs span {
+  margin-right: 5px;
+}
+

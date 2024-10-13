@@ -1,3 +1,20 @@
+/* Style the search input */
+input[type="text"] {
+  width: 300px;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 25px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  margin-bottom: 20px;
+}
+
+/* Input hover and focus states */
+input[type="text"]:focus {
+  border-color: #007bff;
+}
+
 /* General layout for the home component */
 .home-layout {
   display: flex;
@@ -85,5 +102,9 @@
 @media (max-width: 768px) {
   .developers-container {
     grid-template-columns: 1fr; /* Full-width for smaller screens */
+  }
+
+  input[type="text"] {
+    width: 90%;
   }
 }

@@ -1,17 +1,90 @@
-.project-page-layout {
+/* General layout for the home component */
+.home-layout {
   display: flex;
-  height: 100vh;  /* Full viewport height */
+  flex-direction: row;
+  height: 100%;
 }
 
-app-sidenav {
-  flex: 0 0 220px;  /* Fix the sidenav width */
+/* Content area next to the sidenav */
+.content {
+  flex-grow: 1;
+  padding: 16px;
 }
 
-.project-content {
-  flex-grow: 1;  /* Take up the remaining space */
-  padding: 20px;
-  overflow-y: auto;  /* Make sure the content can scroll if it's long */
+.projects-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Flexible column layout */
+  gap: 16px;
+  justify-content: space-around; /* Center items with space */
 }
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  background-color: rgba(50, 50, 50, 0.9); /* Dark gray background */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.project-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Card title styling */
+.project-card mat-card-title {
+  font-size: 1.5em;
+  margin-bottom: 8px;
+  color: #fff; /* White title */
+  text-align: center; /* Center the title */
+}
+
+.project-card img {
+  width: 80%; /* Image does not take full width */
+  height: auto; /* Maintain aspect ratio */
+  max-height: 150px; /* Set max height for image */
+  object-fit: cover; /* Ensure image covers the area evenly */
+  border-radius: 8px;
+  margin: 0 auto 16px auto; /* Center the image */
+}
+
+/* Card content (description) styling */
+.project-card mat-card-content {
+  font-size: 1em;
+  color: #fff; /* White content text */
+  text-align: center;
+  flex-grow: 1; /* Make sure the content takes available space */
+  margin-bottom: 16px;
+}
+
+/* Button styling */
+.project-card mat-card-actions {
+  margin-top: auto; /* Push the button to the bottom */
+}
+
+.project-card mat-card-actions button {
+  width: 100%; /* Full width button */
+  background-color: #ff0000; /* Red button color */
+  color: white;
+  font-weight: bold;
+}
+
+.project-card mat-card-actions button:hover {
+  background-color: #cc0000; /* Darker red on hover */
+}
+
+/* Add some responsive behavior */
+@media (max-width: 768px) {
+  .developers-container {
+    grid-template-columns: 1fr; /* Full-width for smaller screens */
+  }
+}
+
 
 .back-button {
   background-color: #007bff;
@@ -26,47 +99,4 @@ app-sidenav {
 
 .back-button:hover {
   background-color: #0056b3;
-}
-
-.projects-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  /* justify-content: space-between; */
-}
-
-.project-card {
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 16px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  width: calc(30% - 20px);  /* 3 cards per row */
-  margin-bottom: 20px;
-  transition: transform 0.2s ease-in-out;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-}
-
-.project-card img {
-  max-width: 100px;
-  max-height: 100px;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-bottom: 15px;
-}
-
-.project-card h3 {
-  font-size: 1.25rem;
-  margin: 10px 0;
-  color: #333;
-}
-
-.project-card p {
-  font-size: 0.9rem;
-  color: #666;
-  margin: 0;
 }

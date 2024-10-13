@@ -4,7 +4,10 @@
   </button>
 
   <div class="breadcrumbs">
-    <span>Home / Developers</span>
+    <ng-container *ngFor="let crumb of breadcrumbs; let isLast = last">
+      <span>{{ crumb }}</span>
+      <ng-container *ngIf="!isLast"> / </ng-container>
+    </ng-container>
   </div>
 
   <span class="spacer"></span>
@@ -12,6 +15,6 @@
   <div class="user-info">
     <span>Welcome, User</span>
     <mat-icon>account_circle</mat-icon>
-    <button mat-button>Logout</button>
+    <button mat-button (click)="logout()">Logout</button>
   </div>
 </mat-toolbar>

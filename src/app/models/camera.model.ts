@@ -7,6 +7,8 @@ export interface Camera {
     "cindex": number,
     "lat": string,
     "lng": string,
+    "firstPhoto" : string,
+    "lastPhoto" : string,
     "customVideo1": string,
     "customVideo2": string,
     "isDeleted": boolean,

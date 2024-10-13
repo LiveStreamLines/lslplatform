@@ -6,6 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AuthService } from '../../services/auth.service';  // Import the AuthService
 import { RouterModule } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';  // Import Router and ActivatedRoute
+import { filter } from 'rxjs/operators';
+
 
 
 @Component({
@@ -26,11 +29,37 @@ export class HeaderComponent {
   breadcrumbs: string[] = [];
 
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute  
+  ) {}
 
   ngOnInit() {
-    // Example of dynamic breadcrumb logic
-    this.breadcrumbs = ['Home', 'Developers'];
+    this.router.events
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe(() => {
+      this.updateBreadcrumbs();
+    });
+  }
+
+   // Update the breadcrumbs dynamically based on the current route
+   updateBreadcrumbs() {
+    const url = this.router.url;
+    const urlSegments = url.split('/').filter(segment => segment);  // Split the URL and remove empty segments
+
+    // Reset breadcrumbs to Main
+    this.breadcrumbs = ['Main'];
+
+    if (urlSegments.length > 1) {
+      // Add developerTag if available
+      this.breadcrumbs.push(urlSegments[1]);  // Assuming developerTag is in second position
+    }
+
+    if (urlSegments.length > 2) {
+      // Add projectTag if available
+      this.breadcrumbs.push(urlSegments[2]);  // Assuming projectTag is in third position
+    }
   }
 
   // Toggle the sidenav

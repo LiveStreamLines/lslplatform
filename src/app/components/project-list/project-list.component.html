@@ -1,21 +1,22 @@
-<div class="project-page-layout">
-   <div class="project-content">
-    <button (click)="goBack()" class="back-button">← Back to Developers</button>
-
+<button (click)="goBack()" class="back-button">← Back to Developers</button>
+<div class="home-layout">
+  <div class="content">
     <div *ngIf="loading">
-      <p>Loading projects...</p>
-    </div>
-    
-    <div *ngIf="!loading && projects.length > 0" class="projects-container">
-      <div class="project-card" *ngFor="let project of projects" (click)="onProjectClick(project)">
-        <img [src]="project.logo" alt="{{ project.projectName }}" />
-        <h3>{{ project.projectName }}</h3>
-        <p>{{ project.description }}</p>
-      </div>
-    </div>
-    
-    <div *ngIf="!loading && projects.length === 0">
-      <p>No projects found for this developer.</p>
-    </div>
+      <p>Loading developers...</p>
+  </div>
+
+  <div *ngIf="!loading && projects.length > 0" class="projects-container">
+    <mat-card class="project-card" *ngFor="let project of projects" (click)="onProjectClick(project)">
+      <img mat-card-image [src]="project.logo" alt="{{ project.projectName }}" />
+      <mat-card-title>{{ project.projectName }}</mat-card-title>
+      <mat-card-content>{{ project.description }}</mat-card-content>
+      <mat-card-actions>
+        <button mat-button>View Cameras</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div *ngIf="!loading && projects.length === 0">
+    <p>No projects found for this developer.</p>
   </div>
 </div>

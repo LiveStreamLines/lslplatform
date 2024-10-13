@@ -9,8 +9,8 @@ import { CameraDetailComponent } from './components/camera-detail/camera-detail.
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },  // Protect home with AuthGuard
-  { path: 'projects/:id', component: ProjectListComponent },  // Project list for a specific developer
-  { path: 'project/:projectId/cameras', component: CameraListComponent },  // Camera list for a specific project
-  { path: 'project/:projectId/:cameraTag', component: CameraDetailComponent },  // Route for camera detail
+  { path: 'main/:developerTag', component: ProjectListComponent },  // Project list for a specific developer
+  { path: 'main/:developerTag/:projectTag', component: CameraListComponent },  // Camera list for a specific project
+  { path: 'main/:developerTag/:projectTag/:cameraName', component: CameraDetailComponent },  // Route for camera detail
   { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];

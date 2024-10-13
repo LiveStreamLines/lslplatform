@@ -1,69 +1,93 @@
-.camera-page-layout {
-    display: flex;
-    height: 100vh;  /* Full viewport height */
-  }
-  
-  app-sidenav {
-    flex: 0 0 220px;  /* Fix the sidenav width */
-  }
-  
-  .camera-content {
-    flex-grow: 1;  /* Take up the remaining space */
-    padding: 20px;
-    overflow-y: auto;  /* Make sure the content can scroll if it's long */
-  }
-  
-  .back-button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 20px;
-    font-size: 16px;
-  }
-  
-  .back-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .cameras-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    /* justify-content: space-between; */
-  }
-  
-  .camera-card {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: calc(30% - 20px);  /* 3 cards per row */
-    margin-bottom: 20px;
-    transition: transform 0.2s ease-in-out;
-  
-    &:hover {
-      transform: scale(1.05);
-    }
-  }
-  
-  .camera-card h3 {
-    font-size: 1.25rem;
-    margin: 10px 0;
-    color: #333;
-  }
-  
-  .camera-card p {
-    font-size: 0.9rem;
-    color: #666;
-    margin: 0;
-  }
-  
-  google-map {
-    margin-top: 15px;
-  }
-  
+/* Container for the cameras */
+.cameras-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  justify-content: space-around;
+}
+
+/* Camera card styling */
+.camera-card {
+  background-color: rgba(50, 50, 50, 0.9);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  color: #fff;
+}
+
+.camera-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.camera-info {
+  margin-top: 10px;
+  text-align: left;
+  color: #fff;
+}
+
+.camera-info p {
+  margin: 5px 0;
+}
+
+.photo-date {
+  text-align: center;
+  font-size: 12px;
+  color: #ccc;
+}
+
+.carousel-image {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.owl-carousel {
+  width: 100%;
+}
+
+.owl-carousel .owl-stage {
+  transition: all 0.5s ease;  /* Smooth transition */
+}
+
+.owl-carousel .owl-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Button for going back */
+.back-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}
+
+/* Loading state */
+.loading-container {
+  text-align: center;
+  padding: 50px 0;
+  color: white;
+  font-size: 18px;
+}
+
+.no-cameras {
+  text-align: center;
+  color: #fff;
+  font-size: 18px;
+  margin-top: 50px;
+}

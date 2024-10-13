@@ -1,15 +1,41 @@
-<div class="date-picker">
-    <label for="date">Select Date: </label>
-    <input type="date" [(ngModel)]="selectedDate" (change)="onDateChange($event)">
-  </div>
+<button (click)="goBack()" class="back-button">← Back to camera</button>  <!-- Back Button -->
+
+
+  <div *ngIf="selectedPictureUrl">
+    <h2>Camera: {{ cameraName }}</h2>
+    <p>Project: {{ projectId }}</p>
   
-  <div class="selected-image">
-    <img [src]="selectedLargeImage" alt="Selected Image" class="large-image" />
-  </div>
+    <!-- Display the selected large picture -->
+    <div class="large-picture-container">
+       <!-- Show a loading spinner if the large picture is still loading -->
+        <div *ngIf="loadingLargePicture" class="spinner">
+          <p>Loading...</p> <!-- Replace with your spinner design -->
+        </div>
+
+        <div *ngIf="!loadingLargePicture && !selectedPictureUrl">
+          <p>Failed to load image.</p>
+        </div>
+
+        <!-- Large picture (lazy loading with error handling) -->
+        <img 
+        *ngIf="selectedPictureUrl"
+        [src]="selectedPictureUrl" 
+        alt="Selected Picture" 
+        class="large-picture"        
+        (load)="onLargePictureLoad()" 
+        (error)="onLargePictureError()" 
+        [style.display]="loadingLargePicture ? 'none' : 'block'"/>
+    </div>
   
-  <div class="thumbnail-strip">
-    <div *ngFor="let image of imageUrls" class="thumbnail" (click)="selectImage(image.largeUrl)">
-      <img [src]="image.thumbUrl" alt="Thumbnail" />
+    <!-- Thumbnail strip -->
+    <div class="thumbnail-strip">
+      <div *ngFor="let picture of date2Pictures" 
+         class="thumbnail" 
+         [class.selected]="picture === selectedThumbnail"> <!-- Highlight the selected thumbnail -->
+         <img [src]="getThumbPictureUrl(picture)" 
+           (click)="onThumbnailClick(picture)" 
+           alt="Thumbnail" 
+           class="thumbnail-img" />
+      </div>
     </div>
   </div>
-  

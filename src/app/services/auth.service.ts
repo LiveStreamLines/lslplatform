@@ -33,6 +33,8 @@ export class AuthService {
     localStorage.setItem(this.authTokenKey, authh);
     localStorage.setItem('developers', JSON.stringify(developers));
     localStorage.setItem('projects', JSON.stringify(projects));
+    const expiryTime = new Date().getTime() + (60 * 60 * 1000); // 1 hour in milliseconds
+    localStorage.setItem('tokenExpiry', expiryTime.toString());
   }
 
    // Retrieve developer and project IDs
@@ -50,10 +52,20 @@ export class AuthService {
     return localStorage.getItem(this.authTokenKey);
   }
 
+   // Check if the token is expired
+   isTokenExpired(): boolean {
+    const expiryTime = localStorage.getItem('tokenExpiry');
+    if (!expiryTime) {
+      return true;
+    }
+    const currentTime = new Date().getTime();
+    return currentTime > +expiryTime;  // Token is expired if current time is greater than expiry time
+  }
 
   // Remove auth token (logout)
   logout(): void {
     localStorage.removeItem(this.authTokenKey);
+    localStorage.removeItem('tokenExpiry');
     localStorage.removeItem('developers');
     localStorage.removeItem('projects');
     this.router.navigate(['/login']);
