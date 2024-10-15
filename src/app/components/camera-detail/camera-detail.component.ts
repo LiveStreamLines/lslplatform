@@ -3,8 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeveloperService } from '../../services/developer.service';
 import { ProjectService } from '../../services/project.service';
+import { CameraService } from '../../services/camera.service';
 import { CameraDetailService } from '../../services/camera-detail.service';
 import { CameraDetail } from '../../models/camera-detail.model';
+import { Camera } from '../../models/camera.model';
+
 
 @Component({
   selector: 'app-camera-detail',
@@ -15,8 +18,8 @@ import { CameraDetail } from '../../models/camera-detail.model';
 })
 export class CameraDetailComponent implements OnInit {
   projectId!: any;
+  developerId!: any;  
   projectTag!: string;
-  developerId!: any;  // Developer ID to be passed as a query param
   developerTag!: string;
   cameraName!: string;
   cameraDetails!: CameraDetail;
@@ -42,10 +45,26 @@ export class CameraDetailComponent implements OnInit {
     this.cameraName = this.route.snapshot.params['cameraName'];
     this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;
     this.projectTag = this.route.snapshot.paramMap.get('projectTag')!;
-    this.developerId = this.developerService.getDeveloperIdByTag(this.developerTag);
-    this.projectId = this.projectService.getProjectIdByTag(this.projectTag, this.developerId);
     
-    this.getCameraDetails();
+      // Get Developer ID by developerTag
+      this.developerService.getDeveloperIdByTag(this.developerTag).subscribe((developerId: string | undefined) => {
+        if (developerId) {
+           this.developerId = developerId;
+           // Once we have the developerId, get the project ID
+           this.projectService.getProjectIdByTag(this.developerId, this.projectTag).subscribe((projectId: string | undefined) => {
+             if (projectId) {
+               this.projectId = projectId;
+               this.getCameraDetails();  // Now that we have the projectId, fetch the cameras
+             } else {
+               console.error('Project not found.');
+             }
+           });
+        } else {
+          console.error('Developer not found.');
+        }
+      });
+
+
   }
 
   getCameraDetails(): void {

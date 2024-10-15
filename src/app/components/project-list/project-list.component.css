@@ -80,7 +80,7 @@
 
 /* Add some responsive behavior */
 @media (max-width: 768px) {
-  .developers-container {
+  .projects-container {
     grid-template-columns: 1fr; /* Full-width for smaller screens */
   }
 }

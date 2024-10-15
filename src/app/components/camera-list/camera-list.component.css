@@ -1,67 +1,91 @@
-/* Container for the cameras */
-.cameras-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-  justify-content: space-around;
+/* General layout for the home component */
+.home-layout {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
 }
 
-/* Camera card styling */
-.camera-card {
-  background-color: rgba(50, 50, 50, 0.9);
+/* Content area next to the sidenav */
+.content {
+  flex-grow: 1;
+  padding: 16px;
+}
+
+.cameras-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Flexible column layout */
+  gap: 16px;
+  justify-content: space-around; /* Center items with space */
+}
+
+.cameras-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  background-color: rgba(50, 50, 50, 0.9); /* Dark gray background */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   padding: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
-  color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.camera-card:hover {
+.cameras-card:hover {
   transform: scale(1.02);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-.camera-info {
-  margin-top: 10px;
-  text-align: left;
-  color: #fff;
+/* Card title styling */
+.cameras-card mat-card-title {
+  font-size: 1.5em;
+  margin-bottom: 8px;
+  color: #fff; /* White title */
+  text-align: center; /* Center the title */
 }
 
-.camera-info p {
-  margin: 5px 0;
-}
-
-.photo-date {
-  text-align: center;
-  font-size: 12px;
-  color: #ccc;
-}
-
-.carousel-image {
-  width: 100%;
-  height: auto;
-  max-height: 200px;
-  object-fit: cover;
+.cameras-card img {
+  width: 80%; /* Image does not take full width */
+  height: auto; /* Maintain aspect ratio */
+  max-height: 150px; /* Set max height for image */
+  object-fit: cover; /* Ensure image covers the area evenly */
   border-radius: 8px;
-  margin-bottom: 10px;
+  margin: 0 auto 16px auto; /* Center the image */
 }
 
-.owl-carousel {
-  width: 100%;
+/* Card content (description) styling */
+.cameras-card mat-card-content {
+  font-size: 1em;
+  color: #fff; /* White content text */
+  text-align: center;
+  flex-grow: 1; /* Make sure the content takes available space */
+  margin-bottom: 16px;
 }
 
-.owl-carousel .owl-stage {
-  transition: all 0.5s ease;  /* Smooth transition */
+/* Button styling */
+.cameras-card mat-card-actions {
+  margin-top: auto; /* Push the button to the bottom */
 }
 
-.owl-carousel .owl-item {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.cameras-card mat-card-actions button {
+  width: 100%; /* Full width button */
+  background-color: #ff0000; /* Red button color */
+  color: white;
+  font-weight: bold;
 }
 
-/* Button for going back */
+.cameras-card mat-card-actions button:hover {
+  background-color: #cc0000; /* Darker red on hover */
+}
+
+/* Add some responsive behavior */
+@media (max-width: 768px) {
+  .cameras-container {
+    grid-template-columns: 1fr; /* Full-width for smaller screens */
+  }
+}
+
+
 .back-button {
   background-color: #007bff;
   color: white;
@@ -75,19 +99,4 @@
 
 .back-button:hover {
   background-color: #0056b3;
-}
-
-/* Loading state */
-.loading-container {
-  text-align: center;
-  padding: 50px 0;
-  color: white;
-  font-size: 18px;
-}
-
-.no-cameras {
-  text-align: center;
-  color: #fff;
-  font-size: 18px;
-  margin-top: 50px;
 }

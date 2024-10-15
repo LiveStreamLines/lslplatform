@@ -3,20 +3,21 @@
   <div class="content">
     <div *ngIf="loading">
       <p>Loading developers...</p>
-  </div>
+    </div>
 
-  <div *ngIf="!loading && projects.length > 0" class="projects-container">
-    <mat-card class="project-card" *ngFor="let project of projects" (click)="onProjectClick(project)">
-      <img mat-card-image [src]="project.logo" alt="{{ project.projectName }}" />
-      <mat-card-title>{{ project.projectName }}</mat-card-title>
-      <mat-card-content>{{ project.description }}</mat-card-content>
-      <mat-card-actions>
-        <button mat-button>View Cameras</button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
+    <div *ngIf="!loading && projects.length > 0" class="projects-container">
+      <mat-card class="project-card" *ngFor="let project of projects" (click)="onProjectClick(project)">
+        <img mat-card-image [src]="project.logo" alt="{{ project.projectName }}" />
+        <mat-card-title>{{ project.projectName }}</mat-card-title>
+        <mat-card-content>{{ project.description }}</mat-card-content>
+        <mat-card-actions>
+          <button mat-button>View Cameras</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
 
-  <div *ngIf="!loading && projects.length === 0">
-    <p>No projects found for this developer.</p>
+    <div *ngIf="!loading && projects.length === 0">
+      <p>No projects found for this developer.</p>
+    </div>
   </div>
 </div>

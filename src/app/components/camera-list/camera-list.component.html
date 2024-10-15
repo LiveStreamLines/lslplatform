@@ -1,38 +1,27 @@
 <button class="back-button" (click)="goBack()">← Back to Projects</button>
 
-<div *ngIf="loading" class="loading-container">
-  <p>Loading cameras...</p>
-</div>
+<div class="home-layout">
+  <div class="content">
+      <div *ngIf="loading">
+        <p>Loading cameras...</p>
+      </div>
 
-<div *ngIf="!loading && cameras.length > 0" class="cameras-container">
-  <mat-card class="camera-card" *ngFor="let camera of cameras">
-    
-    <h3>{{ camera.cameraDescription }}</h3>
+      <div *ngIf="!loading && cameras.length > 0" class="cameras-container">
+        <mat-card class="cameras-card" *ngFor="let camera of cameras" (click)="viewCameraDetails(camera)">
+          <img mat-card-image [src]="getPictureUrl(camera.camera, camera.lastPhoto)" alt="Last Photo"/>          
+          <mat-card-title>{{ camera.cameraDescription }}</mat-card-title>          
+          <mat-card-content>
+            <p><strong>First Photo Date:</strong> {{ camera.firstPhoto }}</p>
+            <p><strong>Last Photo Date:</strong> {{ camera.lastPhoto }}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button>View Camera Details</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
 
-   <!-- Carousel showing first and last picture -->
-   <owl-carousel-o [options]="carouselOptions">
-    <ng-template carouselSlide *ngIf="camera.firstPhoto">
-      <img [src]="getPictureUrl(camera.camera, camera.firstPhoto)" alt="First Photo" class="carousel-image" />
-      <p class="photo-date">First Photo: {{ camera.firstPhoto }}</p>
-    </ng-template>
-    <ng-template carouselSlide *ngIf="camera.lastPhoto">
-      <img [src]="getPictureUrl(camera.camera, camera.lastPhoto)" alt="Last Photo" class="carousel-image" />
-      <p class="photo-date">Last Photo: {{ camera.lastPhoto }}</p>
-    </ng-template>
-  </owl-carousel-o>
-
-    <!-- Camera name and photo dates -->
-    <div class="camera-info">
-      <p><strong>Camera:</strong> {{ camera.camera }}</p>
-      <p><strong>First Photo Date:</strong> {{ camera.firstPhoto }}</p>
-      <p><strong>Last Photo Date:</strong> {{ camera.lastPhoto }}</p>
-    </div>
-    
-    <!-- Button to view camera details -->
-    <button mat-button (click)="viewCameraDetails(camera)">View Camera Details</button>
-  </mat-card>
-</div>
-
-<div *ngIf="!loading && cameras.length === 0" class="no-cameras">
-  <p>No cameras found for this project.</p>
+      <div *ngIf="!loading && cameras.length === 0">
+        <p>No cameras found for this project.</p>
+      </div>
+  </div>
 </div>
