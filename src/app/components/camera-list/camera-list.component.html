@@ -2,26 +2,41 @@
 
 <div class="home-layout">
   <div class="content">
-      <div *ngIf="loading">
-        <p>Loading cameras...</p>
-      </div>
 
-      <div *ngIf="!loading && cameras.length > 0" class="cameras-container">
-        <mat-card class="cameras-card" *ngFor="let camera of cameras" (click)="viewCameraDetails(camera)">
-          <img mat-card-image [src]="getPictureUrl(camera.camera, camera.lastPhoto)" alt="Last Photo"/>          
-          <mat-card-title>{{ camera.cameraDescription }}</mat-card-title>          
-          <mat-card-content>
-            <p><strong>First Photo Date:</strong> {{ camera.firstPhoto }}</p>
-            <p><strong>Last Photo Date:</strong> {{ camera.lastPhoto }}</p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-button>View Camera Details</button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
+    <mat-tab-group (selectedTabChange)="onTabChange($event.index)">
+      <mat-tab label="Cameras">
+        <div *ngIf="loading">
+          <p>Loading cameras...</p>
+        </div>
 
-      <div *ngIf="!loading && cameras.length === 0">
-        <p>No cameras found for this project.</p>
-      </div>
+        <div *ngIf="!loading && cameras.length > 0" class="cameras-container">
+          <mat-card class="cameras-card" *ngFor="let camera of cameras" (click)="viewCameraDetails(camera)">
+            <img mat-card-image [src]="getPictureUrl(camera.camera, camera.lastPhoto)" alt="Last Photo"/>          
+            <mat-card-title>{{ camera.cameraDescription }}</mat-card-title>          
+            <mat-card-content>
+              <p><strong>First Photo Date:</strong> {{ camera.firstPhoto }}</p>
+              <p><strong>Last Photo Date:</strong> {{ camera.lastPhoto }}</p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button>View Camera Details</button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+
+        <div *ngIf="!loading && cameras.length === 0">
+          <p>No cameras found for this project.</p>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Views">
+        <p>Views content will go here.</p>
+      </mat-tab>
+    
+      <mat-tab label="Maps">
+        <p>Maps content will go here.</p>
+      </mat-tab>
+    </mat-tab-group>  
+
+
   </div>
 </div>

@@ -1,18 +1,36 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField } from '@angular/material/input';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core'; // For date functionality
 import { DeveloperService } from '../../services/developer.service';
 import { ProjectService } from '../../services/project.service';
-import { CameraService } from '../../services/camera.service';
 import { CameraDetailService } from '../../services/camera-detail.service';
 import { CameraDetail } from '../../models/camera-detail.model';
-import { Camera } from '../../models/camera.model';
+import { CameraCompareComponent } from '../camera-compare/camera-compare.component';
 
 
 @Component({
   selector: 'app-camera-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    MatToolbar,
+    MatButton,
+    MatIcon,
+    MatDatepickerModule,
+    MatInputModule,
+    MatNativeDateModule,
+    MatFormField,
+    FormsModule, 
+    CameraCompareComponent
+  ],
   templateUrl: './camera-detail.component.html',  
   styleUrls: ['./camera-detail.component.scss']
 })
@@ -32,13 +50,15 @@ export class CameraDetailComponent implements OnInit {
   date2Pictures: string[] = [];
   loadingLargePicture: boolean = false;  // Add loading state for large picture
   selectedThumbnail: string = '';  // Add state for selected thumbnail
+  selectedDate: Date = new Date(); // This will be bound to ngModel
+  mode: string = 'single';  // Default view mode
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private developerService: DeveloperService,
     private projectService: ProjectService,
-    private cameraService: CameraDetailService
+    private cameraDetailService: CameraDetailService,
   ) {}
 
   ngOnInit(): void {
@@ -63,16 +83,15 @@ export class CameraDetailComponent implements OnInit {
           console.error('Developer not found.');
         }
       });
-
-
   }
 
-  getCameraDetails(): void {
-    this.cameraService.getCameraDetails(this.projectId, this.cameraName)
+  getCameraDetails(date1: string = '', date2: string = ''): void {
+    console.log(date1, date2);
+    this.cameraDetailService.getCameraDetails(this.projectId, this.cameraName, date1, date2)
     .subscribe({
       next: (data: CameraDetail) => {
         this.date2Pictures = data.date2Photos.map(photo => photo.toString());
-  
+      
         // Set the last picture from the `large` folder as the initially displayed picture
         const lastPhoto = this.date2Pictures[this.date2Pictures.length - 1];
         this.lastPictureUrl = this.getLargePictureUrl(lastPhoto);
@@ -86,6 +105,16 @@ export class CameraDetailComponent implements OnInit {
         console.log('Camera details loaded successfully.');
       }
     });
+  }
+
+  formatTimestamp(timestamp: string): string {
+    const year = timestamp.substring(0, 4);
+    const month = timestamp.substring(4, 6);
+    const day = timestamp.substring(6, 8);
+    const hour = timestamp.substring(8, 10);
+    const minute = timestamp.substring(10, 12);
+    const second = timestamp.substring(12, 14);
+    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
   }
 
  
@@ -123,6 +152,52 @@ export class CameraDetailComponent implements OnInit {
   onLargePictureError(): void {
     console.error('Failed to load large picture:', this.selectedPictureUrl);
     this.loadingLargePicture = false;
+  }
+
+  setMode(mode: string): void {
+
+    this.mode = mode;  // Set the current mode
+    console.log(`Mode set to: ${mode}`);
+    // Implement different view modes here
+    switch (mode) {
+      case 'single':
+        // Handle single view
+        break;
+      case 'studio':
+        // Handle studio view
+        break;
+      case 'zoom':
+        // Handle zoom view
+        break;
+      case 'compare':
+        
+        break;
+    }
+  }
+  
+  generateVideo(): void {
+    console.log('Generating video...');
+    // Implement the functionality to generate video
+  }
+  
+  generatePhoto(): void {
+    console.log('Generating photo...');
+    // Implement the functionality to generate photo
+  }
+  
+  onDateChange(event: MatDatepickerInputEvent<Date>): void {
+    const selectedDate : Date = event.value !;
+    const formattedDate = this.formatDate(selectedDate);  // Format the date to yyyymmdd
+  
+    // Fetch camera details with the selected date
+    this.getCameraDetails('', formattedDate);
+  }
+
+  formatDate(date: Date): string {
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');  // Ensure two digits
+    const day = date.getDate().toString().padStart(2, '0');  // Ensure two digits
+    return `${year}${month}${day}`;
   }
 
   goBack(): void {

@@ -1,0 +1,110 @@
+/* Slider container and overlay styling */
+.compare-slider-container {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.compare-slider-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: clip-path 0.3s ease;
+}
+
+.left-img {
+  clip-path: inset(0 50% 0 0); /* Initially shows the left half */
+}
+
+.right-img {
+  clip-path: inset(0 0 0 50%); /* Initially shows the right half */
+}
+
+/* Slider overlay with full-width range input */
+.slider-overlay {
+  position: absolute;
+  top: 95%;
+  width: 100%;
+  transform: translateY(-50%);
+  pointer-events: none; /* Allow clicks through the overlay */
+}
+
+.slider {
+  width: 100%;
+  pointer-events: all; /* React to pointer events */
+}
+
+/* Layout for the thumbnails */
+.compare-layout {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px; /* Increased gap between the two date sections */
+}
+
+.date1-section, .date2-section {
+  width: 50%;
+}
+
+.thumbnail-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+}
+
+.thumbnail {
+  position: relative;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.thumbnail.selected {
+  border-color: #007bff; /* Highlight selected thumbnail */
+}
+
+/* Smaller size for thumbnails */
+.thumbnail-img {
+  width: 90px; /* Reduced width */
+  height: 90px; /* Reduced height */
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+
+/* Date overlay */
+.thumbnail-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 2px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 8px;
+  text-align: center;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+/* Date selector styling */
+.date-selector {
+  margin-bottom: 10px;
+}
+
+
+.spinner-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

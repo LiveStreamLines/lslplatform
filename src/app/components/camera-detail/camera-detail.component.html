@@ -1,21 +1,54 @@
 <button (click)="goBack()" class="back-button">← Back to camera</button>  <!-- Back Button -->
-  <div *ngIf="selectedPictureUrl">
-    <h2>Camera: {{ cameraName }}</h2>
-    <p>Project: {{ projectId }}</p>
-  
-    <!-- Display the selected large picture -->
-    <div class="large-picture-container">
-       <!-- Show a loading spinner if the large picture is still loading -->
-        <div *ngIf="loadingLargePicture" class="spinner">
-          <p>Loading...</p> <!-- Replace with your spinner design -->
-        </div>
 
-        <div *ngIf="!loadingLargePicture && !selectedPictureUrl">
-          <p>Failed to load image.</p>
-        </div>
+<!-- Navigation Menu -->
+<mat-toolbar class="camera-detail-toolbar">
+  <button mat-button [ngClass]="{ 'active': mode === 'single' }" (click)="setMode('single')">
+    <mat-icon>visibility</mat-icon> Single View
+  </button>
+  <button mat-button [ngClass]="{ 'active': mode === 'zoom' }" (click)="setMode('zoom')">
+    <mat-icon>zoom_in</mat-icon> Zoom
+  </button>
+  <button mat-button [ngClass]="{ 'active': mode === 'compare' }" (click)="setMode('compare')">
+    <mat-icon>compare_arrows</mat-icon> Compare
+  </button>
+  <button mat-button [ngClass]="{ 'active': mode === 'generate-video' }" (click)="generateVideo()">
+    <mat-icon>movie</mat-icon> Generate Video
+  </button>
+  <button mat-button [ngClass]="{ 'active': mode === 'generate-photo' }" (click)="generatePhoto()">
+    <mat-icon>photo_camera</mat-icon> Generate Photo
+  </button>
+  <button mat-button [ngClass]="{ 'active': mode === 'studio' }" (click)="setMode('studio')">
+    <mat-icon>image</mat-icon> Studio
+  </button>
+</mat-toolbar>
 
-        <!-- Large picture (lazy loading with error handling) -->
-        <img 
+<div class="home-layout">
+  <div *ngIf="mode === 'compare'" class="compare-container">
+    <app-camera-compare
+        *ngIf="mode === 'compare'"
+        [projectId]="projectId"
+        [cameraName]="cameraName">
+    </app-camera-compare>
+
+  </div>
+
+  <!-- Rest of camera-detail content -->
+<div *ngIf="mode !== 'compare'">
+ 
+  <div class="content">
+    <!-- Large picture display -->
+    <div *ngIf="selectedPictureUrl" class="large-picture-container">
+      <!-- Show a loading spinner if the large picture is still loading -->
+      <div *ngIf="loadingLargePicture" class="spinner">
+        <p>Loading...</p> <!-- Replace with your spinner design -->
+      </div>
+
+      <div *ngIf="!loadingLargePicture && !selectedPictureUrl">
+        <p>Failed to load image.</p>
+      </div>
+
+      <!-- Large picture (lazy loading with error handling) -->
+      <img 
         *ngIf="selectedPictureUrl"
         [src]="selectedPictureUrl" 
         alt="Selected Picture" 
@@ -24,16 +57,37 @@
         (error)="onLargePictureError()" 
         [style.display]="loadingLargePicture ? 'none' : 'block'"/>
     </div>
-  
+
+    <!-- Date selector -->
+    <div class="date-selector">
+      <mat-form-field>
+        <mat-label>Photo Date:</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" (dateChange)="onDateChange($event)" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <button mat-icon-button>
+        <mat-icon>share</mat-icon> Share X
+      </button>
+    </div>
+
     <!-- Thumbnail strip -->
     <div class="thumbnail-strip">
       <div *ngFor="let picture of date2Pictures" 
-         class="thumbnail" 
-         [class.selected]="picture === selectedThumbnail"> <!-- Highlight the selected thumbnail -->
-         <img [src]="getThumbPictureUrl(picture)" 
-           (click)="onThumbnailClick(picture)" 
-           alt="Thumbnail" 
-           class="thumbnail-img" />
-      </div>
+        class="thumbnail" 
+        [class.selected]="picture === selectedThumbnail"> <!-- Highlight the selected thumbnail -->
+        <img [src]="getThumbPictureUrl(picture)" 
+          (click)="onThumbnailClick(picture)" 
+          alt="Thumbnail" 
+          class="thumbnail-img" />
+
+        <div class="thumbnail-overlay">
+          <p>{{ formatTimestamp(picture) }}</p> <!-- Display the formatted date and time -->
+        </div>
+      </div>      
     </div>
   </div>
+
+</div>
+
+</div>

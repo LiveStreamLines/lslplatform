@@ -9,12 +9,19 @@ import { DeveloperService } from '../../services/developer.service';
 import { Camera } from '../../models/camera.model';
 import { CameraDetailService } from '../../services/camera-detail.service';
 import { GoogleMapsModule } from '@angular/google-maps';  // Google Maps module
+import { MatTabsModule } from '@angular/material/tabs';
+
 
 
 @Component({
   selector: 'app-camera-list',
   standalone: true,
-  imports: [CommonModule, GoogleMapsModule, MatCardModule, MatButtonModule],  // Import Sidenav, Header, and GoogleMapsModule
+  imports: [CommonModule, 
+            GoogleMapsModule, 
+            MatCardModule, 
+            MatButtonModule,
+            MatTabsModule
+          ],  // Import Sidenav, Header, and GoogleMapsModule
   templateUrl: './camera-list.component.html',
   styleUrls: ['./camera-list.component.scss']
 })
@@ -26,6 +33,9 @@ export class CameraListComponent implements OnInit {
   developerTag: string = '';
   projectTag: string = '';
   loading: boolean = true;  // Loading state
+
+   // Current active tab index
+   activeTab: number = 0;
 
   constructor(
     private router: Router, 
@@ -91,6 +101,11 @@ export class CameraListComponent implements OnInit {
 
   viewCameraDetails(camera: Camera): void {
     this.router.navigate([`/main/${this.developerTag}/${this.projectTag}/${camera.camera}`]);
+  }
+
+  // Function to switch tabs (in case we want to handle custom tab switching logic)
+  onTabChange(index: number): void {
+    this.activeTab = index;
   }
 
   goBack(): void {
