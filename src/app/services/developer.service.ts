@@ -10,7 +10,10 @@ import { AuthService } from './auth.service';  // Import AuthService to access t
   providedIn: 'root'
 })
 export class DeveloperService {
-  private apiUrl = 'https://lslcloud.com/api/main/developers';  // API URL for fetching developers
+  //private apiUrl = 'https://lslcloud.com/api/main/developers';  // API URL for fetching developers
+  private apiUrl = 'http://localhost:5000/api/developers'; 
+  private baseUrl = 'https://liveview.lslcloud.com/api/admin';
+
   //private apiUrl = 'http://192.168.8.73:5000/api/main/developers';  // API URL for fetching developers
   private developers: Developer[] = [];  // Store developers here
 
@@ -21,7 +24,7 @@ export class DeveloperService {
     const authh = this.authService.getAuthToken();  // Get auth token from AuthService
     // Set the custom header with the authh token
     const headers = new HttpHeaders({
-      'authh': authh ? authh : ''  // Send authh header
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
     });
     // if (this.developers.length > 0) {
     //   // Return the developers if already loaded
@@ -52,4 +55,30 @@ export class DeveloperService {
     const developer = this.developers.find(dev => dev.developerTag === developerTag);
     return developer ? developer._id : undefined;
   }
+
+  addDeveloper(developer: Partial<Developer>): Observable<any> {
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 'authh': authh ? authh : '' });
+    return this.http.post(`${this.baseUrl}/developers`, developer, { headers });
+  }
+
+  // Method to edit an existing developer
+  editDeveloper(developerId: string, developer: Partial<Developer>): Observable<any> {
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    return this.http.put(`${this.baseUrl}/developer/${developerId}`, developer, { headers });
+  }
+
+  // Method to get developer details for editing
+  getDeveloperById(developerId: string): Observable<Developer> {
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    return this.http.get<Developer>(`${this.baseUrl}/developer/${developerId}`, { headers });
+  }
+
+
 }

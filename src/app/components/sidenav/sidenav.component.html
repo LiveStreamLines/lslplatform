@@ -1,7 +1,7 @@
 <!-- Sidenav menu with icons in front of each menu item -->
 <mat-nav-list>
   <h3>Platform</h3>
-  <a mat-list-item routerLink="/home">
+  <a mat-list-item routerLink="/home" routerLinkActive="active">
     <mat-icon>home</mat-icon>
     <span>Home</span>
   </a>
@@ -15,11 +15,11 @@
   </a>
 
   <h3 *ngIf="isAdmin">Admin</h3>
-  <a mat-list-item *ngIf="isAdmin" routerLink="/developers">
+  <a mat-list-item *ngIf="isAdmin" routerLink="/developers" routerLinkActive="active">
     <mat-icon>build</mat-icon>
     <span>Developers</span>
   </a>
-  <a mat-list-item *ngIf="isAdmin" routerLink="/projects">
+  <a mat-list-item *ngIf="isAdmin" routerLink="/projects" routerLinkActive="active">
     <mat-icon>folder</mat-icon>
     <span>Projects</span>
   </a>

@@ -48,10 +48,15 @@ export class CameraDetailComponent implements OnInit {
   photosByDate: any = {};
   date1Pictures: string[] = [];
   date2Pictures: string[] = [];
+  path: string = ''; 
   loadingLargePicture: boolean = false;  // Add loading state for large picture
   selectedThumbnail: string = '';  // Add state for selected thumbnail
   selectedDate: Date = new Date(); // This will be bound to ngModel
   mode: string = 'single';  // Default view mode
+  lensX: number = 0;  // Position of the zoom lens
+  lensY: number = 0;
+  backgroundPosition: string = '0px 0px';  // Background position for zoomed view
+  backgroundSize: string = '200%';
 
   constructor(
     private route: ActivatedRoute,
@@ -87,11 +92,12 @@ export class CameraDetailComponent implements OnInit {
 
   getCameraDetails(date1: string = '', date2: string = ''): void {
     console.log(date1, date2);
-    this.cameraDetailService.getCameraDetails(this.projectId, this.cameraName, date1, date2)
+    //this.cameraDetailService.getCameraDetails(this.projectId, this.cameraName, date1, date2)
+    this.cameraDetailService.getCameraDetails(this.developerTag, this.projectTag,this.cameraName,date1,date2)
     .subscribe({
       next: (data: CameraDetail) => {
         this.date2Pictures = data.date2Photos.map(photo => photo.toString());
-      
+        this.path = data.path;
         // Set the last picture from the `large` folder as the initially displayed picture
         const lastPhoto = this.date2Pictures[this.date2Pictures.length - 1];
         this.lastPictureUrl = this.getLargePictureUrl(lastPhoto);
@@ -120,12 +126,14 @@ export class CameraDetailComponent implements OnInit {
  
   // Get the full URL for the large picture
   getLargePictureUrl(picture: string): string {
-    return `https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${this.cameraName}/large/${picture}.jpg`;
+    //return `https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${this.cameraName}/large/${picture}.jpg`;
+    return `${this.path}/large/${picture}.jpg` ;
   }
 
   // Get the full URL for the thumbnail picture
   getThumbPictureUrl(picture: string): string {
-    return `https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${this.cameraName}/thumbs/${picture}.jpg`;
+    //return `https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${this.cameraName}/thumbs/${picture}.jpg`;
+    return `${this.path}/thumbs/${picture}.jpg` ;;
   }
 
   // Handle click on thumbnail to show the large picture
@@ -198,6 +206,31 @@ export class CameraDetailComponent implements OnInit {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');  // Ensure two digits
     const day = date.getDate().toString().padStart(2, '0');  // Ensure two digits
     return `${year}${month}${day}`;
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    if (this.mode !== 'zoom') return;
+
+      const img = event.target as HTMLImageElement;
+      const rect = img.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+  
+      // Set lens position
+      this.lensX = x - 100;  // Center lens
+      this.lensY = y - 100;
+  
+      // Set background position based on image natural dimensions
+      const xPercent = (x / rect.width) * 100;
+      const yPercent = (y / rect.height) * 100;
+      this.backgroundPosition = `${xPercent}% ${yPercent}%`;
+  
+  }
+
+  hideZoom(): void {
+    this.lensX = 0;
+    this.lensY = 0;
+    this.backgroundPosition = '0% 0%';
   }
 
   goBack(): void {

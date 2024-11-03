@@ -9,6 +9,7 @@ export interface Camera {
     "lng": string,
     "firstPhoto" : string,
     "lastPhoto" : string,
+    "path": string,
     "customVideo1": string,
     "customVideo2": string,
     "isDeleted": boolean,

@@ -20,6 +20,8 @@
     loading: boolean = true;
     filteredDevelopers: Developer[] = [];  // To store filtered developers
     searchTerm: string = '';  // This will be used for filtering developers
+    logopath: string = 'http://localhost:5000/';
+    //logopath: string = 'https://lslcloud.com/media/';
 
     constructor(
       private developerService: DeveloperService, 
@@ -31,7 +33,7 @@
           // If the logo is a relative path, prepend the base URL
           this.developers = data.map(dev => ({
             ...dev,
-            logo: `https://lslcloud.com/media/${dev.logo}`  // Prepend the base URL if needed
+            logo: this.logopath + dev.logo  // Prepend the base URL if needed
           }));
           this.filteredDevelopers = this.developers;// Initialize filteredDevelopers with all developers
           this.loading = false;  // Stop loading when data is fetched

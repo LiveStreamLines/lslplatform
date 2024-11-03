@@ -22,19 +22,19 @@ export class LoginComponent {
   onLogin(): void {
     // Call login with rememberMe
     this.authService.login(this.username, this.password, this.rememberMe ? 'true' : '')
-      .subscribe(
-        (response: any) => {
-          if (response.authh) {
-            // Store auth data
-            this.authService.setAuthData(response.authh, response.developers, response.projects);
+   .subscribe({
+    next: (response: any) => {
+      if (response.authh) {
+        // Store auth data
+        this.authService.setAuthData(response.authh, response.developers, response.projects);
 
-            // Navigate to the dashboard (or another page)
-            this.router.navigate(['/home']);
-          }
-        },
-        error => {
-          this.loginError = error.error.msg || 'Login failed. Please try again.';
-        }
-      );
+        // Navigate to the dashboard (or another page)
+        this.router.navigate(['/home']);
+      }
+    },
+    error: (error) => {
+      this.loginError = error.error.msg || 'Login failed. Please try again.';
+    }
+  });
   }
 }

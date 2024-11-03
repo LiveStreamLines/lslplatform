@@ -56,7 +56,6 @@ mat-icon {
 
 /* Large picture container */
 .large-picture-container {
-  text-align: center;
   margin-bottom: 20px;
   position: relative; /* Allows positioning of spinner */
 }
@@ -144,6 +143,17 @@ mat-icon {
   border-bottom-right-radius: 5px;
 }
 
+.zoom-lens {
+  position: absolute;
+  width: 200px; /* Diameter of the zoom circle */
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #007bff;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: 2000%;
+}
 
 /* Centered text for camera and project */
 h2, p {

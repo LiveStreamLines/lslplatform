@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Developer' : 'Add New Developer' }}</h2>
+
+<div class="dialog-content">
+  
+    <form [formGroup]="developerForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Developer Name</mat-label>
+        <input matInput formControlName="developerName" required />
+        <mat-error *ngIf="developerForm.get('developerName')?.hasError('required')">Name is required</mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Developer Tag</mat-label>
+        <input matInput formControlName="developerTag" required />
+        <mat-error *ngIf="developerForm.get('developerTag')?.hasError('required')">Tag is required</mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" required></textarea>
+        <mat-error *ngIf="developerForm.get('description')?.hasError('required')">Description is required</mat-error>
+      </mat-form-field>
+  
+      <mat-checkbox formControlName="isActive">Is Active</mat-checkbox>
+  
+      <div class="logo-upload">
+        <mat-label>Upload Logo:</mat-label>
+        <input type="file" (change)="onLogoChange($event)" />
+        <img *ngIf="logoPreview" [src]="logoPreview" alt="Logo Preview" class="logo-preview mat-elevation-z2" />
+      </div>
+  
+      <div class="dialog-actions">
+        <button mat-button (click)="onCancel()">Cancel</button>
+        <button mat-raised-button color="primary" type="submit">{{ isEditMode ? 'Update' : 'Add' }}</button>
+      </div>
+    </form>
+  </div>
+  

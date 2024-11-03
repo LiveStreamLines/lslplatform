@@ -52,10 +52,23 @@
         *ngIf="selectedPictureUrl"
         [src]="selectedPictureUrl" 
         alt="Selected Picture" 
-        class="large-picture"        
+        class="large-picture"
+        (mousemove)="mode === 'zoom' && onMouseMove($event)"
+        (mouseleave)="hideZoom()"        
         (load)="onLargePictureLoad()" 
         (error)="onLargePictureError()" 
         [style.display]="loadingLargePicture ? 'none' : 'block'"/>
+
+         <!-- Zoom lens circle, only visible in "Zoom" mode -->
+         <div 
+         *ngIf="mode === 'zoom'" 
+         class="zoom-lens"
+         [style.top.px]="lensY"
+         [style.left.px]="lensX"
+         [style.backgroundImage]="'url(' + selectedPictureUrl + ')'"
+         [style.backgroundPosition]="backgroundPosition">
+       </div>
+       
     </div>
 
     <!-- Date selector -->

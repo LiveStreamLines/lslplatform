@@ -8,7 +8,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'  // This ensures the service is available throughout the application
 })
 export class AuthService {
-  private authUrl = 'https://liveview.lslcloud.com/api/user/login/';
+  //private authUrl = 'https://liveview.lslcloud.com/api/user/login/';
+  private authUrl = 'http://localhost:5000/api/auth/login/';
   private authTokenKey = 'authh';  // Key for storing auth token in localStorage
   private developerIdsKey = 'developer_ids';
   private projectIdsKey = 'project_ids';
@@ -19,7 +20,7 @@ export class AuthService {
   // Send login request to the API
   login(username: string, password: string, rememberMe: string): Observable<any> {
     const loginData = {
-      username: username,
+      email: username,
       password: password,
       rememberMe: rememberMe
     };

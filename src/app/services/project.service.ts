@@ -9,7 +9,8 @@ import { AuthService } from './auth.service';  // To access the auth token
   providedIn: 'root'
 })
 export class ProjectService {
-  private apiUrl = 'https://lslcloud.com/api/main/developer';  // Base URL for fetching projects
+  //private apiUrl = 'https://lslcloud.com/api/main/developer';  // Base URL for fetching projects
+  private apiUrl = 'http://localhost:5000/api/projects/dev';
   private projects: Project[] = [];  // Store projects here
 
   constructor(private http: HttpClient, private authService: AuthService) {}
@@ -18,7 +19,7 @@ export class ProjectService {
     const authh = this.authService.getAuthToken();  // Get the auth token from AuthService
     // Set the custom header with the authh token
     const headers = new HttpHeaders({
-      'authh': authh ? authh : ''  // Send the authh header
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
     });
       return this.http.get<Project[]>(`${this.apiUrl}/${developerId}`, { headers }).pipe(
         tap((data) => {

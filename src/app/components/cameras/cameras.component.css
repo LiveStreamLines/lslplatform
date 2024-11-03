@@ -1,0 +1,36 @@
+.camera-container {
+    padding: 16px;
+  }
+  
+  .mat-form-field {
+    width: 300px;
+    margin-right: 16px;
+  }
+  
+  .spinner-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .mat-elevation-z8 {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .open-circle-button {
+    background-color: #ff1744; /* Red background */
+    color: white; /* Icon color */
+    border-radius: 50%; /* Makes the button circular */
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Optional shadow */
+    transition: background-color 0.3s;
+  }
+  
+  .open-circle-button:hover {
+    background-color: #d50000;
+  }
+  

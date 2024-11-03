@@ -8,9 +8,6 @@ import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/
 import { MatFormField } from '@angular/material/input';
 import { MatLabel } from '@angular/material/input';
 
-
-
-
 @Component({
   selector: 'app-camera-compare',
   standalone: true,
@@ -33,6 +30,7 @@ export class CameraCompareComponent implements OnInit {
   selectedDate2: Date = new Date(); // This will be bound to ngModel
   selectedDate1Thumbnail!: string;
   selectedDate2Thumbnail!: string;
+  path: string = '';
 
   loadingLeft = false;
   loadingRight = false;
@@ -53,10 +51,12 @@ export class CameraCompareComponent implements OnInit {
 
   // Fetch both date1 and date2 pictures
   loadComparisonPhotos(date1: string = '', date2: string = ''): void {
-    this.cameraDetailService.getCameraDetails(this.projectId, this.cameraName, date1, date2).subscribe(data => {
+//    this.cameraDetailService.getCameraDetails(this.projectId, this.cameraName, date1, date2)
+    this.cameraDetailService.getCameraDetails(this.developerTag, this.projectTag,this.cameraName,date1,date2)
+    .subscribe(data => {
       this.date1Pictures = data.date1Photos.map(photo => photo.toString());
       this.date2Pictures = data.date2Photos.map(photo => photo.toString());
-
+      this.path = data.path;
      // console.log("Date 1 Pictures:", this.date1Pictures);  // Debug log
      // console.log("Date 2 Pictures:", this.date2Pictures);  // Debug log
       // Set default selected pictures
@@ -127,12 +127,15 @@ export class CameraCompareComponent implements OnInit {
 
   // Method to get large picture URL
   getLargePictureUrl(picture: string): string {
-    return `https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${this.cameraName}/large/${picture}.jpg`;
+    //return `https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${this.cameraName}/large/${picture}.jpg`;
+    return `${this.path}/large/${picture}.jpg` ;
   }
 
   // Method to get thumbnail URL
   getThumbPictureUrl(picture: string): string {
-    return `https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${this.cameraName}/thumbs/${picture}.jpg`;
+    //return `https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${this.cameraName}/thumbs/${picture}.jpg`;
+    return `${this.path}/thumbs/${picture}.jpg` ;
+
   }
 
 

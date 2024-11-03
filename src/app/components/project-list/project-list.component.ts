@@ -21,6 +21,9 @@ export class ProjectListComponent implements OnInit {
   developerId: any = '';
   developerTag: string = '';
   loading: boolean = true;
+  logopath: string = 'http://localhost:5000/';
+  //logopath: string = 'https://lslcloud.com/media/';
+
 
   constructor(
     private projectService: ProjectService, 
@@ -45,7 +48,7 @@ export class ProjectListComponent implements OnInit {
       next: (data: Project[]) => {
         this.projects = data.map(project => ({
           ...project,
-          logo: `https://lslcloud.com/media/${project.logo}`
+          logo: this.logopath + project.logo
         }));
         this.loading = false;
       },

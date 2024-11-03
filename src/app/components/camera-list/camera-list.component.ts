@@ -75,16 +75,15 @@ export class CameraListComponent implements OnInit {
     this.cameraService.getCamerasByProject(this.projectId).subscribe({
       next: (data) => {
         this.cameras = data;  // Assign the cameras to the component
-        this.loading = false;  // Stop loading once the data is fetched
         this.cameras.forEach(camera => {
           // For each camera, fetch the first and last pictures
-          this.cameraDetailService.getCameraDetails(this.projectId, camera.camera).subscribe((cameraDetail) => {
-            camera.firstPhoto = cameraDetail.firstPhoto;
-            camera.lastPhoto = cameraDetail.lastPhoto;
-
-            console.log('First Photo URL:', this.getPictureUrl(camera.camera, camera.firstPhoto));
-            console.log('Last Photo URL:', this.getPictureUrl(camera.camera, camera.lastPhoto));
-        
+         // this.cameraDetailService.getCameraDetails(this.projectId, camera.camera)
+         this.cameraDetailService.getCameraDetails(this.developerTag, this.projectTag,camera.camera) 
+         .subscribe((cameraDetail) => {
+            this.loading = false;  // Stop loading once the data is fetched
+            camera.firstPhoto =  cameraDetail.firstPhoto;
+            camera.lastPhoto = cameraDetail.lastPhoto;     
+            camera.path = cameraDetail.path;   
           });
         });
       },
@@ -96,7 +95,8 @@ export class CameraListComponent implements OnInit {
   }  
 
   getPictureUrl(camera: string, photo: string): string {
-    return`https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${camera}/large/${photo}.jpg`;  // Adjust path as needed
+    //return`https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${camera}/large/${photo}.jpg`;  // Adjust path as needed
+    return `${camera}/large/${photo}.jpg` ;
   }
 
   viewCameraDetails(camera: Camera): void {
@@ -106,6 +106,13 @@ export class CameraListComponent implements OnInit {
   // Function to switch tabs (in case we want to handle custom tab switching logic)
   onTabChange(index: number): void {
     this.activeTab = index;
+  }
+
+  formatTimestamp(timestamp: string): string {
+    const year = timestamp.substring(0, 4);
+    const month = timestamp.substring(4, 6);
+    const day = timestamp.substring(6, 8);
+    return `${year}-${month}-${day}`;
   }
 
   goBack(): void {
