@@ -21,7 +21,7 @@ export class ProjectListComponent implements OnInit {
   developerId: any = '';
   developerTag: string = '';
   loading: boolean = true;
-  logopath: string = 'http://localhost:5000/';
+  logopath: string = 'http://5.9.85.250:5000/';
   //logopath: string = 'https://lslcloud.com/media/';
 
 

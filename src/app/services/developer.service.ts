@@ -11,8 +11,10 @@ import { AuthService } from './auth.service';  // Import AuthService to access t
 })
 export class DeveloperService {
   //private apiUrl = 'https://lslcloud.com/api/main/developers';  // API URL for fetching developers
-  private apiUrl = 'http://localhost:5000/api/developers'; 
-  private baseUrl = 'https://liveview.lslcloud.com/api/admin';
+  private apiUrl = 'http://5.9.85.250:5000/api/developers'; 
+  private baseUrl = 'http://5.9.85.250:5000/api/developers'; 
+
+ // private baseUrl = 'https://liveview.lslcloud.com/api/admin';
 
   //private apiUrl = 'http://192.168.8.73:5000/api/main/developers';  // API URL for fetching developers
   private developers: Developer[] = [];  // Store developers here
@@ -56,19 +58,16 @@ export class DeveloperService {
     return developer ? developer._id : undefined;
   }
 
-  addDeveloper(developer: Partial<Developer>): Observable<any> {
+  addOrUpdateDeveloper(formData: FormData, isEditMode: boolean, developerId?: string): Observable<any> {
     const authh = this.authService.getAuthToken(); 
-    const headers = new HttpHeaders({ 'authh': authh ? authh : '' });
-    return this.http.post(`${this.baseUrl}/developers`, developer, { headers });
-  }
-
-  // Method to edit an existing developer
-  editDeveloper(developerId: string, developer: Partial<Developer>): Observable<any> {
-    const authh = this.authService.getAuthToken(); 
-    const headers = new HttpHeaders({
+    const headers = new HttpHeaders({ 
       'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
     });
-    return this.http.put(`${this.baseUrl}/developer/${developerId}`, developer, { headers });
+    if (isEditMode && developerId) {
+      return this.http.put(`${this.baseUrl}/${developerId}`, formData, { headers });
+    } else {
+      return this.http.post(`${this.baseUrl}/`, formData, { headers });
+    }
   }
 
   // Method to get developer details for editing

@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';  // Assuming you have AuthService 
 })
 export class CameraDetailService {
   //private apiUrl = 'https://lslcloud.com/api/main/projectcamerafiles';
-  private apiUrl = 'http://localhost:5000/api/camerapics';
+  private apiUrl = 'http://5.9.85.250:5000/api/camerapics';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

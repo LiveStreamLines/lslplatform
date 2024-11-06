@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
   //private authUrl = 'https://liveview.lslcloud.com/api/user/login/';
-  private authUrl = 'http://localhost:5000/api/auth/login/';
+  private authUrl = 'http://5.9.85.250:5000/api/auth/login/';
   private authTokenKey = 'authh';  // Key for storing auth token in localStorage
   private developerIdsKey = 'developer_ids';
   private projectIdsKey = 'project_ids';

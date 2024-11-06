@@ -47,8 +47,9 @@ export class DevelopersComponent implements OnInit {
   openAddDeveloperDialog(): void {
     const dialogRef = this.dialog.open(DeveloperFormComponent, {
       data: { isEditMode: false },
-      width: '600px',      // Set desired width
-      maxHeight: '80vh'   // Limit height to 80% of viewport height
+      panelClass: 'custom-dialog-container',
+      // width: '700px',      // Set desired width
+      // maxHeight: '80vh'   // Limit height to 80% of viewport height
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -62,8 +63,9 @@ export class DevelopersComponent implements OnInit {
   openEditDeveloperDialog(developer: Developer): void {
     const dialogRef = this.dialog.open(DeveloperFormComponent, {
       data: { isEditMode: true, developer },
-      width: '600px',      // Set desired width
-      maxHeight: '80vh'   // Limit height to 80% of viewport height
+      panelClass: 'custom-dialog-container',
+      // width: '700px',      // Set desired width
+      // maxHeight: '80vh'   // Limit height to 80% of viewport height
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -78,14 +80,6 @@ export class DevelopersComponent implements OnInit {
     this.dataSource.filter = this.searchTerm.trim().toLowerCase();
   }
 
-  // Add new developer action
-  addNewDeveloper(): void {
-    // Implement add developer functionality here
-  }
 
-  // Open developer record
-  openDeveloper(developerId: string): void {
-    // Implement navigation or modal opening for developer details here
-  }
 
 }

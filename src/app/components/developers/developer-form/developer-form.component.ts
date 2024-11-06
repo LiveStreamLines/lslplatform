@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Developer } from '../../../models/developer.model';
-
+import { DeveloperService } from '../../../services/developer.service';
 
 @Component({
   selector: 'app-developer-form',
@@ -32,8 +32,11 @@ export class DeveloperFormComponent implements OnInit {
   developerForm!: FormGroup;
   @Input() isEditMode: boolean = false;
   logoPreview: string | ArrayBuffer | null = null;
+  logoFile: File | null = null;
 
-  constructor(private fb: FormBuilder, 
+  constructor(
+    private fb: FormBuilder, 
+    private developerService: DeveloperService,
     private dialogRef: MatDialogRef<DeveloperFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       this.isEditMode = data.isEditMode;
@@ -45,7 +48,6 @@ export class DeveloperFormComponent implements OnInit {
       developerTag: ['', Validators.required],
       description: ['', Validators.required],
       isActive: [true],
-      newlogo: ['']
     });
     if (this.isEditMode && this.data.developer) {
       this.populateForm(this.data.developer);
@@ -58,20 +60,21 @@ export class DeveloperFormComponent implements OnInit {
       developerTag: developer.developerTag,
       description: developer.description,
       isActive: developer.isActive,
-      newlogo: developer.logo  // or some method to load the logo
     });
-    this.logoPreview = developer.logo; // Show the existing logo if editing
+    this.logoPreview = 'http://5.9.85.250:5000/' + developer.logo; // Show the existing logo if editing
   }
 
   onLogoChange(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.logoFile = input.files[0];
+      
+      // Generate a preview
       const reader = new FileReader();
       reader.onload = () => {
         this.logoPreview = reader.result;
       };
-      reader.readAsDataURL(file);
-      this.developerForm.patchValue({ newlogo: reader.result });
+      reader.readAsDataURL(this.logoFile);
     }
   }
 
@@ -82,7 +85,34 @@ export class DeveloperFormComponent implements OnInit {
   onSubmit(): void {
     if (this.developerForm.valid) {
       const developerData = this.developerForm.value;
-      console.log(developerData); // Replace with your API call
+  
+      // Prepare FormData for the backend
+      const formData = new FormData();
+      formData.append('developerName', developerData.developerName);
+      formData.append('developerTag', developerData.developerTag);
+      formData.append('description', developerData.description);
+      formData.append('isActive', developerData.isActive);
+  
+      // Append logo file if present
+      if (this.logoFile) {
+        formData.append('logo', this.logoFile);
+      } else if (this.isEditMode && this.data.developer.logo) {
+        // In edit mode, if no new logo is uploaded, keep the existing logo reference
+        formData.append('logo', this.data.developer.logo);
+      }
+  
+      // Call service method to submit the data
+      this.developerService.addOrUpdateDeveloper(formData, this.isEditMode, this.data?.developer?._id).subscribe(
+      {
+        next: (response) => {
+          console.log('Developer submitted successfully:', response);
+          this.dialogRef.close(response); // Close dialog on success
+        },
+        error: (error) => {
+          console.error('Error submitting developer:', error);
+        }
+      });
     }
   }
+      
 }

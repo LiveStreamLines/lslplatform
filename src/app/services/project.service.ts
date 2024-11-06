@@ -10,7 +10,8 @@ import { AuthService } from './auth.service';  // To access the auth token
 })
 export class ProjectService {
   //private apiUrl = 'https://lslcloud.com/api/main/developer';  // Base URL for fetching projects
-  private apiUrl = 'http://localhost:5000/api/projects/dev';
+  private apiUrl = 'http://5.9.85.250:5000/api/projects/dev';
+  private baseUrl = 'http://5.9.85.250:5000/api/projects';
   private projects: Project[] = [];  // Store projects here
 
   constructor(private http: HttpClient, private authService: AuthService) {}
@@ -37,6 +38,18 @@ export class ProjectService {
       return this.getProjectsByDeveloper(developerId).pipe(
         map(() => this.findProjectIdByTag(projectTag))
       );
+    }
+  }
+
+  addOrUpdateProject(formData: FormData, isEditMode: boolean, projectId?: string): Observable<any> {
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    if (isEditMode && projectId) {
+      return this.http.put(`${this.baseUrl}/${projectId}`, formData, { headers });
+    } else {
+      return this.http.post(`${this.baseUrl}/`, formData, { headers });
     }
   }
   

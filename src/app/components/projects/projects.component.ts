@@ -14,6 +14,8 @@ import { Developer } from '../../models/developer.model';
 import { Project } from '../../models/project.model';
 import { MatSelectModule } from '@angular/material/select'; // Import for dropdown
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog } from '@angular/material/dialog';
+import { ProjectFormComponent } from './project-form/project-form.component';
 
 
 @Component({
@@ -35,7 +37,7 @@ export class ProjectsComponent implements OnInit {
 
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private developerService: DeveloperService, private projectService: ProjectService) {}
+  constructor(private developerService: DeveloperService, private projectService: ProjectService,  private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.fetchDevelopers();
@@ -72,8 +74,35 @@ export class ProjectsComponent implements OnInit {
   }
 
   // Add new project action
-  addNewProject(): void {
-    // Implement add project functionality here
+  openAddProjectDialog(): void {
+    const dialogRef = this.dialog.open(ProjectFormComponent, {
+      data: { isEditMode: false },
+      panelClass: 'custom-dialog-container',
+      // width: '700px',      // Set desired width
+      // maxHeight: '80vh'   // Limit height to 80% of viewport height
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.fetchProjectsByDeveloper(this.selectedDeveloperId);  // Refresh list after adding a new developer
+      }
+    });
+  }
+
+   // Open the form in "Edit" mode
+   openEditProjectDialog(project: Project): void {
+    const dialogRef = this.dialog.open(ProjectFormComponent, {
+      data: { isEditMode: true, project },
+      panelClass: 'custom-dialog-container',
+      // width: '700px',      // Set desired width
+      // maxHeight: '80vh'   // Limit height to 80% of viewport height
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.fetchProjectsByDeveloper(this.selectedDeveloperId);  // Refresh list after editing a developer
+      }
+    });
   }
 
   // Open project record

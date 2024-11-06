@@ -20,7 +20,7 @@
     loading: boolean = true;
     filteredDevelopers: Developer[] = [];  // To store filtered developers
     searchTerm: string = '';  // This will be used for filtering developers
-    logopath: string = 'http://localhost:5000/';
+    logopath: string = 'http://5.9.85.250:5000/';
     //logopath: string = 'https://lslcloud.com/media/';
 
     constructor(
