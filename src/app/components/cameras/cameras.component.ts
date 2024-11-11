@@ -13,6 +13,7 @@ import { CameraService } from '../../services/camera.service';
 import { Developer } from '../../models/developer.model';
 import { Project } from '../../models/project.model';
 import { Camera } from '../../models/camera.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-camera',
@@ -41,6 +42,7 @@ export class CameraComponent implements OnInit {
   constructor(
     private developerService: DeveloperService,
     private projectService: ProjectService,
+    private router: Router, 
     private cameraService: CameraService
   ) {}
 
@@ -94,5 +96,13 @@ export class CameraComponent implements OnInit {
   onProjectChange(): void {
     this.cameras = [];
     this.loadCameras();
+  }
+
+  openEditCamera(cameraId: string) {
+    this.router.navigate(['/camera-form', cameraId]);
+  }
+
+  openAddCamera(){
+    this.router.navigate(['/camera-form',{ developerId: this.selectedDeveloperId, projectId: this.selectedProjectId }]);
   }
 }

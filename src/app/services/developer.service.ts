@@ -76,7 +76,7 @@ export class DeveloperService {
     const headers = new HttpHeaders({ 
       'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
     });
-    return this.http.get<Developer>(`${this.baseUrl}/developer/${developerId}`, { headers });
+    return this.http.get<Developer>(`${this.baseUrl}/${developerId}`, { headers });
   }
 
 

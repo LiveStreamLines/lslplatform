@@ -16,6 +16,21 @@
   .mat-elevation-z8 {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   }
+
+  .add-new-button {
+    font-weight: bold;
+    background-color: #ff1744;
+    color: white;
+    padding: 8px 16px;
+    margin-left: 20px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+  }
+  
+  .add-new-button:hover {
+    background-color: #d50000;
+  }
   
   .open-circle-button {
     background-color: #ff1744; /* Red background */

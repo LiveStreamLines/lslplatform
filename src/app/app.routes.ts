@@ -9,6 +9,8 @@ import { CameraCompareComponent } from './components/camera-compare/camera-compa
 import { DevelopersComponent } from './components/developers/developers.component';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { CameraComponent } from './components/cameras/cameras.component';
+import { CameraFormComponent } from './components/cameras/camera-form/camera-form.component'; // Adjust the path as necessary
+
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -20,5 +22,7 @@ export const routes: Routes = [
   { path: 'developers', component: DevelopersComponent },
   { path: 'projects', component: ProjectsComponent },
   { path: 'cameras', component: CameraComponent },
+  { path: 'camera-form', component: CameraFormComponent }, // Route for adding a new camera
+  { path: 'camera-form/:id', component: CameraFormComponent }, // Route for editing a camera by ID
   { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];

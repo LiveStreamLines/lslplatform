@@ -11,7 +11,7 @@ import { AuthService } from './auth.service';  // To access the auth token
 export class CameraService {
   
   //private apiUrl = 'https://lslcloud.com/api/main/projects/cameras';  // API base URL for fetching cameras
-  private apiUrl = 'http://5.9.85.250:5000/api/cameras/proj';
+  private apiUrl = 'http://5.9.85.250:5000/api/cameras/';
   private cameras: Camera[] = [];
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -23,12 +23,48 @@ export class CameraService {
       'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
     });
     
-    return this.http.get<any>(`${this.apiUrl}/${projectId}`, { headers }).pipe(
+    return this.http.get<any>(`${this.apiUrl}/proj/${projectId}`, { headers }).pipe(
       map((response) => response)  // Extract only the 'cameras' array
       // tap((data) => {
       //   this.cameras = data;  // Store the list of project
       // })
     );
+  }
+
+  getCameraById(cameraId: string) {
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    return this.http.get<Camera>(`${this.apiUrl}/${cameraId}`, { headers });
+  }
+
+  addOrUpdateProject(formData: FormData, isEditMode: boolean, projectId?: string): Observable<any> {
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    if (isEditMode && projectId) {
+      return this.http.put(`${this.apiUrl}/${projectId}`, formData, { headers });
+    } else {
+      return this.http.post(`${this.apiUrl}/`, formData, { headers });
+    }
+  }
+
+  addCamera(formData: FormData){
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    return this.http.post(`${this.apiUrl}/`, formData, { headers });
+  }
+
+  updateCamera(cameraId: any, formData: FormData){
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    return this.http.put(`${this.apiUrl}/${cameraId}`, formData, { headers });
   }
 
 

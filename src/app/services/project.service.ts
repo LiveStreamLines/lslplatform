@@ -29,6 +29,15 @@ export class ProjectService {
       );
   }
 
+   // Method to get developer details for editing
+   getProjectById(projectId: string): Observable<Project> {
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    return this.http.get<Project>(`${this.baseUrl}/${projectId}`, { headers });
+  }
+
   getProjectIdByTag(developerId: string, projectTag: string): Observable<string | undefined> {
     if (this.projects.length > 0) {
       // If projects are already loaded, return the ID
@@ -52,6 +61,8 @@ export class ProjectService {
       return this.http.post(`${this.baseUrl}/`, formData, { headers });
     }
   }
+
+
   
   // Helper function to find the project ID by tag
   private findProjectIdByTag(projectTag: string): string | undefined {
