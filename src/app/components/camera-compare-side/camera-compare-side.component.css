@@ -1,0 +1,93 @@
+/* Slider container and overlay styling */
+.compare-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  
+  .image-comparison {
+    display: flex;
+    gap: 20px; /* Adjust gap as needed */
+  }
+  
+  .image {
+    width: 48%; /* Adjust width to control how much space each image takes */
+  }
+  
+  .side-by-side {
+    width: 50%; /* Ensure images fill their container */
+    object-fit: cover; /* Ensures proper scaling of images */
+    border-radius: 8px; /* Optional, add rounded corners */
+  }
+
+  /* Layout for the thumbnails */
+  .compare-layout {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px; /* Increased gap between the two date sections */
+  }
+  
+  .date1-section, .date2-section {
+    width: 50%;
+  }
+  
+  .thumbnail-strip {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+  }
+  
+  .thumbnail {
+    position: relative;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+  }
+  
+  .thumbnail.selected {
+    border-color: #007bff; /* Highlight selected thumbnail */
+  }
+  
+  /* Smaller size for thumbnails */
+  .thumbnail-img {
+    width: 90px; /* Reduced width */
+    height: 90px; /* Reduced height */
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  
+  
+  /* Date overlay */
+  .thumbnail-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 2px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 8px;
+    text-align: center;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+  
+  /* Date selector styling */
+  .date-selector {
+    margin-bottom: 10px;
+  }
+  
+  
+  .spinner-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

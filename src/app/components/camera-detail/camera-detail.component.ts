@@ -14,7 +14,8 @@ import { ProjectService } from '../../services/project.service';
 import { CameraDetailService } from '../../services/camera-detail.service';
 import { CameraDetail } from '../../models/camera-detail.model';
 import { CameraCompareComponent } from '../camera-compare/camera-compare.component';
-
+import { CameraCompareSideComponent } from '../camera-compare-side/camera-compare-side.component';
+import { CameraCompareMagnifyComponent } from '../camera-compare-magnify/camera-compare-magnify.component';
 
 @Component({
   selector: 'app-camera-detail',
@@ -29,7 +30,9 @@ import { CameraCompareComponent } from '../camera-compare/camera-compare.compone
     MatNativeDateModule,
     MatFormField,
     FormsModule, 
-    CameraCompareComponent
+    CameraCompareComponent,
+    CameraCompareSideComponent,
+    CameraCompareMagnifyComponent
   ],
   templateUrl: './camera-detail.component.html',  
   styleUrls: ['./camera-detail.component.scss']
@@ -57,6 +60,7 @@ export class CameraDetailComponent implements OnInit {
   lensY: number = 0;
   backgroundPosition: string = '0px 0px';  // Background position for zoomed view
   backgroundSize: string = '200%';
+  compareView: 'sideBySide' | 'slider' | 'magnify' = 'sideBySide';
 
   constructor(
     private route: ActivatedRoute,
@@ -163,24 +167,12 @@ export class CameraDetailComponent implements OnInit {
   }
 
   setMode(mode: string): void {
-
     this.mode = mode;  // Set the current mode
     console.log(`Mode set to: ${mode}`);
-    // Implement different view modes here
-    switch (mode) {
-      case 'single':
-        // Handle single view
-        break;
-      case 'studio':
-        // Handle studio view
-        break;
-      case 'zoom':
-        // Handle zoom view
-        break;
-      case 'compare':
-        
-        break;
-    }
+  }
+
+  setCompareView(view: 'sideBySide' | 'slider' | 'magnify') {
+    this.compareView = view;
   }
   
   generateVideo(): void {

@@ -9,7 +9,7 @@
       <select formControlName="developer" (change)="onDeveloperChange($event)" *ngIf="!isEditing">
         <option *ngFor="let dev of developers" [value]="dev._id">{{ dev.developerName }}</option>
       </select>
-      <input type="text" *ngIf="isEditing" [value]="selectedDeveloper?.developerName" disabled />
+      <input type="text" *ngIf="isEditing" [value]="selectedDeveloper.developerName" disabled />
     </div>
 
     <div class="col">
@@ -17,7 +17,7 @@
       <select formControlName="project" *ngIf="!isEditing">
         <option *ngFor="let proj of filteredProjects" [value]="proj._id">{{ proj.projectName }}</option>
       </select>
-      <input type="text" *ngIf="isEditing" [value]="selectedProject?.projectName" disabled />
+      <input type="text" *ngIf="isEditing" [value]="selectedProject.projectName" disabled />
     </div>
   </div>
 

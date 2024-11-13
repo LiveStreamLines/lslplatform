@@ -38,6 +38,14 @@
   background-color: rgba(0, 0, 0, 0.1);
 }
 
+/* .compare-toolbar {
+  background-color: #e0e0e0;
+} */
+
+.compare-toolbar button.active {
+  background-color: #df1212;
+}
+
 mat-icon {
   margin-right: 8px;
 }

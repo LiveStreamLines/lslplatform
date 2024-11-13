@@ -22,52 +22,77 @@
   </button>
 </mat-toolbar>
 
+<!-- Secondary toolbar for Compare mode -->
+<mat-toolbar *ngIf="mode === 'compare'" class="compare-toolbar">
+  <button mat-button [ngClass]="{ 'active': compareView === 'sideBySide' }" (click)="setCompareView('sideBySide')">
+    <mat-icon>view_compact</mat-icon> Side by Side
+  </button>
+  <button mat-button [ngClass]="{ 'active': compareView === 'slider' }" (click)="setCompareView('slider')">
+    <mat-icon>compare</mat-icon> Slider
+  </button>
+  <button mat-button [ngClass]="{ 'active': compareView === 'magnify' }" (click)="setCompareView('magnify')">
+    <mat-icon>zoom_in</mat-icon> Magnify
+  </button>
+</mat-toolbar>
+
 <div class="home-layout">
-  <div *ngIf="mode === 'compare'" class="compare-container">
+  <div *ngIf="compareView === 'sideBySide' && mode === 'compare'" class="compare-container">
+    <app-camera-compare-side
+        [projectId]="projectId"
+        [cameraName]="cameraName">
+    </app-camera-compare-side>
+  </div>
+   
+  <div *ngIf="compareView === 'slider' && mode === 'compare'" class="compare-container">
     <app-camera-compare
-        *ngIf="mode === 'compare'"
         [projectId]="projectId"
         [cameraName]="cameraName">
     </app-camera-compare>
+  </div>
 
+  <div *ngIf="compareView === 'magnify' && mode === 'compare'" class="compare-container">
+    <app-camera-compare-magnify
+        [projectId]="projectId"
+        [cameraName]="cameraName">
+    </app-camera-compare-magnify>
   </div>
 
   <!-- Rest of camera-detail content -->
-<div *ngIf="mode !== 'compare'">
+  <div *ngIf="mode !== 'compare'">
  
-  <div class="content">
-    <!-- Large picture display -->
-    <div *ngIf="selectedPictureUrl" class="large-picture-container">
-      <!-- Show a loading spinner if the large picture is still loading -->
-      <div *ngIf="loadingLargePicture" class="spinner">
-        <p>Loading...</p> <!-- Replace with your spinner design -->
-      </div>
+    <div class="content">
+      <!-- Large picture display -->
+      <div *ngIf="selectedPictureUrl" class="large-picture-container">
+        <!-- Show a loading spinner if the large picture is still loading -->
+        <div *ngIf="loadingLargePicture" class="spinner">
+          <p>Loading...</p> <!-- Replace with your spinner design -->
+        </div>
 
-      <div *ngIf="!loadingLargePicture && !selectedPictureUrl">
-        <p>Failed to load image.</p>
-      </div>
+        <div *ngIf="!loadingLargePicture && !selectedPictureUrl">
+          <p>Failed to load image.</p>
+        </div>
 
-      <!-- Large picture (lazy loading with error handling) -->
-      <img 
-        *ngIf="selectedPictureUrl"
-        [src]="selectedPictureUrl" 
-        alt="Selected Picture" 
-        class="large-picture"
-        (mousemove)="mode === 'zoom' && onMouseMove($event)"
-        (mouseleave)="hideZoom()"        
-        (load)="onLargePictureLoad()" 
-        (error)="onLargePictureError()" 
-        [style.display]="loadingLargePicture ? 'none' : 'block'"/>
+        <!-- Large picture (lazy loading with error handling) -->
+        <img 
+          *ngIf="selectedPictureUrl"
+          [src]="selectedPictureUrl" 
+          alt="Selected Picture" 
+          class="large-picture"
+          (mousemove)="mode === 'zoom' && onMouseMove($event)"
+          (mouseleave)="hideZoom()"        
+          (load)="onLargePictureLoad()" 
+          (error)="onLargePictureError()" 
+          [style.display]="loadingLargePicture ? 'none' : 'block'"/>
 
-         <!-- Zoom lens circle, only visible in "Zoom" mode -->
-         <div 
-         *ngIf="mode === 'zoom'" 
-         class="zoom-lens"
-         [style.top.px]="lensY"
-         [style.left.px]="lensX"
-         [style.backgroundImage]="'url(' + selectedPictureUrl + ')'"
-         [style.backgroundPosition]="backgroundPosition">
-       </div>
+          <!-- Zoom lens circle, only visible in "Zoom" mode -->
+          <div 
+          *ngIf="mode === 'zoom'" 
+          class="zoom-lens"
+          [style.top.px]="lensY"
+          [style.left.px]="lensX"
+          [style.backgroundImage]="'url(' + selectedPictureUrl + ')'"
+          [style.backgroundPosition]="backgroundPosition">
+        </div>
        
     </div>
 
@@ -99,7 +124,7 @@
         </div>
       </div>      
     </div>
-  </div>
+    </div>
 
 </div>
 
