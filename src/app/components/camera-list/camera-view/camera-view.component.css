@@ -1,0 +1,43 @@
+.camera-tabs {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-tab-group {
+  width: 100%;
+}
+
+mat-tab {
+  width: 100%;
+}
+
+.slider-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+mat-slider {
+  width: 80%;
+  margin-bottom: 10px;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  height: 60%; /* Or a specific height if you want to limit it */
+  overflow: hidden; /* Optional: hides overflow if image is too large */
+}
+
+.image-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* This ensures the image scales while maintaining aspect ratio */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

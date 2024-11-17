@@ -59,12 +59,12 @@ export class CameraFormComponent implements OnInit {
         this.isEditing = true;
         this.developerService.getDeveloperById(developerId).subscribe(developer => {
           this.selectedDeveloper = developer;
-          this.cameraForm.patchValue({ developer: developer.developerName });
+          this.cameraForm.patchValue({ developer: developer._id });
         });
 
         this.projectService.getProjectById(projectId).subscribe(project => {
           this.selectedProject = project;
-          this.cameraForm.patchValue({ project: project.projectName });
+          this.cameraForm.patchValue({ project: project._id });
         });
       } else {
         this.isEditing = false;

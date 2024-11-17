@@ -10,6 +10,8 @@ import { Camera } from '../../models/camera.model';
 import { CameraDetailService } from '../../services/camera-detail.service';
 import { GoogleMapsModule } from '@angular/google-maps';  // Google Maps module
 import { MatTabsModule } from '@angular/material/tabs';
+import { CameraViewComponent } from './camera-view/camera-view.component';
+import { CameraMapComponent } from './camera-map/camera-map.component';
 
 
 
@@ -20,7 +22,9 @@ import { MatTabsModule } from '@angular/material/tabs';
             GoogleMapsModule, 
             MatCardModule, 
             MatButtonModule,
-            MatTabsModule
+            MatTabsModule,
+            CameraViewComponent,
+            CameraMapComponent
           ],  // Import Sidenav, Header, and GoogleMapsModule
   templateUrl: './camera-list.component.html',
   styleUrls: ['./camera-list.component.scss']
@@ -75,19 +79,25 @@ export class CameraListComponent implements OnInit {
     this.cameraService.getCamerasByProject(this.projectId).subscribe({
       next: (data) => {
         this.cameras = data;  // Assign the cameras to the component
-        this.cameras.forEach(camera => {
-          // For each camera, fetch the first and last pictures
-         // this.cameraDetailService.getCameraDetails(this.projectId, camera.camera)
-         this.cameraDetailService.getCameraDetails(this.developerTag, this.projectTag,camera.camera) 
-         .subscribe((cameraDetail) => {
-            this.loading = false;  // Stop loading once the data is fetched
-            camera.firstPhoto =  cameraDetail.firstPhoto;
-            camera.lastPhoto = cameraDetail.lastPhoto;     
-            camera.path = cameraDetail.path;   
+          this.cameras.forEach(camera => {
+              // For each camera, fetch the first and last pictures
+            // this.cameraDetailService.getCameraDetails(this.projectId, camera.camera)
+            this.cameraDetailService.getCameraDetails(this.developerTag, this.projectTag,camera.camera) 
+            .subscribe(
+              {
+                  next: (cameraDetail) => {
+                    this.loading = false;  // Stop loading once the data is fetched
+                    camera.firstPhoto =  cameraDetail.firstPhoto;
+                    camera.lastPhoto = cameraDetail.lastPhoto;     
+                    camera.path = cameraDetail.path;   
+                  },
+                  error: (err) => {
+                    console.log ("This Camera has no pics");
+                  }
+              });
           });
-        });
-      },
-      error: (err) => {
+       },
+         error: (err) => {
         console.error('Error fetching cameras:', err);
         this.loading = false;  // Stop loading in case of error
       }
@@ -96,7 +106,11 @@ export class CameraListComponent implements OnInit {
 
   getPictureUrl(camera: string, photo: string): string {
     //return`https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${camera}/large/${photo}.jpg`;  // Adjust path as needed
-    return `${camera}/large/${photo}.jpg` ;
+    if (camera && photo) {
+      return `${camera}/large/${photo}.jpg` ;
+    } else {
+      return '';
+    }
   }
 
   viewCameraDetails(camera: Camera): void {
@@ -109,10 +123,14 @@ export class CameraListComponent implements OnInit {
   }
 
   formatTimestamp(timestamp: string): string {
+    if (timestamp) {
     const year = timestamp.substring(0, 4);
     const month = timestamp.substring(4, 6);
     const day = timestamp.substring(6, 8);
-    return `${year}-${month}-${day}`;
+    return `${year}-${month}-${day}`;}
+    else {
+      return 'Null';
+    }
   }
 
   goBack(): void {

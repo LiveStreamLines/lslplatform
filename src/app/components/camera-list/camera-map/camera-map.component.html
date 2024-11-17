@@ -1,0 +1,6 @@
+<!-- <div #mapContainer class="map-container"></div> -->
+<google-map 
+ *ngIf="cameras"
+height="400px" width="100%" [center]="{lat: +cameras[0].lat, lng: +cameras[0].lng}" [zoom]="12">
+<map-marker *ngFor="let camera of cameras" [position]="{lat: +camera.lat, lng: +camera.lng}" [label]="camera.cameraDescription"></map-marker>
+</google-map>

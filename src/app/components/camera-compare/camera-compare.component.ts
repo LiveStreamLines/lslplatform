@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormField } from '@angular/material/input';
 import { MatLabel } from '@angular/material/input';
+import { CameraCompareService } from '../../services/camera-compare-service';
 
 @Component({
   selector: 'app-camera-compare',
@@ -37,7 +38,8 @@ export class CameraCompareComponent implements OnInit {
   
   constructor(
    private route: ActivatedRoute,
-   private cameraDetailService: CameraDetailService
+   private cameraDetailService: CameraDetailService,
+   private cameraCompareService: CameraCompareService
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +48,7 @@ export class CameraCompareComponent implements OnInit {
 
     if (this.projectId && this.cameraName) {
       this.loadComparisonPhotos();
+      //this.cameraCompareService.loadComparisonPhotos(this.cameraName);
     }
   }
 

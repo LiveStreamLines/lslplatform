@@ -1,0 +1,21 @@
+<div class="camera-tabs">
+  <mat-tab-group (selectedTabChange)="onCameraTabChange($event.index)">
+    <mat-tab *ngFor="let camera of cameras" [label]="camera.cameraDescription">
+      <!-- Camera-specific content -->
+      <div class="slider-container">
+        <mat-slider
+          [min]="0"
+          [max]="images.length - 1"
+          (input)="onSliderMove($event)"
+          thumbLabel
+          tickInterval="1"
+        >
+          <input matSliderThumb>
+        </mat-slider>
+        <div *ngIf="images.length > 0" class="image-container">
+          <img [src]="getLargePictureUrl(images[imageIndex])" alt="Camera Image" />
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

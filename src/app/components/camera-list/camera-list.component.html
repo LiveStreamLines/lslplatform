@@ -29,11 +29,21 @@
       </mat-tab>
 
       <mat-tab label="Views">
-        <p>Views content will go here.</p>
+        <div *ngIf="loading">
+          <p>Loading cameras...</p>
+        </div>
+        <div *ngIf="!loading && cameras.length > 0">
+             <app-camera-view></app-camera-view>
+        </div>
       </mat-tab>
     
       <mat-tab label="Maps">
-        <p>Maps content will go here.</p>
+        <div *ngIf="loading">
+          <p>Loading cameras...</p>
+        </div>
+        <div *ngIf="!loading && cameras.length > 0">
+            <app-camera-map></app-camera-map>
+        </div>
       </mat-tab>
     </mat-tab-group>  
 

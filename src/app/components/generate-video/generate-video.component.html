@@ -1,0 +1,60 @@
+<div class="camera-detail-container">
+    <h1>Camera Detail: {{ cameraName }}</h1>
+    <p>Developer: {{ developerTag }}</p>
+    <p>Project: {{ projectTag }}</p>
+  
+    <form (ngSubmit)="onGenerateVideo()" class="form-container">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="startDate" name="startDate" required />
+        <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker></mat-datepicker>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>End Date</mat-label>
+        <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="endDate" name="endDate" required />
+        <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #endDatePicker></mat-datepicker>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Start Hour (HH)</mat-label>
+        <input matInput [(ngModel)]="hour1" name="hour1" required />
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>End Hour (HH)</mat-label>
+        <input matInput [(ngModel)]="hour2" name="hour2" required />
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Duration (seconds)</mat-label>
+        <input matInput type="number" [(ngModel)]="duration" name="duration" required />
+      </mat-form-field>
+  
+      <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">Generate Video</button>
+    </form>
+  
+    <div class="loading-spinner" *ngIf="isLoading">
+      <mat-spinner></mat-spinner>
+      <p>Generating video, please wait...</p>
+    </div>
+  
+    <div *ngIf="errorMessage" class="error">
+      <p>{{ errorMessage }}</p>
+    </div>
+  
+    <div *ngIf="videoDetails">
+      <h2>Video Generation Details</h2>
+      <p>{{ videoDetails.message }}</p>
+      <p>Filtered Images: {{ videoDetails.filteredImageCount }}</p>
+      <p>Video Length: {{ videoDetails.videoLength }}</p>
+      <p>File Size: {{ videoDetails.fileSize }}</p>
+      <p>Time Taken: {{ videoDetails.timeTaken }}</p>
+  
+      <h2>Preview</h2>
+      <video [src]="videoSrc" controls></video>
+    </div>
+  </div>
+  

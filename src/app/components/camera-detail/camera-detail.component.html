@@ -11,15 +11,12 @@
   <button mat-button [ngClass]="{ 'active': mode === 'compare' }" (click)="setMode('compare')">
     <mat-icon>compare_arrows</mat-icon> Compare
   </button>
-  <button mat-button [ngClass]="{ 'active': mode === 'generate-video' }" (click)="generateVideo()">
+  <button mat-button [ngClass]="{ 'active': mode === 'generate-video' }" (click)="setMode('generate-video')">
     <mat-icon>movie</mat-icon> Generate Video
   </button>
   <button mat-button [ngClass]="{ 'active': mode === 'generate-photo' }" (click)="generatePhoto()">
     <mat-icon>photo_camera</mat-icon> Generate Photo
-  </button>
-  <button mat-button [ngClass]="{ 'active': mode === 'studio' }" (click)="setMode('studio')">
-    <mat-icon>image</mat-icon> Studio
-  </button>
+  </button>  
 </mat-toolbar>
 
 <!-- Secondary toolbar for Compare mode -->
@@ -31,7 +28,16 @@
     <mat-icon>compare</mat-icon> Slider
   </button>
   <button mat-button [ngClass]="{ 'active': compareView === 'magnify' }" (click)="setCompareView('magnify')">
-    <mat-icon>zoom_in</mat-icon> Magnify
+    <mat-icon>zoom_in</mat-icon> Spot
+  </button>
+</mat-toolbar>
+
+<mat-toolbar *ngIf="mode === 'zoom'" class="compare-toolbar">
+  <button mat-button [ngClass]="{ 'active': zoomView === 'lens' }" (click)="setZoomView('lens')">
+    <mat-icon>view_compact</mat-icon> Magnify
+  </button>
+  <button mat-button [ngClass]="{ 'active': zoomView === 'pan' }" (click)="setZoomView('pan')">
+    <mat-icon>compare</mat-icon> Pan
   </button>
 </mat-toolbar>
 
@@ -58,7 +64,7 @@
   </div>
 
   <!-- Rest of camera-detail content -->
-  <div *ngIf="mode !== 'compare'">
+  <div *ngIf="mode !== 'compare' && mode !=='generate-video'">
  
     <div class="content">
       <!-- Large picture display -->
@@ -72,28 +78,44 @@
           <p>Failed to load image.</p>
         </div>
 
+        <div *ngIf="zoomView !== 'pan' ">
         <!-- Large picture (lazy loading with error handling) -->
-        <img 
-          *ngIf="selectedPictureUrl"
-          [src]="selectedPictureUrl" 
-          alt="Selected Picture" 
-          class="large-picture"
-          (mousemove)="mode === 'zoom' && onMouseMove($event)"
-          (mouseleave)="hideZoom()"        
-          (load)="onLargePictureLoad()" 
-          (error)="onLargePictureError()" 
-          [style.display]="loadingLargePicture ? 'none' : 'block'"/>
+            <img 
+              *ngIf="selectedPictureUrl"
+              [src]="selectedPictureUrl" 
+              alt="Selected Picture" 
+              class="large-picture"
+              (mousemove)="mode === 'zoom' && zoomView === 'lens' && onMouseMove($event)"
+              (mouseleave)="hideZoom()"        
+              (load)="onLargePictureLoad()" 
+              (error)="onLargePictureError()" 
+              [style.display]="loadingLargePicture ? 'none' : 'block'"/>
 
-          <!-- Zoom lens circle, only visible in "Zoom" mode -->
-          <div 
-          *ngIf="mode === 'zoom'" 
-          class="zoom-lens"
-          [style.top.px]="lensY"
-          [style.left.px]="lensX"
-          [style.backgroundImage]="'url(' + selectedPictureUrl + ')'"
-          [style.backgroundPosition]="backgroundPosition">
+              <!-- Zoom lens circle, only visible in "Zoom" mode -->
+              <div 
+              *ngIf="mode === 'zoom'  && zoomView === 'lens'"
+              class="zoom-lens"
+              [style.top.px]="lensY"
+              [style.left.px]="lensX"
+              [style.backgroundImage]="'url(' + selectedPictureUrl + ')'"
+              [style.backgroundPosition]="backgroundPosition">
+            </div>
         </div>
-       
+
+        <div
+            *ngIf="zoomView === 'pan'"
+            class="zoom-container" 
+            (mousedown)="startPan($event)" 
+            (mousemove)="pan($event)" 
+            (mouseup)="endPan()">
+            <img 
+              *ngIf="selectedPictureUrl"
+              [src]="selectedPictureUrl" 
+              alt="Selected Picture" 
+              class="content"
+              [style.transform]="transform"/>
+        </div>
+
     </div>
 
     <!-- Date selector -->
@@ -127,5 +149,9 @@
     </div>
 
 </div>
+
+  <div *ngIf="mode === 'generate-video'">
+    <app-generate-video [cameraName]="cameraName"></app-generate-video>
+  </div>
 
 </div>

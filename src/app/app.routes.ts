@@ -10,6 +10,9 @@ import { DevelopersComponent } from './components/developers/developers.componen
 import { ProjectsComponent } from './components/projects/projects.component';
 import { CameraComponent } from './components/cameras/cameras.component';
 import { CameraFormComponent } from './components/cameras/camera-form/camera-form.component'; // Adjust the path as necessary
+import { GalleryComponent } from './components/gallery/gallery.component';
+import { VideoRequestComponent } from './components/gallery/video-request/video-request.component';
+import { PhotoRequestComponent } from './components/gallery/photo-request/photo-request.component';
 
 
 export const routes: Routes = [
@@ -24,5 +27,8 @@ export const routes: Routes = [
   { path: 'cameras', component: CameraComponent },
   { path: 'camera-form', component: CameraFormComponent }, // Route for adding a new camera
   { path: 'camera-form/:id', component: CameraFormComponent }, // Route for editing a camera by ID
-  { path: '', redirectTo: '/login', pathMatch: 'full' }
+  { path: 'gallery', component: GalleryComponent},
+  { path: 'gallery/video-request', component: VideoRequestComponent},
+  { path: 'gallery/photo-request', component: PhotoRequestComponent},
+    { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];

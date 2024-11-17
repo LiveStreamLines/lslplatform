@@ -16,6 +16,7 @@ import { CameraDetail } from '../../models/camera-detail.model';
 import { CameraCompareComponent } from '../camera-compare/camera-compare.component';
 import { CameraCompareSideComponent } from '../camera-compare-side/camera-compare-side.component';
 import { CameraCompareMagnifyComponent } from '../camera-compare-magnify/camera-compare-magnify.component';
+import { GenerateVideoComponent } from '../generate-video/generate-video.component';
 
 @Component({
   selector: 'app-camera-detail',
@@ -32,7 +33,8 @@ import { CameraCompareMagnifyComponent } from '../camera-compare-magnify/camera-
     FormsModule, 
     CameraCompareComponent,
     CameraCompareSideComponent,
-    CameraCompareMagnifyComponent
+    CameraCompareMagnifyComponent,
+    GenerateVideoComponent
   ],
   templateUrl: './camera-detail.component.html',  
   styleUrls: ['./camera-detail.component.scss']
@@ -61,6 +63,15 @@ export class CameraDetailComponent implements OnInit {
   backgroundPosition: string = '0px 0px';  // Background position for zoomed view
   backgroundSize: string = '200%';
   compareView: 'sideBySide' | 'slider' | 'magnify' = 'sideBySide';
+  zoomView: 'lens' | 'pan' = 'lens';
+
+  scale = 2;
+  translateX = 0;
+  translateY = 0;
+  isPanning = false;
+  startX = 0;
+  startY = 0;
+  transform = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -92,6 +103,27 @@ export class CameraDetailComponent implements OnInit {
           console.error('Developer not found.');
         }
       });
+  }
+
+  startPan(event: MouseEvent) {
+    this.isPanning = true;
+    this.startX = event.clientX - this.translateX;
+    this.startY = event.clientY - this.translateY;
+  }
+
+  pan(event: MouseEvent) {
+    if (!this.isPanning) return;
+    this.translateX = event.clientX - this.startX;
+    this.translateY = event.clientY - this.startY;
+    this.updateTransform();
+  }
+
+  endPan() {
+    this.isPanning = false;
+  }
+
+  updateTransform() {
+    this.transform = `translate(${this.translateX}px, ${this.translateY}px) scale(${this.scale})`;
   }
 
   getCameraDetails(date1: string = '', date2: string = ''): void {
@@ -173,6 +205,11 @@ export class CameraDetailComponent implements OnInit {
 
   setCompareView(view: 'sideBySide' | 'slider' | 'magnify') {
     this.compareView = view;
+  }
+
+  setZoomView(view: 'lens' | 'pan' ) {
+    this.zoomView = view;
+    console.log(`Show zoom mode: ${this.zoomView}`);
   }
   
   generateVideo(): void {

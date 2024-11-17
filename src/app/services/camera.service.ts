@@ -23,7 +23,7 @@ export class CameraService {
       'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
     });
     
-    return this.http.get<any>(`${this.apiUrl}/proj/${projectId}`, { headers }).pipe(
+    return this.http.get<any>(`${this.apiUrl}proj/${projectId}`, { headers }).pipe(
       map((response) => response)  // Extract only the 'cameras' array
       // tap((data) => {
       //   this.cameras = data;  // Store the list of project
