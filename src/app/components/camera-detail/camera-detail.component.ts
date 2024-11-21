@@ -12,6 +12,7 @@ import { MatNativeDateModule } from '@angular/material/core'; // For date functi
 import { DeveloperService } from '../../services/developer.service';
 import { ProjectService } from '../../services/project.service';
 import { CameraDetailService } from '../../services/camera-detail.service';
+import { WeatherService } from '../../services/weather.service';
 import { CameraDetail } from '../../models/camera-detail.model';
 import { CameraCompareComponent } from '../camera-compare/camera-compare.component';
 import { CameraCompareSideComponent } from '../camera-compare-side/camera-compare-side.component';
@@ -62,7 +63,9 @@ export class CameraDetailComponent implements OnInit {
   mode: string = 'single';  // Default view mode
   compareView: 'sideBySide' | 'slider' | 'magnify' = 'sideBySide';
   zoomView: 'lens' | 'pan' = 'lens';
-  showDateTime: boolean = false;
+  showDateTime: boolean = true;
+  showWeather: boolean = true;
+  weatherString: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -70,6 +73,7 @@ export class CameraDetailComponent implements OnInit {
     private developerService: DeveloperService,
     private projectService: ProjectService,
     private cameraDetailService: CameraDetailService,
+    private weatherService: WeatherService
   ) {}
 
   ngOnInit(): void {
@@ -109,6 +113,8 @@ export class CameraDetailComponent implements OnInit {
         this.lastPictureUrl = this.getLargePictureUrl(lastPhoto);
         this.selectedPictureUrl = this.lastPictureUrl;
         this.selectedThumbnail = lastPhoto;  // Set the last photo as selected by default
+        const formattedTime = this.convertToWeather(lastPhoto);  // Convert timestamp to weather API format
+        this.getWeather(formattedTime);
       },
       error: (err: any) => {
         console.error('Error fetching camera details:', err);
@@ -150,7 +156,10 @@ export class CameraDetailComponent implements OnInit {
     setTimeout(() => {
       this.selectedPictureUrl = this.getLargePictureUrl(picture);  // Set the large picture URL
       this.selectedThumbnail = picture;  // Mark the selected thumbnail
+      const formattedTime = this.convertToWeather(picture);  // Convert to the weather API format
+      this.getWeather(formattedTime);  // Fetch the weather for the selected picture
     }, 100);  // Adding a small delay can help with a smooth transition
+
 
   }
 
@@ -205,6 +214,36 @@ export class CameraDetailComponent implements OnInit {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');  // Ensure two digits
     const day = date.getDate().toString().padStart(2, '0');  // Ensure two digits
     return `${year}${month}${day}`;
+  }
+
+  convertToWeather(timestamp: string): string {
+      // Manually extract the parts of the timestamp (yyyymmddhhmmss)
+    const year = timestamp.substring(0, 4);  // "2024"
+    const month = timestamp.substring(4, 6);  // "11"
+    const day = timestamp.substring(6, 8);  // "12"
+    const hour = timestamp.substring(8, 10);  // "12"
+   
+    // Format it as "YYYY-MM-DDTHH:mm:ss.000Z"
+    const formattedTime = `${year}-${month}-${day}T${hour}:00:00.000Z`;
+    
+    return formattedTime;
+  }
+
+  getWeather(time: string): void {
+    this.weatherService.getWeatherByTime(time).subscribe({
+      next: (data) => {
+        // Convert Fahrenheit to Celsius: (temp - 32) * (5/9)
+        const tempCelsius = ((data.temp - 32) * 5) / 9;
+        const hum = data.rh;
+
+        // Format the weather string
+        this.weatherString = `Temp: ${tempCelsius.toFixed(1)}°C\nHumidity: ${hum}%`;
+      },
+      error: (error) => {
+        console.error('Error fetching weather data', error);
+        this.weatherString = 'No data';
+      }
+    });
   }
 
   goBack(): void {
