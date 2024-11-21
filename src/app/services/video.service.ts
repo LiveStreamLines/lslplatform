@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';  // To access the auth token
   providedIn: 'root',
 })
 export class VideoService {
-  private apiUrl = 'http://5.9.85.250:5000/api/video/';
+  private apiUrl = 'http://5.9.85.250:5000/api/generate/';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -23,5 +23,18 @@ export class VideoService {
     duration: number;
   }): Observable<any> {
     return this.http.post(this.apiUrl, payload);
+  }
+
+  filterImages(payload: {
+    developerId: string;
+    projectId: string;
+    cameraId: string;
+    date1: string;
+    date2: string;
+    hour1: string;
+    hour2: string;
+    duration: number;
+  }): Observable<any> {
+    return this.http.post(`${this.apiUrl}filter`, payload);
   }
 }

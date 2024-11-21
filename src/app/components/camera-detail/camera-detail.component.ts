@@ -17,6 +17,7 @@ import { CameraCompareComponent } from '../camera-compare/camera-compare.compone
 import { CameraCompareSideComponent } from '../camera-compare-side/camera-compare-side.component';
 import { CameraCompareMagnifyComponent } from '../camera-compare-magnify/camera-compare-magnify.component';
 import { GenerateVideoComponent } from '../generate-video/generate-video.component';
+import { CameraZoomComponent } from '../camera-zoom/camera-zoom.component';
 
 @Component({
   selector: 'app-camera-detail',
@@ -31,6 +32,7 @@ import { GenerateVideoComponent } from '../generate-video/generate-video.compone
     MatNativeDateModule,
     MatFormField,
     FormsModule, 
+    CameraZoomComponent,
     CameraCompareComponent,
     CameraCompareSideComponent,
     CameraCompareMagnifyComponent,
@@ -58,20 +60,9 @@ export class CameraDetailComponent implements OnInit {
   selectedThumbnail: string = '';  // Add state for selected thumbnail
   selectedDate: Date = new Date(); // This will be bound to ngModel
   mode: string = 'single';  // Default view mode
-  lensX: number = 0;  // Position of the zoom lens
-  lensY: number = 0;
-  backgroundPosition: string = '0px 0px';  // Background position for zoomed view
-  backgroundSize: string = '200%';
   compareView: 'sideBySide' | 'slider' | 'magnify' = 'sideBySide';
   zoomView: 'lens' | 'pan' = 'lens';
-
-  scale = 2;
-  translateX = 0;
-  translateY = 0;
-  isPanning = false;
-  startX = 0;
-  startY = 0;
-  transform = '';
+  showDateTime: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -103,27 +94,6 @@ export class CameraDetailComponent implements OnInit {
           console.error('Developer not found.');
         }
       });
-  }
-
-  startPan(event: MouseEvent) {
-    this.isPanning = true;
-    this.startX = event.clientX - this.translateX;
-    this.startY = event.clientY - this.translateY;
-  }
-
-  pan(event: MouseEvent) {
-    if (!this.isPanning) return;
-    this.translateX = event.clientX - this.startX;
-    this.translateY = event.clientY - this.startY;
-    this.updateTransform();
-  }
-
-  endPan() {
-    this.isPanning = false;
-  }
-
-  updateTransform() {
-    this.transform = `translate(${this.translateX}px, ${this.translateY}px) scale(${this.scale})`;
   }
 
   getCameraDetails(date1: string = '', date2: string = ''): void {
@@ -235,31 +205,6 @@ export class CameraDetailComponent implements OnInit {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');  // Ensure two digits
     const day = date.getDate().toString().padStart(2, '0');  // Ensure two digits
     return `${year}${month}${day}`;
-  }
-
-  onMouseMove(event: MouseEvent): void {
-    if (this.mode !== 'zoom') return;
-
-      const img = event.target as HTMLImageElement;
-      const rect = img.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-  
-      // Set lens position
-      this.lensX = x - 100;  // Center lens
-      this.lensY = y - 100;
-  
-      // Set background position based on image natural dimensions
-      const xPercent = (x / rect.width) * 100;
-      const yPercent = (y / rect.height) * 100;
-      this.backgroundPosition = `${xPercent}% ${yPercent}%`;
-  
-  }
-
-  hideZoom(): void {
-    this.lensX = 0;
-    this.lensY = 0;
-    this.backgroundPosition = '0% 0%';
   }
 
   goBack(): void {

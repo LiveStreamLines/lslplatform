@@ -46,6 +46,9 @@ export class GenerateVideoComponent implements OnInit {
   isLoading: boolean = false;
   errorMessage: string | null = null;
 
+  filterMessage: string | null = null;
+  isFilterComplete: boolean = false;
+
   videoDetails: {
     message: string;
     videoPath: string;
@@ -67,6 +70,36 @@ export class GenerateVideoComponent implements OnInit {
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}${month}${day}`;
+  }
+
+  filterImages() {
+    this.isLoading = true;
+    this.errorMessage = null;
+    this.filterMessage = null;
+
+    const payload = {
+      developerId: this.developerTag,
+      projectId: this.projectTag,
+      cameraId: this.cameraName,
+      date1: this.formatDate(this.startDate),
+      date2: this.formatDate(this.endDate),
+      hour1: this.hour1,
+      hour2: this.hour2,
+      duration: this.duration,
+    };
+
+    this.videoService.filterImages(payload).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.filterMessage = response.message; // Message from the backend (e.g., "Pictures filtered successfully")
+        this.isFilterComplete = true; // Enable video generation
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = 'Failed to filter images. Please try again.';
+        console.error(error);
+      },
+    });
   }
 
 
