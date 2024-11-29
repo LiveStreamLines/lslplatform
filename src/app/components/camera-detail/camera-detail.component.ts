@@ -51,6 +51,7 @@ export class CameraDetailComponent implements OnInit {
   cameraDetails!: CameraDetail;
   firstPhoto!: string;
   lastPhoto!: string;
+  noonPhotoUrl!: string;
   lastPictureUrl!: string;
   selectedPictureUrl!: string;
   photosByDate: any = {};
@@ -108,7 +109,14 @@ export class CameraDetailComponent implements OnInit {
       next: (data: CameraDetail) => {
         this.date2Pictures = data.date2Photos.map(photo => photo.toString());
         this.path = data.path;
+
+        const noonPictures = this.date2Pictures.filter(photo => {
+          const hour = photo.substring(8, 10); // Extract hour (HH)
+          return hour === '12'; // Match 12:00 PM
+        });
+
         // Set the last picture from the `large` folder as the initially displayed picture
+        this.noonPhotoUrl = this.getLargePictureUrl(noonPictures[0]);
         const lastPhoto = this.date2Pictures[this.date2Pictures.length - 1];
         this.lastPictureUrl = this.getLargePictureUrl(lastPhoto);
         this.selectedPictureUrl = this.lastPictureUrl;

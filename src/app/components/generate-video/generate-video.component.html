@@ -1,60 +1,103 @@
-<div class="camera-detail-container">
-   <p>Generate Video</p>
+<div class="container">
+  <!-- Left Section: Form -->
+  <div class="form-section">
+    <p>Generate Video</p>
 
-  <form *ngIf="!isFilterComplete" (ngSubmit)="filterImages()" class="form-container">
-    <mat-form-field appearance="outline" class="form-field">
-      <mat-label>Start Date</mat-label>
-      <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="startDate" name="startDate" required />
-      <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-      <mat-datepicker #startDatePicker></mat-datepicker>
-    </mat-form-field>
+    <form *ngIf="!isFilterComplete" (ngSubmit)="filterImages()" class="form-container">
+      <!-- Start Date -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="startDate" name="startDate" required />
+        <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker></mat-datepicker>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="form-field">
-      <mat-label>End Date</mat-label>
-      <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="endDate" name="endDate" required />
-      <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-      <mat-datepicker #endDatePicker></mat-datepicker>
-    </mat-form-field>
+      <!-- End Date -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>End Date</mat-label>
+        <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="endDate" name="endDate" required />
+        <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #endDatePicker></mat-datepicker>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="form-field">
-      <mat-label>Start Hour (HH)</mat-label>
-      <input matInput [(ngModel)]="hour1" name="hour1" required />
-    </mat-form-field>
+      <!-- Start Hour -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Start Hour (HH)</mat-label>
+        <input 
+          matInput
+          type="number"
+          min="0"
+          max="23"
+          [(ngModel)]="hour1"
+          name="hour1"
+          required
+          (change)="onHour1Change(hour1)" 
+        />
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="form-field">
-      <mat-label>End Hour (HH)</mat-label>
-      <input matInput [(ngModel)]="hour2" name="hour2" required />
-    </mat-form-field>
+      <!-- End Hour -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>End Hour (HH)</mat-label>
+        <input matInput type="number"
+          [min]="hour1 + 1"
+          max="23"
+          [(ngModel)]="hour2"
+          name="hour2"
+          required />
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="form-field">
-      <mat-label>Duration (seconds)</mat-label>
-      <input matInput type="number" [(ngModel)]="duration" name="duration" required />
-    </mat-form-field>
+      <!-- Resolution -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Resolution</mat-label>
+        <mat-select [(ngModel)]="resolution" name="resolution" required>
+          <mat-option value="720">720</mat-option>
+          <mat-option value="HD">HD</mat-option>
+          <mat-option value="4K">4K</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">Filter Images</button>
-  </form>
+      <!-- Duration -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Duration</mat-label>
+        <mat-select [(ngModel)]="duration" name="duration" required>
+          <mat-option *ngFor="let option of durationOptions" [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-  <div class="loading-spinner" *ngIf="isLoading">
-    <mat-spinner></mat-spinner>
-    <p>Processing, please wait...</p>
+      <!-- Checkboxes -->
+      <mat-checkbox [(ngModel)]="showDate" (change)="onShowDateChange()" name="showDate">Show Date</mat-checkbox>
+
+      <mat-checkbox [(ngModel)]="showText" name="addText" (change)="onShowTextChange()">Add Text</mat-checkbox>
+      <div *ngIf="showText">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Text</mat-label>
+          <input matInput [(ngModel)]="textOverlay" (ngModelChange)="onTextOverlayChange()" name="textOverlay" />
+        </mat-form-field>
+      </div>
+
+      <mat-checkbox [(ngModel)]="showImage" name="showImage" (change)="onShowImageChange()">Show Image</mat-checkbox>
+      <div *ngIf="showImage">
+        <input type="file" (change)="onImageUpload($event)" />
+      </div>
+
+      <mat-checkbox [(ngModel)]="showWatermark" name="addWatermark" (change)="onShowWatermarkChange()">Add Watermark</mat-checkbox>
+      <div *ngIf="showWatermark">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Watermark Text</mat-label>
+          <input matInput [(ngModel)]="waterMarkText" (ngModelChange)="onWatermarkChange()" name="watermarkText" />
+        </mat-form-field>
+      </div>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">Filter Images</button>
+    </form>
   </div>
 
-  <div *ngIf="filterMessage" class="filter-message">
-    <p>{{ filterMessage }}</p>
-    <button *ngIf="isFilterComplete" mat-raised-button color="accent" (click)="onGenerateVideo()">
-      Generate Video
-    </button>
-  </div>
-
-  <div *ngIf="videoDetails">
-    <h2>Video Generation Details</h2>
-    <p>{{ videoDetails.message }}</p>
-    <p>Filtered Images: {{ videoDetails.filteredImageCount }}</p>
-    <p>Video Length: {{ videoDetails.videoLength }}</p>
-    <p>File Size: {{ videoDetails.fileSize }}</p>
-    <p>Time Taken: {{ videoDetails.timeTaken }}</p>
-
+  <!-- Right Section: Preview Pane -->
+  <div class="preview-section">
     <h2>Preview</h2>
-    <video [src]="videoSrc" controls></video>
+    <canvas #canvas *ngIf="previewPHoto" class="image-preview"></canvas>
+     <p *ngIf="!previewPHoto">No preview available.</p>
   </div>
 </div>

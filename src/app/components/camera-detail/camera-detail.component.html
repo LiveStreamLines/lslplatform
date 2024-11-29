@@ -64,7 +64,10 @@
     </div>
 
     <div *ngIf="mode === 'generate-video'">
-      <app-generate-video [cameraName]="cameraName"></app-generate-video>
+      <app-generate-video 
+        [cameraName]="cameraName"
+        [previewPHoto]="noonPhotoUrl">
+      ></app-generate-video>
     </div>    
 
     <div *ngIf="mode === 'single'" class="date-time-toggle">

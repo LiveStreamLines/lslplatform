@@ -39,6 +39,7 @@ export class VideoRequestComponent implements OnInit {
   dataSource = new MatTableDataSource<any>();
   isLoading: boolean = false;
   errorMessage: string | null = null;
+  serverUrl: string = "http://5.9.85.250:5000/media/upload";
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -60,8 +61,8 @@ export class VideoRequestComponent implements OnInit {
           hours: `${request.startHour} to ${request.endHour}`,
           RequestTime: request.RequestTime,
           filteredImageCount: request.filteredImageCount,
-          status: 'Queued', // Initial status
-          videoLink: null, // Set to null initially
+          status: request.status,
+          videoLink: request.status === 'ready' ? `${this.serverUrl}/${request.developerTag}/${request.projectTag}/${request.camera}/videos/video_${request.id}.mp4` : null, // Set to null initially
         }));
         this.isLoading = false;
         this.dataSource.paginator = this.paginator;

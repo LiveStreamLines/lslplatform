@@ -34,5 +34,15 @@
       width: 100%;
       border-collapse: collapse;
     }
+
+    a {
+        color: #3f51b5;
+        text-decoration: underline;
+      }
+      
+      a:hover {
+        text-decoration: none;
+      }
+      
   }
   
