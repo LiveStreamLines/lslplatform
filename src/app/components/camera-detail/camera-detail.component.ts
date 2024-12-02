@@ -18,6 +18,7 @@ import { CameraCompareComponent } from '../camera-compare/camera-compare.compone
 import { CameraCompareSideComponent } from '../camera-compare-side/camera-compare-side.component';
 import { CameraCompareMagnifyComponent } from '../camera-compare-magnify/camera-compare-magnify.component';
 import { GenerateVideoComponent } from '../generate-video/generate-video.component';
+import { GeneratePhotoComponent } from '../generate-photo/generate-photo.component';
 import { CameraZoomComponent } from '../camera-zoom/camera-zoom.component';
 import { ShareComponent } from './share/share.component';
 
@@ -39,6 +40,7 @@ import { ShareComponent } from './share/share.component';
     CameraCompareSideComponent,
     CameraCompareMagnifyComponent,
     GenerateVideoComponent,
+    GeneratePhotoComponent,
     ShareComponent
   ],
   templateUrl: './camera-detail.component.html',  

@@ -14,7 +14,7 @@
   <button mat-button [ngClass]="{ 'active': mode === 'generate-video' }" (click)="setMode('generate-video')">
     <mat-icon>movie</mat-icon> Generate Video
   </button>
-  <button mat-button [ngClass]="{ 'active': mode === 'generate-photo' }" (click)="generatePhoto()">
+  <button mat-button [ngClass]="{ 'active': mode === 'generate-photo' }" (click)="setMode('generate-photo')">
     <mat-icon>photo_camera</mat-icon> Generate Photo
   </button>  
 </mat-toolbar>
@@ -68,7 +68,14 @@
         [cameraName]="cameraName"
         [previewPHoto]="noonPhotoUrl">
       ></app-generate-video>
-    </div>    
+    </div>
+    
+    <div *ngIf="mode === 'generate-photo'">
+      <app-generate-photo 
+        [cameraName]="cameraName">
+      ></app-generate-photo>
+    </div>
+    
 
     <div *ngIf="mode === 'single'" class="date-time-toggle">
       <label>

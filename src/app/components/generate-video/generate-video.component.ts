@@ -316,7 +316,7 @@ export class GenerateVideoComponent implements OnInit {
       formData.append('logo', this.imageFile); // Append the file to the FormData
     }
 
-    this.videoService.filterImages(formData).subscribe({
+    this.videoService.generateVideo(formData).subscribe({
       next: (response) => {
         this.isLoading = false;
         this.filterMessage = response.message; // Message from the backend (e.g., "Pictures filtered successfully")

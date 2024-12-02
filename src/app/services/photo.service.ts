@@ -7,12 +7,12 @@ import { AuthService } from './auth.service';  // To access the auth token
 @Injectable({
   providedIn: 'root',
 })
-export class VideoService {
+export class PhotoService {
   private apiUrl = 'http://5.9.85.250:5000/api/video/';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  generateVideo(formData: FormData): Observable<any> {
-    return this.http.post(`${this.apiUrl}videoGen`, formData);
+  generatePhoto(formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}photoGen`, formData);
   }
 }
