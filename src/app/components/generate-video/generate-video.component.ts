@@ -74,16 +74,8 @@ export class GenerateVideoComponent implements OnInit {
   errorMessage: string | null = null;
 
   filterMessage: string | null = null;
+  filteredPicsCount!: number;
   isFilterComplete: boolean = false;
-
-  videoDetails: {
-    message: string;
-    videoPath: string;
-    filteredImageCount: number;
-    videoLength: string;
-    fileSize: string;
-    timeTaken: string;
-  } | null = null;
 
   constructor(private videoService: VideoService, private route: ActivatedRoute) {}
 
@@ -182,7 +174,7 @@ export class GenerateVideoComponent implements OnInit {
       // Rotate the canvas to align the text diagonally
       context.save(); // Save the current canvas state
       context.translate(x, y); // Move to the center of the canvas
-      context.rotate(Math.PI / 4); // Rotate the canvas by -45 degrees
+      //context.rotate(Math.PI / 4); // Rotate the canvas by -45 degrees
 
       // Draw the text outline
       context.strokeText(this.waterMarkText, 0, 0);
@@ -197,7 +189,7 @@ export class GenerateVideoComponent implements OnInit {
 
   private drawUploadedImage(context: CanvasRenderingContext2D, canvasWidth: number): void {
     if (this.imageFile) {
-      const squareSize = 100; // Size of the small square
+      const squareSize = 200; // Size of the small square
       const x = canvasWidth - squareSize - 10; // 10px margin from the right edge
       const y = 10; // 10px margin from the top edge
   
@@ -294,7 +286,6 @@ export class GenerateVideoComponent implements OnInit {
     }
   }
 
-
   formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
@@ -307,26 +298,29 @@ export class GenerateVideoComponent implements OnInit {
     this.errorMessage = null;
     this.filterMessage = null;
 
-    const payload = {
-      developerId: this.developerTag,
-      projectId: this.projectTag,
-      cameraId: this.cameraName,
-      date1: this.formatDate(this.startDate),
-      date2: this.formatDate(this.endDate),
-      hour1: this.hour1.toString().padStart(2, '0'),
-      hour2: this.hour2.toString().padStart(2, '0'),
-      resolution: this.resolution,
-      duration: this.duration,
-      showDate: this.showDate,
-      textOverlay: this.showText ? this.textOverlay : null,
-      imageFile: this.showImage ? this.imageFile : null,
-      watermarkText: this.showWatermark ? this.waterMarkText : null,
-    };
+    const formData = new FormData();
+      formData.append('developerId', this.developerTag);
+      formData.append('projectId', this.projectTag);
+      formData.append('cameraId', this.cameraName);
+      formData.append('date1', this.formatDate(this.startDate));
+      formData.append('date2', this.formatDate(this.endDate));
+      formData.append('hour1', this.hour1.toString().padStart(2, '0'));
+      formData.append('hour2', this.hour2.toString().padStart(2, '0'));
+      formData.append('duration', this.duration.toString());
+      formData.append('showdate', this.showDate ? 'true' : 'false');
+      formData.append('showedText', this.showText ? this.textOverlay : '');
+      formData.append('showedWatermark', this.showWatermark ? this.waterMarkText : '');
+      formData.append('resolution', this.resolution || '720');
+  
+    if (this.imageFile) {
+      formData.append('logo', this.imageFile); // Append the file to the FormData
+    }
 
-    this.videoService.filterImages(payload).subscribe({
+    this.videoService.filterImages(formData).subscribe({
       next: (response) => {
         this.isLoading = false;
         this.filterMessage = response.message; // Message from the backend (e.g., "Pictures filtered successfully")
+        this.filteredPicsCount = response.filteredImageCount;
         this.isFilterComplete = true; // Enable video generation
       },
       error: (error) => {
@@ -335,37 +329,5 @@ export class GenerateVideoComponent implements OnInit {
         console.error(error);
       },
     });
-  }
-
-
-  onGenerateVideo() {
-    this.isLoading = true;
-    this.errorMessage = null;
-
-    const payload = {
-      developerId: this.developerTag,
-      projectId: this.projectTag,
-      cameraId: this.cameraName,
-      date1: this.formatDate(this.startDate),
-      date2: this.formatDate(this.endDate),
-      hour1: this.hour1.toString().padStart(2, '0'),
-      hour2: this.hour2.toString().padStart(2, '0'),
-      duration: this.duration,
-    };
-
-    this.videoService.generateVideo(payload).subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        this.videoDetails = response;
-        this.videoSrc = `http://5.9.85.250:5000${response.videoPath.replace('/var', '')}`;
-
-        //this.videoSrc = `http://5.9.85.250:5000${response.videoPath}`;
-      },
-      error: (error) => {
-        this.isLoading = false;
-        this.errorMessage = 'Failed to generate video. Please try again.';
-        console.error(error);
-      },
-    });
-  }
+  } 
 }

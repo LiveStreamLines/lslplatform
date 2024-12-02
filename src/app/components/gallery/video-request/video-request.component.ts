@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { VideoRequestService } from '../../../services/video-request.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatIcon } from '@angular/material/icon';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -22,6 +23,7 @@ import { MatTableDataSource } from '@angular/material/table';
     MatProgressSpinnerModule, // For mat-spinner
     MatFormFieldModule, // For mat-form-field
     MatInputModule, // For matInput inside form fields
+    MatIcon
   ],
   templateUrl: './video-request.component.html',
   styleUrls: ['./video-request.component.css'],
@@ -63,6 +65,7 @@ export class VideoRequestComponent implements OnInit {
           filteredImageCount: request.filteredImageCount,
           status: request.status,
           videoLink: request.status === 'ready' ? `${this.serverUrl}/${request.developerTag}/${request.projectTag}/${request.camera}/videos/video_${request.id}.mp4` : null, // Set to null initially
+          resolution: request.resolution
         }));
         this.isLoading = false;
         this.dataSource.paginator = this.paginator;

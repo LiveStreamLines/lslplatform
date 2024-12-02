@@ -119,9 +119,13 @@
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
-          <button mat-icon-button>
+          <button mat-icon-button (click)="openShareModal(photoUrl)">
             <mat-icon>share</mat-icon> Share X
           </button>
+          <app-share *ngIf="isShareModalOpen"
+            [photoUrl]="selectedPictureUrl"
+            (close)="closeShareModal()">
+         </app-share>
         </div>
 
         <!-- Thumbnail strip -->

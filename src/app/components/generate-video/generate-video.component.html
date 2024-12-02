@@ -1,9 +1,9 @@
 <div class="container">
   <!-- Left Section: Form -->
-  <div class="form-section">
+  <div class="form-section" *ngIf="!isFilterComplete">
     <p>Generate Video</p>
 
-    <form *ngIf="!isFilterComplete" (ngSubmit)="filterImages()" class="form-container">
+    <form (ngSubmit)="filterImages()" class="form-container">
       <!-- Start Date -->
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Start Date</mat-label>
@@ -92,6 +92,18 @@
 
       <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">Filter Images</button>
     </form>
+  </div>
+
+  <!-- Success Message -->
+  <div class="success-message" *ngIf="isFilterComplete">
+    <h3>Video Request Queued Successfully</h3>
+    <p>Date From: {{ formatDate(startDate) }} To: {{ formatDate(endDate) }}</p>
+    <p>Hours: {{ hour1 }} - {{ hour2 }}</p>
+    <p>Resolution: {{ resolution }}</p>
+    <p>Video Length: {{ duration }} seconds</p>
+    <p>No. of Pictures Filtered: {{ filteredPicsCount }}</p>
+    <p>Estimated Time to Generate: {{ (filteredPicsCount/ 60).toFixed(2) }} minutes</p>
+    <p>Check on the gallery/video request to see the video.</p>
   </div>
 
   <!-- Right Section: Preview Pane -->

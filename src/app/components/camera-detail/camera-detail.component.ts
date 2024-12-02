@@ -19,6 +19,7 @@ import { CameraCompareSideComponent } from '../camera-compare-side/camera-compar
 import { CameraCompareMagnifyComponent } from '../camera-compare-magnify/camera-compare-magnify.component';
 import { GenerateVideoComponent } from '../generate-video/generate-video.component';
 import { CameraZoomComponent } from '../camera-zoom/camera-zoom.component';
+import { ShareComponent } from './share/share.component';
 
 @Component({
   selector: 'app-camera-detail',
@@ -37,7 +38,8 @@ import { CameraZoomComponent } from '../camera-zoom/camera-zoom.component';
     CameraCompareComponent,
     CameraCompareSideComponent,
     CameraCompareMagnifyComponent,
-    GenerateVideoComponent
+    GenerateVideoComponent,
+    ShareComponent
   ],
   templateUrl: './camera-detail.component.html',  
   styleUrls: ['./camera-detail.component.scss']
@@ -67,6 +69,10 @@ export class CameraDetailComponent implements OnInit {
   showDateTime: boolean = true;
   showWeather: boolean = true;
   weatherString: string = '';
+
+  isShareModalOpen: boolean = false;
+  currentPhotoUrl: string = '';
+  photoUrl: string ='';
 
   constructor(
     private route: ActivatedRoute,
@@ -256,6 +262,15 @@ export class CameraDetailComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate([`/main/${this.developerTag}/${this.projectTag}`]);
+  }
+
+  openShareModal(photoUrl: string) {
+    this.currentPhotoUrl = photoUrl;
+    this.isShareModalOpen = true;
+  }
+
+  closeShareModal() {
+    this.isShareModalOpen = false;
   }
 
 }

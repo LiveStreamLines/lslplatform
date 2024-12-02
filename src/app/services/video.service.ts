@@ -12,29 +12,7 @@ export class VideoService {
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  generateVideo(payload: {
-    developerId: string;
-    projectId: string;
-    cameraId: string;
-    date1: string;
-    date2: string;
-    hour1: string;
-    hour2: string;
-    duration: number;
-  }): Observable<any> {
-    return this.http.post(`${this.apiUrl}generate`, payload);
-  }
-
-  filterImages(payload: {
-    developerId: string;
-    projectId: string;
-    cameraId: string;
-    date1: string;
-    date2: string;
-    hour1: string;
-    hour2: string;
-    duration: number;
-  }): Observable<any> {
-    return this.http.post(`${this.apiUrl}filter`, payload);
+  filterImages(formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}filter`, formData);
   }
 }
