@@ -77,18 +77,19 @@
         </mat-form-field>
       </div>
 
-      <mat-checkbox [(ngModel)]="showImage" name="showImage" (change)="onShowImageChange()">Show Image</mat-checkbox>
+      <mat-checkbox [(ngModel)]="showImage" name="showImage" (change)="onShowImageChange()">Add logo</mat-checkbox>
       <div *ngIf="showImage">
+        <p>Upload logo</p>
         <input type="file" (change)="onImageUpload($event)" />
       </div>
 
       <mat-checkbox [(ngModel)]="showWatermark" name="addWatermark" (change)="onShowWatermarkChange()">Add Watermark</mat-checkbox>
       <div *ngIf="showWatermark">
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Watermark Text</mat-label>
-          <input matInput [(ngModel)]="waterMarkText" (ngModelChange)="onWatermarkChange()" name="watermarkText" />
-        </mat-form-field>
+        <p>Upload Watermark Image</p>
+        <input type="file" (change)="onWatermarkImageUpload($event)" />
       </div>
+
+      <mat-checkbox [(ngModel)]="addMusic" name="addMusic">Add Background Music</mat-checkbox>
 
       <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">Filter Images</button>
     </form>
@@ -111,5 +112,55 @@
     <h2>Preview</h2>
     <canvas #canvas *ngIf="previewPHoto" class="image-preview"></canvas>
      <p *ngIf="!previewPHoto">No preview available.</p>
+
+      <!-- Sliders for Visual Effects -->
+  <div *ngIf="previewPHoto" class="slider-controls">
+    <!-- Brightness -->
+    <div class="slider">
+      <label for="brightness">Brightness</label>
+      <input
+        type="range"
+        id="brightness"
+        [(ngModel)]="brightness"
+        name="brightness"
+        min="-1"
+        max="1"
+        step="0.1"
+        (input)="onEffectChange()"
+      />
+      <span>{{ brightness }}</span>
+    </div>
+
+    <!-- Contrast -->
+    <div class="slider">
+      <label for="contrast">Contrast</label>
+      <input
+        type="range"
+        id="contrast"
+        [(ngModel)]="contrast"
+        name="contrast"
+        min="0"
+        max="3"
+        step="0.1"
+        (input)="onEffectChange()"
+      />
+      <span>{{ contrast }}</span>
+    </div>
+
+    <!-- Saturation -->
+    <div class="slider">
+      <label for="saturation">Saturation</label>
+      <input
+        type="range"
+        id="saturation"
+        [(ngModel)]="saturation"
+        name="saturation"
+        min="0"
+        max="3"
+        step="0.1"
+        (input)="onEffectChange()"
+      />
+      <span>{{ saturation }}</span>
+    </div>
   </div>
 </div>

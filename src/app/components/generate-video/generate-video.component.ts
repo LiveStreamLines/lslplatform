@@ -39,9 +39,13 @@ export class GenerateVideoComponent implements OnInit {
   showText: boolean = false;
   textOverlay: string = ''; // Text to display in the middle of the image
   showWatermark: boolean = false;
-  waterMarkText: string ='';
+  //waterMarkText: string ='';
   showImage: boolean = false;
   imageFile: File | null = null;
+  watermarkImageFile: File | null = null; // Store the uploaded watermark image
+  addMusic: boolean = false; // Whether to include background music
+
+
 
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
   private image = new Image(); // To load and draw the image on the canvas
@@ -68,6 +72,10 @@ export class GenerateVideoComponent implements OnInit {
     { label: '2:30 minutes', value: 150 },
     { label: '3 minutes', value: 180 },
   ];
+
+  brightness: number = 0; // Default brightness
+  contrast: number = 1;   // Default contrast
+  saturation: number = 1; // Default saturation
 
   videoSrc: string | null = null;
   isLoading: boolean = false;
@@ -159,31 +167,20 @@ export class GenerateVideoComponent implements OnInit {
   }
   
   private drawWatermark(context: CanvasRenderingContext2D, canvasWidth: number, canvasHeight: number): void {
-    if (this.showWatermark && this.waterMarkText) {
-      const fontSize = 120; // Larger font size for the watermark
-      context.font = `${fontSize}px Arial`; // Set font size and style
-      context.textAlign = 'center'; // Center align text
-      context.fillStyle = 'rgba(255, 255, 255, 0.5)'; // Semi-transparent white text
-      context.strokeStyle = 'rgba(0, 0, 0, 0.5)'; // Semi-transparent black outline
-      context.lineWidth = 2;
-
-      // Position the text at the center of the canvas
-      const x = canvasWidth / 2;
-      const y = canvasHeight / 2;
-
-      // Rotate the canvas to align the text diagonally
-      context.save(); // Save the current canvas state
-      context.translate(x, y); // Move to the center of the canvas
-      //context.rotate(Math.PI / 4); // Rotate the canvas by -45 degrees
-
-      // Draw the text outline
-      context.strokeText(this.waterMarkText, 0, 0);
-
-      // Draw the filled text
-      context.fillText(this.waterMarkText, 0, 0);
-
-      // Restore the canvas state
-      context.restore();
+    if (this.showWatermark && this.watermarkImageFile) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const watermarkImage = new Image();
+        watermarkImage.src = reader.result as string;
+        watermarkImage.onload = () => {
+          const x = (canvasWidth - watermarkImage.width) / 2; // Center horizontally
+          const y = (canvasHeight - watermarkImage.height) / 2; // Center vertically
+          context.globalAlpha = 0.5; // Make the watermark semi-transparent
+          context.drawImage(watermarkImage, x, y);
+          context.globalAlpha = 1.0; // Reset transparency
+        };
+      };
+      reader.readAsDataURL(this.watermarkImageFile);
     }   
   }
 
@@ -254,7 +251,7 @@ export class GenerateVideoComponent implements OnInit {
 
   onShowWatermarkChange(): void {
     if (!this.showWatermark) {
-      this.waterMarkText = '';
+      this.watermarkImageFile = null;
     }
   }
 
@@ -286,11 +283,48 @@ export class GenerateVideoComponent implements OnInit {
     }
   }
 
+  onWatermarkImageUpload(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      this.watermarkImageFile = target.files[0]; // Store the selected file
+      this.drawCanvas(); // Redraw the preview with the watermark image
+    }
+  }
+
   formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}${month}${day}`;
+  }
+
+  onEffectChange(): void {
+    const canvas = this.canvasRef.nativeElement;
+    const context = canvas.getContext('2d');
+  
+    if (!context) {
+      console.error('Canvas context could not be retrieved');
+      return;
+    }
+  
+    // Clear the canvas
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  
+    // Apply filters
+    const adjustedBrightness = this.brightness + 1; // Now ranges from 0 (darkest) to 2 (brightest)
+    context.filter = `brightness(${adjustedBrightness}) contrast(${this.contrast}) saturate(${this.saturation})`;
+
+    // Draw the image with filters
+    context.drawImage(this.image, 0, 0, canvas.width, canvas.height);
+
+    // Reset filter for overlays
+    context.filter = 'none';
+
+    // Redraw overlays
+    this.drawDate(context, 60);
+    this.drawTextOverlay(context, canvas.width, 60);
+    this.drawWatermark(context, canvas.width, canvas.height);
+    this.drawUploadedImage(context, canvas.width);
   }
 
   filterImages() {
@@ -309,11 +343,20 @@ export class GenerateVideoComponent implements OnInit {
       formData.append('duration', this.duration.toString());
       formData.append('showdate', this.showDate ? 'true' : 'false');
       formData.append('showedText', this.showText ? this.textOverlay : '');
-      formData.append('showedWatermark', this.showWatermark ? this.waterMarkText : '');
       formData.append('resolution', this.resolution || '720');
+      formData.append('music', this.addMusic ? 'true' : 'false');
+      
+      // Add visual effect parameters
+      formData.append('contrast', this.contrast.toString());
+      formData.append('brightness', this.brightness.toString());
+      formData.append('saturation', this.saturation.toString());
   
     if (this.imageFile) {
       formData.append('logo', this.imageFile); // Append the file to the FormData
+    }
+
+    if (this.watermarkImageFile) {
+      formData.append('showedWatermark', this.watermarkImageFile);
     }
 
     this.videoService.generateVideo(formData).subscribe({
