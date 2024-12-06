@@ -39,6 +39,7 @@ export class StudioComponent {
     fillColor: string;
     borderColor: string;
     borderWidth: number;
+    moveMode: boolean;
     selected: boolean;
   }[] = [];
   selectedShapeIndex: number | null = null; // Index of the selected shape
@@ -48,6 +49,8 @@ export class StudioComponent {
   
   private isDragging: boolean = false;
   private hasDragged: boolean = false;
+  private isResizing: boolean = false;
+  isMoving: boolean = false;
 
   currentTool: string = ''; // Stores the current tool (text, rectangle, etc.)
 
@@ -363,27 +366,14 @@ export class StudioComponent {
         return; // Stop further processing if dragging a text
       }
     }
-  
-    // Check if a shape is clicked or create a new shape
-    if (this.currentTool === 'rectangle' || this.currentTool === 'circle') {
-      const clickedShapeIndex = this.shapes.findIndex((shape) =>
-        this.isPointInsideShape(shape, x, y)
-      );
-  
-      if (clickedShapeIndex !== -1) {
-        // Select the clicked shape
-        this.selectShape(clickedShapeIndex);
-        this.isDragging = true;
-
-         // Update the shape controller position
-        const selectedShape = this.shapes[clickedShapeIndex];
-        this.fontControllerPosition = {
-          x: selectedShape.x, // Right of the shape
-          y: selectedShape.y, // Bottom of the shape
-        };
-
-      } else {
-        // Create a new shape
+    
+    if (this.selectedShapeIndex !== null) {
+      const selectedShape = this.shapes[this.selectedShapeIndex];
+      if (this.isPointInsideShape(selectedShape, x, y)) {
+        this.isDragging = true;  
+      }
+    } else if (this.currentTool === 'rectangle' || this.currentTool === 'circle') {    // Create a new shape if none is selected
+      // Create a new shape if none is selected
         this.isDragging = true;
         this.shapes.push({
           type: this.currentTool,
@@ -391,16 +381,15 @@ export class StudioComponent {
           y,
           width: 0,
           height: 0,
-          fillColor: '#ffffff', // Default fill color
+          fillColor: 'rgba(0,0,0,0)', // Default fill color
           borderColor: '#000000', // Default border color
-          borderWidth: 1, // Default border width
+          borderWidth: 10, // Default border width
           selected: false,
+          moveMode: false,
         });
         this.selectedShapeIndex = this.shapes.length - 1; // Select the new shape
-      }
-      return;
     }
-  }
+       }
   
   
   onCanvasMouseMove(event: MouseEvent): void {
@@ -432,22 +421,19 @@ export class StudioComponent {
       this.selectedShapeIndex !== null
     ) {
 
-      const currentShape = this.shapes[this.selectedShapeIndex];
-      if (this.isDragging) {
-        // Update the shape's dimensions
-        currentShape.width = x - currentShape.x;
-        currentShape.height = y - currentShape.y;
+      const selectedShape = this.shapes[this.selectedShapeIndex];
+      if (selectedShape.moveMode) {
+        // Move the shape
+        const dx = x - selectedShape.x;
+        const dy = y - selectedShape.y;
+        selectedShape.x += dx;
+        selectedShape.y += dy;
       } else {
-        // If moving, update the position
-        currentShape.x = x;
-        currentShape.y = y;
+        selectedShape.width = x - selectedShape.x;
+        selectedShape.height = y - selectedShape.y;
       }
-
       // Update shape controller position
-      this.shapeControllerPosition = {
-        x: currentShape.x, 
-        y: currentShape.y,
-      };
+      this.updateShapeControllerPosition(selectedShape);
     }
   
     this.updateCanvas();
@@ -520,6 +506,13 @@ export class StudioComponent {
     const y = (event.clientY - rect.top) * this.scaleY;
 
     return { x, y };
+  }
+
+  toggleShapeMove(): void {
+    if (this.selectedShapeIndex !== null) {
+      const selectedShape = this.shapes[this.selectedShapeIndex];
+      selectedShape.moveMode = !selectedShape.moveMode; // Toggle move mode
+    }
   }
 
 
