@@ -168,6 +168,23 @@ export class StudioComponent {
         return; // Stop further processing
       }
     }
+
+    // Handle shapes
+      if (this.currentTool === 'rectangle' || this.currentTool === 'circle') {
+        const clickedShapeIndex = this.shapes.findIndex((shape) =>
+          this.isPointInsideShape(shape, x, y)
+        );
+
+        if (clickedShapeIndex !== -1) {
+          this.selectShape(clickedShapeIndex); // Select the clicked shape
+        } else {
+          this.deselectShape(); // Deselect previously selected shape
+        }
+
+        this.updateCanvas();
+        return; // Stop further processing for shapes
+      }
+
   
     if (this.currentTool === 'text') {
       //Check if a text is clicked
@@ -260,31 +277,76 @@ export class StudioComponent {
     }
    }
 
+  private isPointInsideShape(
+      shape: { type: string; x: number; y: number; width: number; height: number },
+      x: number,
+      y: number
+    ): boolean {
+      if (shape.type === 'rectangle') {
+        return (
+          x >= shape.x &&
+          x <= shape.x + shape.width &&
+          y >= shape.y &&
+          y <= shape.y + shape.height
+        );
+      } else if (shape.type === 'circle') {
+        const radius = Math.sqrt(
+          Math.pow(shape.width, 2) + Math.pow(shape.height, 2)
+        );
+        const dx = x - shape.x;
+        const dy = y - shape.y;
+        return Math.sqrt(dx * dx + dy * dy) <= radius;
+      }
+      return false;
+  }
+
+  private selectShape(index: number): void {
+    this.selectedShapeIndex = index;
+    this.shapes.forEach((shape, i) => (shape.selected = i === index));
+  }
+
+  private deselectShape(): void {
+    this.selectedShapeIndex = null;
+    this.updateCanvas();
+  }
+
+  
    onCanvasMouseDown(event: MouseEvent): void {
     const { x, y } = this.getCanvasCoordinates(event);
 
 
     if (this.selectedTextIndex !== null) {
-      const { x, y } = this.getCanvasCoordinates(event);
- 
       const selectedText = this.texts[this.selectedTextIndex];
       if (this.isPointInsideText(selectedText, x, y)) {
         this.isDragging = true;
+        return; // Stop further processing if dragging a text
       }
     }
 
     if (this.currentTool === 'rectangle' || this.currentTool === 'circle') {
-      // Start drawing a shape
-      this.isDragging = true;
-      this.shapes.push({
-        type: this.currentTool,
-        x,
-        y,
-        width: 0,
-        height: 0,
-        color: '#000000',
-        selected: false,
-      });
+      // Check if a shape is clicked
+      const clickedShapeIndex = this.shapes.findIndex((shape) =>
+        this.isPointInsideShape(shape, x, y)
+      );
+
+      if (clickedShapeIndex !== -1) {
+        // Select the clicked shape for dragging
+        this.selectShape(clickedShapeIndex);
+        this.isDragging = true;
+      } else {
+        // Create a new shape
+        this.isDragging = true;
+        this.shapes.push({
+          type: this.currentTool,
+          x,
+          y,
+          width: 0,
+          height: 0,
+          color: '#000000',
+          selected: false,
+        });
+        this.selectedShapeIndex = this.shapes.length - 1; // Select the new shape
+      }
     }
   }
   
@@ -297,7 +359,6 @@ export class StudioComponent {
       this.hasDragged = true;
 
       const rect = this.canvasRef.nativeElement.getBoundingClientRect();
-
       const x = (event.clientX - rect.left) * this.scaleX;
       const y = (event.clientY - rect.top) * this.scaleY;
   
@@ -317,8 +378,11 @@ export class StudioComponent {
       (this.currentTool === 'rectangle' || this.currentTool === 'circle') &&
       this.shapes.length > 0
     ) {
-      const currentShape = this.shapes[this.shapes.length - 1];
-  
+      const currentShape =
+      this.selectedShapeIndex !== null
+        ? this.shapes[this.selectedShapeIndex] // Use selected shape if dragging
+        : this.shapes[this.shapes.length - 1]; // Or the last created shape if drawing
+
       // Update the shape's dimensions
       currentShape.width = x - currentShape.x;
       currentShape.height = y - currentShape.y;
