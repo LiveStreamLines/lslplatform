@@ -171,8 +171,6 @@ export class StudioComponent {
     });
   }
   
-
-
   onCanvasClick(event: MouseEvent): void {
     if (this.hasDragged) {
       this.hasDragged = false; // Reset the flag
@@ -484,15 +482,15 @@ export class StudioComponent {
     if (shape.type === 'rectangle') {
       // For rectangles, position near the bottom-right corner
       this.shapeControllerPosition = {
-        x: (shape.x + shape.width + 10) / scaleX, // Offset 10px to the right
-        y: (shape.y + shape.height + 10) / scaleY, // Offset 10px below
+        x: ((shape.x + shape.width) / scaleX) + 20, // Offset 10px to the right
+        y: ((shape.y + shape.height) / scaleY) + 20, // Offset 10px below
       };
     } else if (shape.type === 'circle') {
       const radius = Math.sqrt(shape.width ** 2 + shape.height ** 2) / 2;
       // For circles, position near the bounding box's bottom-right corner
       this.shapeControllerPosition = {
-        x: (shape.x + radius + 10) / scaleX, // Offset 10px to the right of bounding box
-        y: (shape.y + radius + 10) / scaleY, // Offset 10px below the bounding box
+        x: ((shape.x + radius) / scaleX) + 50, // Offset 10px to the right of bounding box
+        y: ((shape.y + radius) / scaleY) + 50, // Offset 10px below the bounding box
       };
     }
   }
