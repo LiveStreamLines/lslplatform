@@ -117,10 +117,18 @@ export class StudioComponent {
     // Draw shapes
     this.shapes.forEach((shape, index) => {
       context.beginPath();
+
       if (shape.type === 'rectangle') {
         // Draw rectangle
         context.fillStyle = shape.fillColor;
         context.fillRect(shape.x, shape.y, shape.width, shape.height);
+
+        // Draw rectangle border
+        if (shape.borderColor && shape.borderWidth > 0) {
+          context.strokeStyle = shape.borderColor;
+          context.lineWidth = shape.borderWidth;
+          context.strokeRect(shape.x, shape.y, shape.width, shape.height);
+        }
   
         // Draw boundary if selected
         if (index === this.selectedShapeIndex) {
@@ -128,6 +136,7 @@ export class StudioComponent {
           context.lineWidth = 2;
           context.strokeRect(shape.x, shape.y, shape.width, shape.height);
         }
+
       } else if (shape.type === 'circle') {
         // Draw circle
         const radiusX = Math.abs(shape.width) / 2; // Horizontal radius
@@ -138,6 +147,14 @@ export class StudioComponent {
         context.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
         context.fillStyle = shape.fillColor;
         context.fill();
+
+        // Draw circle border
+        if (shape.borderColor && shape.borderWidth > 0) {
+          context.strokeStyle = shape.borderColor;
+          context.lineWidth = shape.borderWidth;
+          context.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
+          context.stroke();
+        }
   
         // Draw boundary if selected
         if (index === this.selectedShapeIndex) {
