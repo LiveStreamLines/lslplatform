@@ -36,10 +36,15 @@ export class StudioComponent {
     y: number;
     width: number;
     height: number;
-    color: string;
+    fillColor: string;
+    borderColor: string;
+    borderWidth: number;
     selected: boolean;
   }[] = [];
   selectedShapeIndex: number | null = null; // Index of the selected shape
+  shapeControllerPosition: { x: number; y: number } | null = null;
+  currentShape!: any; // Placeholder for the currently selected shape
+
   
   private isDragging: boolean = false;
   private hasDragged: boolean = false;
@@ -88,49 +93,12 @@ export class StudioComponent {
   private updateCanvas(): void {
     const canvas = this.canvasRef.nativeElement;
     const context = this.context;
-
-    // Clear the canvas
-    context.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Redraw the image
-    context.drawImage(this.image, 0, 0);
-
-
-    // Draw shapes
-    this.shapes.forEach((shape, index) => {
-      context.beginPath();
-      context.fillStyle = shape.color;
-
-      if (shape.type === 'rectangle') {
-        context.rect(shape.x, shape.y, shape.width, shape.height);
-        context.fill();
-      } else if (shape.type === 'circle') {
-        const radius = Math.sqrt(Math.pow(shape.width, 2) + Math.pow(shape.height, 2));
-        context.arc(shape.x, shape.y, radius, 0, Math.PI * 2);
-        context.fill();
-      }
-
-      context.closePath();
-
-      // Draw border for selected shape
-      if (index === this.selectedShapeIndex) {
-        context.strokeStyle = 'blue';
-        context.lineWidth = 2;
-
-        if (shape.type === 'rectangle') {
-          context.strokeRect(shape.x, shape.y, shape.width, shape.height);
-        } else if (shape.type === 'circle') {
-          const radius = Math.sqrt(Math.pow(shape.width, 2) + Math.pow(shape.height, 2));
-          context.beginPath();
-          context.arc(shape.x, shape.y, radius, 0, Math.PI * 2);
-          context.stroke();
-          context.closePath();
-        }
-      }
-    });
-
-
   
+    // Clear the canvas and draw the background image
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(this.image, 0, 0);
+  
+    // Draw texts
     this.texts.forEach((t, index) => {
       context.font = `${t.fontSize}px Arial`;
       context.fillStyle = t.color;
@@ -145,7 +113,44 @@ export class StudioComponent {
         context.strokeRect(t.x - 5, t.y - textHeight, textWidth + 10, textHeight + 10);
       }
     });
+  
+    // Draw shapes
+    this.shapes.forEach((shape, index) => {
+      context.beginPath();
+      if (shape.type === 'rectangle') {
+        // Draw rectangle
+        context.fillStyle = shape.fillColor;
+        context.fillRect(shape.x, shape.y, shape.width, shape.height);
+  
+        // Draw boundary if selected
+        if (index === this.selectedShapeIndex) {
+          context.strokeStyle = 'blue';
+          context.lineWidth = 2;
+          context.strokeRect(shape.x, shape.y, shape.width, shape.height);
+        }
+      } else if (shape.type === 'circle') {
+        // Draw circle
+        const radiusX = Math.abs(shape.width) / 2; // Horizontal radius
+        const radiusY = Math.abs(shape.height) / 2; // Vertical radius
+        const centerX = shape.x + radiusX; // Circle's center X
+        const centerY = shape.y + radiusY; // Circle's center Y
+  
+        context.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
+        context.fillStyle = shape.fillColor;
+        context.fill();
+  
+        // Draw boundary if selected
+        if (index === this.selectedShapeIndex) {
+          context.strokeStyle = 'blue';
+          context.lineWidth = 2;
+          context.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
+          context.stroke();
+        }
+      }
+      context.closePath();
+    });
   }
+  
 
 
   onCanvasClick(event: MouseEvent): void {
@@ -303,18 +308,37 @@ export class StudioComponent {
   private selectShape(index: number): void {
     this.selectedShapeIndex = index;
     this.shapes.forEach((shape, i) => (shape.selected = i === index));
+
+    const selectedShape = this.shapes[index];
+    this.currentShape = selectedShape;
+    this.updateShapeControllerPosition(selectedShape);
   }
 
   private deselectShape(): void {
     this.selectedShapeIndex = null;
+    this.shapeControllerPosition = null;
     this.updateCanvas();
   }
 
+  // Update shape properties
+  updateShape(): void {
+    if (this.selectedShapeIndex !== null) {
+      this.updateCanvas();
+    }
+  }
+
+  // Delete the selected shape
+  deleteShape(): void {
+    if (this.selectedShapeIndex !== null) {
+      this.shapes.splice(this.selectedShapeIndex, 1);
+      this.deselectShape();
+    }
+  }  
   
-   onCanvasMouseDown(event: MouseEvent): void {
+  onCanvasMouseDown(event: MouseEvent): void {
     const { x, y } = this.getCanvasCoordinates(event);
-
-
+  
+    // Check if a text is selected and begin dragging if inside the text
     if (this.selectedTextIndex !== null) {
       const selectedText = this.texts[this.selectedTextIndex];
       if (this.isPointInsideText(selectedText, x, y)) {
@@ -322,17 +346,25 @@ export class StudioComponent {
         return; // Stop further processing if dragging a text
       }
     }
-
+  
+    // Check if a shape is clicked or create a new shape
     if (this.currentTool === 'rectangle' || this.currentTool === 'circle') {
-      // Check if a shape is clicked
       const clickedShapeIndex = this.shapes.findIndex((shape) =>
         this.isPointInsideShape(shape, x, y)
       );
-
+  
       if (clickedShapeIndex !== -1) {
-        // Select the clicked shape for dragging
+        // Select the clicked shape
         this.selectShape(clickedShapeIndex);
         this.isDragging = true;
+
+         // Update the shape controller position
+        const selectedShape = this.shapes[clickedShapeIndex];
+        this.fontControllerPosition = {
+          x: selectedShape.x, // Right of the shape
+          y: selectedShape.y, // Bottom of the shape
+        };
+
       } else {
         // Create a new shape
         this.isDragging = true;
@@ -342,13 +374,17 @@ export class StudioComponent {
           y,
           width: 0,
           height: 0,
-          color: '#000000',
+          fillColor: '#ffffff', // Default fill color
+          borderColor: '#000000', // Default border color
+          borderWidth: 1, // Default border width
           selected: false,
         });
         this.selectedShapeIndex = this.shapes.length - 1; // Select the new shape
       }
+      return;
     }
   }
+  
   
   onCanvasMouseMove(event: MouseEvent): void {
     if (!this.isDragging) return;
@@ -376,16 +412,25 @@ export class StudioComponent {
     // Handle drawing or resizing shapes
     else if (
       (this.currentTool === 'rectangle' || this.currentTool === 'circle') &&
-      this.shapes.length > 0
-    ) {
-      const currentShape =
       this.selectedShapeIndex !== null
-        ? this.shapes[this.selectedShapeIndex] // Use selected shape if dragging
-        : this.shapes[this.shapes.length - 1]; // Or the last created shape if drawing
+    ) {
 
-      // Update the shape's dimensions
-      currentShape.width = x - currentShape.x;
-      currentShape.height = y - currentShape.y;
+      const currentShape = this.shapes[this.selectedShapeIndex];
+      if (this.isDragging) {
+        // Update the shape's dimensions
+        currentShape.width = x - currentShape.x;
+        currentShape.height = y - currentShape.y;
+      } else {
+        // If moving, update the position
+        currentShape.x = x;
+        currentShape.y = y;
+      }
+
+      // Update shape controller position
+      this.shapeControllerPosition = {
+        x: currentShape.x, 
+        y: currentShape.y,
+      };
     }
   
     this.updateCanvas();
@@ -396,19 +441,59 @@ export class StudioComponent {
 
     // Handle shape creation
     if (this.currentTool === 'rectangle' || this.currentTool === 'circle') {
-      if (this.shapes.length > 0) {
-        const currentShape = this.shapes[this.shapes.length - 1];
+      if (this.selectedShapeIndex !== null) {
+        const currentShape = this.shapes[this.selectedShapeIndex];
   
         // Remove the shape if it has invalid dimensions
         if (currentShape.width === 0 || currentShape.height === 0) {
           this.shapes.pop();
+          this.selectedShapeIndex = null;
         } else {
-          // Finalize shape
+          // Mark the shape as finalized
           currentShape.selected = true;
+
+          // Update shape controller position
+          this.shapeControllerPosition = {
+            x: currentShape.x ,
+            y: currentShape.y ,
+          };
         }
       }
     }
+      // Reset drag and selection states
+      this.updateCanvas();
   }
+
+  private updateShapeControllerPosition(shape: {
+    type: 'rectangle' | 'circle';
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }): void {
+
+     // Get canvas bounding rect and scale
+     const canvas = this.canvasRef.nativeElement;
+     const rect = canvas.getBoundingClientRect();
+     const scaleX = canvas.width / rect.width;
+     const scaleY = canvas.height / rect.height;
+
+    if (shape.type === 'rectangle') {
+      // For rectangles, position near the bottom-right corner
+      this.shapeControllerPosition = {
+        x: (shape.x + shape.width + 10) / scaleX, // Offset 10px to the right
+        y: (shape.y + shape.height + 10) / scaleY, // Offset 10px below
+      };
+    } else if (shape.type === 'circle') {
+      const radius = Math.sqrt(shape.width ** 2 + shape.height ** 2) / 2;
+      // For circles, position near the bounding box's bottom-right corner
+      this.shapeControllerPosition = {
+        x: (shape.x + radius + 10) / scaleX, // Offset 10px to the right of bounding box
+        y: (shape.y + radius + 10) / scaleY, // Offset 10px below the bounding box
+      };
+    }
+  }
+  
 
   private getCanvasCoordinates(event: MouseEvent): { x: number; y: number } {
     const canvas = this.canvasRef.nativeElement;
@@ -419,6 +504,8 @@ export class StudioComponent {
 
     return { x, y };
   }
+
+
   
  
 }

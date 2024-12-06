@@ -47,6 +47,31 @@
                 <mat-icon>delete</mat-icon>
               </button>
         </div>
+
+        <div *ngIf="shapeControllerPosition && (currentTool === 'circle' || currentTool === 'rectangle')"
+            class="shape-controller"
+            [ngStyle]="{
+                top: shapeControllerPosition.y + 'px',
+                left: shapeControllerPosition.x + 'px'
+            }"
+            >
+            <label>
+              Fill:
+              <input type="color" [(ngModel)]="currentShape.fillColor" (ngModelChange)="updateShape()" />
+            </label>
+            <label>
+              Border:
+              <input type="color" [(ngModel)]="currentShape.borderColor" (ngModelChange)="updateShape()" />
+            </label>
+            <label>
+              Border Width:
+              <input type="number" [(ngModel)]="currentShape.borderWidth" (ngModelChange)="updateShape()" min="0" />
+            </label>
+            <button (click)="deleteShape()" class="delete-button">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          
      
     </div>
   </div>

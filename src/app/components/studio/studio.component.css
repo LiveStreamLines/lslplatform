@@ -72,6 +72,39 @@
     justify-content: center;
     cursor: pointer;
   }
+
+  .shape-controller {
+    position: absolute;
+    background-color: black; /* Black background */
+    color: white; /* White font */
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Add shadow for a clean look */
+    font-size: 14px; /* Slightly smaller font size */
+    z-index: 10; /* Ensure it stays above the canvas */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.shape-controller label {
+  display: flex;
+  flex-direction: column;
+}
+
+.delete-button {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
   
   
   
