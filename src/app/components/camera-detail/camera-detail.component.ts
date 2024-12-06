@@ -21,6 +21,7 @@ import { GenerateVideoComponent } from '../generate-video/generate-video.compone
 import { GeneratePhotoComponent } from '../generate-photo/generate-photo.component';
 import { CameraZoomComponent } from '../camera-zoom/camera-zoom.component';
 import { ShareComponent } from './share/share.component';
+import { StudioComponent } from "../studio/studio.component";
 
 @Component({
   selector: 'app-camera-detail',
@@ -34,15 +35,16 @@ import { ShareComponent } from './share/share.component';
     MatInputModule,
     MatNativeDateModule,
     MatFormField,
-    FormsModule, 
+    FormsModule,
     CameraZoomComponent,
     CameraCompareComponent,
     CameraCompareSideComponent,
     CameraCompareMagnifyComponent,
     GenerateVideoComponent,
     GeneratePhotoComponent,
-    ShareComponent
-  ],
+    ShareComponent,
+    StudioComponent
+],
   templateUrl: './camera-detail.component.html',  
   styleUrls: ['./camera-detail.component.scss']
 })

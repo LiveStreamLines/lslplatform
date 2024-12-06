@@ -5,6 +5,9 @@
   <button mat-button [ngClass]="{ 'active': mode === 'single' }" (click)="setMode('single')">
     <mat-icon>visibility</mat-icon> Single View
   </button>
+  <button mat-button [ngClass]="{ 'active': mode === 'studio' }" (click)="setMode('studio')">
+    <mat-icon>edit</mat-icon> Studio
+  </button>
   <button mat-button [ngClass]="{ 'active': mode === 'zoom' }" (click)="setMode('zoom')">
     <mat-icon>zoom_in</mat-icon> Zoom
   </button>
@@ -87,7 +90,7 @@
     </div>
 
   <!-- Rest of camera-detail content -->
-    <div *ngIf="mode === 'single' || mode === 'zoom'">  
+    <div *ngIf="mode === 'single' || mode === 'zoom' || mode=== 'studio'">  
       <div class="content">
           <!-- Show a loading spinner if the large picture is still loading -->
         <div *ngIf="loadingLargePicture" class="spinner">
@@ -116,6 +119,13 @@
             [selectedPictureUrl]="selectedPictureUrl"
             [zoomView]="zoomView"
           ></app-camera-zoom>
+        </div>
+
+        <div *ngIf="mode === 'studio'">
+          <app-studio
+            [imageSrc] = "selectedPictureUrl">
+
+          </app-studio>
         </div>
 
         <!-- Date selector -->

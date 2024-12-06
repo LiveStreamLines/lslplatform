@@ -1,0 +1,53 @@
+<div class="studio-container">
+    <div class="toolbar">
+        <button (click)="selectTool('text')" [ngClass]="{ active: currentTool === 'text' }">
+            Text
+        </button>
+        <button (click)="selectTool('rectangle')" [ngClass]="{ active: currentTool === 'rectangle' }">
+            Rectangle
+        </button>
+        <button (click)="selectTool('circle')" [ngClass]="{ active: currentTool === 'circle' }">
+            Circle
+        </button>
+        <button (click)="selectTool('arrow')" [ngClass]="{ active: currentTool === 'arrow' }">
+            Arrow
+        </button>
+        <button (click)="selectTool('effect')" [ngClass]="{ active: currentTool === 'effect' }">
+            Effect
+        </button>
+    </div>
+  
+    <div class="canvas-area">
+        <canvas
+        #canvas
+        (click)="onCanvasClick($event)"
+        (mousedown)="onCanvasMouseDown($event)"
+        (mousemove)="onCanvasMouseMove($event)"
+        (mouseup)="onCanvasMouseUp()"
+    ></canvas>  
+      
+        <div
+            *ngIf="currentTool === 'text' && fontControllerPosition"
+            class="text-controls"
+            [ngStyle]="{
+                top: fontControllerPosition.y + 'px',
+                left: fontControllerPosition.x + 'px'
+            }"
+            >
+            <label>Text:
+                <input type="text" [(ngModel)]="textValue" (input)="updateText()" />
+            </label>
+            <label>Font Size:
+                <input type="number" [(ngModel)]="fontSize" (input)="updateText()" />
+            </label>
+            <label>Color:
+                <input type="color" [(ngModel)]="fontColor" (input)="updateText()" />
+            </label>           
+            <button (click)="removeText()" class="remove-button">
+                <mat-icon>delete</mat-icon>
+              </button>
+        </div>
+     
+    </div>
+  </div>
+  
