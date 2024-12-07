@@ -497,16 +497,31 @@ export class StudioComponent {
         selectedShape.width = x - selectedShape.x;
         selectedShape.height = y - selectedShape.y;
       }
+     
       // Update shape controller position
       this.updateShapeControllerPosition(selectedShape);
+
     } else if (this.currentTool === 'arrow' && this.selectedShapeIndex !== null) {
       const currentShape = this.shapes[this.selectedShapeIndex];
       if (currentShape.type === 'arrow') {
-        currentShape.endX = x;
-        currentShape.endY = y;
+        if (currentShape.moveMode) {
+          const dx = x - currentShape.x;
+          const dy = y - currentShape.y;
+
+          currentShape.x += dx;
+          currentShape.y += dy;
+          currentShape.endX += dx;
+          currentShape.endY += dy;
+        } else {
+          currentShape.endX = x;
+          currentShape.endY = y;
+        }
       }
-      this.updateCanvas();
+      this.updateShapeControllerPosition(currentShape);
+
     }
+
+    
   
     this.updateCanvas();
   }

@@ -92,7 +92,14 @@
   flex-direction: column;
 }
 
-.delete-button {
+.buttons-container {
+  display: flex;
+  gap: 10px; /* Space between buttons */
+  margin-top: 10px; /* Add spacing from labels */
+  justify-content: flex-start;
+}
+
+.action-button {
   background-color: red;
   color: white;
   border: none;
@@ -103,6 +110,23 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+  background-color: darkred;
+}
+
+.delete-button {
+  background-color: red;
+}
+
+.move-button {
+  background-color: blue;
+}
+
+.move-button.active {
+  background-color: green; /* Indicate active state for move */
 }
 
   

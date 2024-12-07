@@ -65,30 +65,38 @@
             </label>
             <label>
               Border Width:
-              <input type="number" [(ngModel)]="currentShape.borderWidth" (ngModelChange)="updateShape()" min="0" />
+              <input type="range" min="1" max="20" [(ngModel)]="currentShape.borderWidth" (ngModelChange)="updateShape()" min="0" />
             </label>
-            <button (click)="deleteShape()" class="delete-button">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <button (click)="toggleShapeMove()" class="delete-button" [class.active]="isMoving">
-               <mat-icon>open_with</mat-icon>
-            </button>
+            <div class="buttons-container">
+                <button (click)="deleteShape()" class="action-button delete-button">
+                <mat-icon>delete</mat-icon>
+                </button>
+                <button (click)="toggleShapeMove()" class="action-button move-button" [class.active]="currentShape.moveMode">
+                <mat-icon>open_with</mat-icon>
+                </button>
+            </div>
           </div>
 
 
-        <div *ngIf="selectedShapeIndex !== null && shapes[selectedShapeIndex]?.type === 'arrow'"   class="shape-controller"
+        <div *ngIf="shapeControllerPosition && currentShape.type === 'arrow'" 
+            class="shape-controller"
             [ngStyle]="{ position: 'absolute', top: shapeControllerPosition?.y + 'px', left: shapeControllerPosition?.x + 'px' }">
             <label>
                 color:
-            <input type="color" [(ngModel)]="shapes[selectedShapeIndex].color" (ngModelChange)="updateShape()"/>
+            <input type="color" [(ngModel)]="currentShape.color" (ngModelChange)="updateShape()"/>
             </label>
             <label>
                 line width:
-                <input type="range" min="1" max="10" [(ngModel)]="shapes[selectedShapeIndex].lineWidth" (ngModelChange)="updateShape()"/>
+                <input type="range" min="1" max="20" [(ngModel)]="currentShape.lineWidth" (ngModelChange)="updateShape()"/>
             </label>
-            <button (click)="deleteShape()" class="delete-button">
+            <div class="buttons-container">
+                <button (click)="deleteShape()" class="action-button delete-button">
                 <mat-icon>delete</mat-icon>
-            </button>
+                </button>
+                <button (click)="toggleShapeMove()" class="action-button move-button" [class.active]="currentShape.moveMode">
+                <mat-icon>open_with</mat-icon>
+                </button>
+            </div>
 
         </div>
           
