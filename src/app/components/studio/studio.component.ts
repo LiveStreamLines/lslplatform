@@ -50,7 +50,10 @@ export class StudioComponent {
   shapeControllerPosition: { x: number; y: number } | null = null;
   currentShape!: any; // Placeholder for the currently selected shape
 
-  
+  brightness: number = 1; // Default brightness
+  contrast: number = 1; // Default contrast
+  saturation: number = 1; // Default saturation
+
   private isDragging: boolean = false;
   private hasDragged: boolean = false;
   private isResizing: boolean = false;
@@ -97,6 +100,11 @@ export class StudioComponent {
     };
   }
 
+  // Apply effects and redraw the canvas
+  applyEffects(): void {
+    this.updateCanvas();
+  }
+
   private updateCanvas(): void {
     const canvas = this.canvasRef.nativeElement;
     const context = this.context;
@@ -104,6 +112,10 @@ export class StudioComponent {
     // Clear the canvas and draw the background image
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.drawImage(this.image, 0, 0);
+
+    // Apply effects using filter
+    context.filter = `brightness(${this.brightness}) contrast(${this.contrast}) saturate(${this.saturation})`;
+
   
     // Draw texts
     this.texts.forEach((t, index) => {
@@ -180,7 +192,7 @@ export class StudioComponent {
 
         // Draw arrowhead
         const arrowAngle = Math.atan2(shape.endY! - shape.y!, shape.endX! - shape.x!);
-        const arrowHeadLength = 10; // Length of the arrowhead
+        const arrowHeadLength = 50; // Length of the arrowhead
 
         // Left wing of the arrowhead
         context.moveTo(shape.endX!, shape.endY!);
@@ -499,7 +511,7 @@ export class StudioComponent {
       }
      
       // Update shape controller position
-      this.updateShapeControllerPosition(selectedShape);
+      //this.updateShapeControllerPosition(selectedShape);
 
     } else if (this.currentTool === 'arrow' && this.selectedShapeIndex !== null) {
       const currentShape = this.shapes[this.selectedShapeIndex];
@@ -517,7 +529,7 @@ export class StudioComponent {
           currentShape.endY = y;
         }
       }
-      this.updateShapeControllerPosition(currentShape);
+      //this.updateShapeControllerPosition(currentShape);
 
     }
 
@@ -650,6 +662,27 @@ export class StudioComponent {
   
     return distanceToLine <= selectionThreshold;
   }
+
+  clearCanvas(): void {
+    // Clear all shapes and texts
+    this.shapes = [];
+    this.texts = [];
+    this.selectedShapeIndex = null;
+    this.selectedTextIndex = null;
+  
+    // Clear the font and shape controllers
+    this.fontControllerPosition = null;
+    this.shapeControllerPosition = null;
+
+     // Reset effects
+      this.brightness = 1;
+      this.contrast = 1;
+      this.saturation = 1;
+  
+    // Redraw the canvas
+    this.updateCanvas();
+  }
+  
   
   
  

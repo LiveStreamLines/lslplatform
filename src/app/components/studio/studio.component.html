@@ -12,8 +12,21 @@
         <button (click)="selectTool('arrow')" [ngClass]="{ active: currentTool === 'arrow' }">
             Arrow
         </button>
+        <button (click)="addWatermark()" class="watermark-button">
+           Add Watermark
+        </button>
+          <input
+            #watermarkInput
+            type="file"
+            accept="image/*"
+            (change)="handleWatermarkUpload($event)"
+            style="display: none"
+          />
         <button (click)="selectTool('effect')" [ngClass]="{ active: currentTool === 'effect' }">
             Effect
+        </button>
+        <button (click)="clearCanvas()" class="clear-button">
+            Clear Canvas
         </button>
     </div>
   
@@ -38,7 +51,7 @@
                 <input type="text" [(ngModel)]="textValue" (input)="updateText()" />
             </label>
             <label>Font Size:
-                <input type="number" [(ngModel)]="fontSize" (input)="updateText()" />
+                <input type="range" min="40" max="100" [(ngModel)]="fontSize" (input)="updateText()" />
             </label>
             <label>Color:
                 <input type="color" [(ngModel)]="fontColor" (input)="updateText()" />
@@ -101,6 +114,28 @@
         </div>
           
      
+    </div>
+
+    <div 
+        *ngIf="currentTool === 'effect'" 
+        class="effects-panel" 
+        [ngStyle]="{
+            top: '200px', 
+            left: '150px'
+        }"
+        >
+        <label>
+            Brightness:
+            <input type="range" min="0" max="2" step="0.1" [(ngModel)]="brightness" (ngModelChange)="applyEffects()" />
+        </label>
+        <label>
+            Contrast:
+            <input type="range" min="0" max="2" step="0.1" [(ngModel)]="contrast" (ngModelChange)="applyEffects()" />
+        </label>
+        <label>
+            Saturation:
+            <input type="range" min="0" max="2" step="0.1" [(ngModel)]="saturation" (ngModelChange)="applyEffects()" />
+        </label>
     </div>
   </div>
   
