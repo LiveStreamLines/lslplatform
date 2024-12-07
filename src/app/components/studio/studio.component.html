@@ -28,6 +28,13 @@
         <button (click)="clearCanvas()" class="clear-button">
             Clear Canvas
         </button>
+
+        <div class="canvas-actions">
+            <button (click)="downloadCanvas()" class="download-button">
+              <mat-icon>download</mat-icon> Download
+            </button>
+          </div>
+
     </div>
   
     <div class="canvas-area">
@@ -137,5 +144,10 @@
             <input type="range" min="0" max="2" step="0.1" [(ngModel)]="saturation" (ngModelChange)="applyEffects()" />
         </label>
     </div>
+
+    
+      
+
+
   </div>
   

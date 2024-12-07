@@ -15,6 +15,11 @@ export class StudioComponent {
   @ViewChild('canvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
   @Input() imageSrc!: string; // Parent-provided image source
 
+  @ViewChild('watermarkInput', { static: false }) watermarkInput!: ElementRef<HTMLInputElement>;
+  watermarkImage: HTMLImageElement | null = null;
+  watermarkPosition = { x: 0, y: 0 }; // Default watermark position
+
+
   private context!: CanvasRenderingContext2D;
   image = new Image(); // To load the provided image
   private rect!: DOMRect; // Canvas rect for scaling
@@ -100,6 +105,40 @@ export class StudioComponent {
     };
   }
 
+  // Method to trigger file upload for watermark
+addWatermark(): void {
+  this.watermarkInput.nativeElement.click();
+}
+
+// Handle watermark image upload
+handleWatermarkUpload(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.src = reader.result as string;
+      img.onload = () => {
+        this.watermarkImage = img;
+        this.placeWatermark();
+      };
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+// Place watermark in the middle of the canvas
+placeWatermark(): void {
+  if (this.watermarkImage) {
+    const canvas = this.canvasRef.nativeElement;
+    this.watermarkPosition.x = (canvas.width - this.watermarkImage.width) / 2;
+    this.watermarkPosition.y = (canvas.height - this.watermarkImage.height) / 2;
+
+    this.updateCanvas(); // Ensure other elements are redrawn
+  }
+}
+
   // Apply effects and redraw the canvas
   applyEffects(): void {
     this.updateCanvas();
@@ -116,6 +155,12 @@ export class StudioComponent {
     // Apply effects using filter
     context.filter = `brightness(${this.brightness}) contrast(${this.contrast}) saturate(${this.saturation})`;
 
+     // Draw watermark
+      if (this.watermarkImage) {
+        context.globalAlpha = 0.5; // Semi-transparent
+        context.drawImage(this.watermarkImage, this.watermarkPosition.x, this.watermarkPosition.y);
+        context.globalAlpha = 1; // Reset transparency
+      }
   
     // Draw texts
     this.texts.forEach((t, index) => {
@@ -233,7 +278,6 @@ export class StudioComponent {
     }
     const { x, y } = this.getCanvasCoordinates(event);
 
-    console.log('Click position:', { x, y });
 
     // Check if there's a selected text
     if (this.selectedTextIndex !== null) {
@@ -326,7 +370,6 @@ export class StudioComponent {
       x: controllerX, // Align with text's x position
       y: controllerY + textHeight + 10 // Offset slightly below the text
     };
-    console.log('Font Controller Position:', this.fontControllerPosition);
 
   }
     
@@ -678,9 +721,32 @@ export class StudioComponent {
       this.brightness = 1;
       this.contrast = 1;
       this.saturation = 1;
+
+      // Clear watermark
+      this.watermarkImage = null; // Clear the watermark
+
+      // Clear the canvas
+      const canvas = this.canvasRef.nativeElement;
+      const context = this.context;
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Redraw the image if it exists
+      if (this.image) {
+        context.drawImage(this.image, 0, 0);
+      }
+  }
+
+  downloadCanvas(): void {
+    const canvas = this.canvasRef.nativeElement;
   
-    // Redraw the canvas
-    this.updateCanvas();
+    // Convert canvas to a data URL
+    const dataURL = canvas.toDataURL('image/png');
+  
+    // Create a temporary link element to trigger download
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'edited_image.png';
+    link.click();
   }
   
   
