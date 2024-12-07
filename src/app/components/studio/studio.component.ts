@@ -556,6 +556,8 @@ export class StudioComponent {
     type: 'rectangle' | 'circle' | 'arrow';
     x: number;
     y: number;
+    endX: number;
+    endY: number;
     width: number;
     height: number;
   }): void {
@@ -579,6 +581,16 @@ export class StudioComponent {
         x: ((shape.x + radius) / scaleX) + 50, // Offset 10px to the right of bounding box
         y: ((shape.y + radius) / scaleY) + 50, // Offset 10px below the bounding box
       };
+    } else if (shape.type === 'arrow') {
+      // For arrows, position near the midpoint of the line
+      const midX = (shape.x + shape.endX) / 2; // Midpoint X
+      const midY = (shape.y + shape.endY) / 2; // Midpoint Y
+      
+      this.shapeControllerPosition = {
+        x: (midX / scaleX) + 50, // Offset 20px to the right of the midpoint
+        y: (midY / scaleY) + 50, // Offset 20px below the midpoint
+  };
+
     }
   }
   
