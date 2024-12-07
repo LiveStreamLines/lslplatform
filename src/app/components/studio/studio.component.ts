@@ -31,16 +31,20 @@ export class StudioComponent {
   fontControllerPosition: { x: number; y: number } | null = null;
 
   shapes: {
-    type: 'rectangle' | 'circle';
+    type: 'rectangle' | 'circle' | 'arrow';
     x: number;
     y: number;
+    endX: number;
+    endY: number;
     width: number;
     height: number;
     fillColor: string;
     borderColor: string;
     borderWidth: number;
-    moveMode: boolean;
-    selected: boolean;
+    color: string;
+    lineWidth?: number;
+    moveMode?: boolean;
+    selected?: boolean;
   }[] = [];
   selectedShapeIndex: number | null = null; // Index of the selected shape
   shapeControllerPosition: { x: number; y: number } | null = null;
@@ -166,6 +170,45 @@ export class StudioComponent {
           context.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
           context.stroke();
         }
+      } else if (shape.type === 'arrow') {
+         // Draw arrow line
+        context.strokeStyle = shape.color;
+        context.lineWidth = shape.lineWidth || 2;
+        context.moveTo(shape.x!, shape.y!);
+        context.lineTo(shape.endX!, shape.endY!);
+        context.stroke();
+
+        // Draw arrowhead
+        const arrowAngle = Math.atan2(shape.endY! - shape.y!, shape.endX! - shape.x!);
+        const arrowHeadLength = 10; // Length of the arrowhead
+
+        // Left wing of the arrowhead
+        context.moveTo(shape.endX!, shape.endY!);
+        context.lineTo(
+          shape.endX! - arrowHeadLength * Math.cos(arrowAngle - Math.PI / 6),
+          shape.endY! - arrowHeadLength * Math.sin(arrowAngle - Math.PI / 6)
+        );
+
+        // Right wing of the arrowhead
+        context.moveTo(shape.endX!, shape.endY!);
+        context.lineTo(
+          shape.endX! - arrowHeadLength * Math.cos(arrowAngle + Math.PI / 6),
+          shape.endY! - arrowHeadLength * Math.sin(arrowAngle + Math.PI / 6)
+        );
+
+        context.stroke();
+
+        // Draw boundary if selected
+        if (index === this.selectedShapeIndex) {
+          context.strokeStyle = 'blue';
+          context.lineWidth = 2;
+          context.strokeRect(
+            Math.min(shape.x!, shape.endX!),
+            Math.min(shape.y!, shape.endY!),
+            Math.abs(shape.endX! - shape.x!),
+            Math.abs(shape.endY! - shape.y!)
+          );
+        }
       }
       context.closePath();
     });
@@ -193,7 +236,7 @@ export class StudioComponent {
     }
 
     // Handle shapes
-      if (this.currentTool === 'rectangle' || this.currentTool === 'circle') {
+      if (this.currentTool === 'rectangle' || this.currentTool === 'circle' || this.currentTool === 'arrow') {
         const clickedShapeIndex = this.shapes.findIndex((shape) =>
           this.isPointInsideShape(shape, x, y)
         );
@@ -301,24 +344,26 @@ export class StudioComponent {
    }
 
   private isPointInsideShape(
-      shape: { type: string; x: number; y: number; width: number; height: number },
-      x: number,
-      y: number
+      shape: { type: string; x: number; y: number; width: number; height: number, endX: number, endY: number },
+      x1: number,
+      y1: number
     ): boolean {
       if (shape.type === 'rectangle') {
         return (
-          x >= shape.x &&
-          x <= shape.x + shape.width &&
-          y >= shape.y &&
-          y <= shape.y + shape.height
+          x1 >= shape.x &&
+          x1 <= shape.x + shape.width &&
+          y1 >= shape.y &&
+          y1 <= shape.y + shape.height
         );
       } else if (shape.type === 'circle') {
         const radius = Math.sqrt(
           Math.pow(shape.width, 2) + Math.pow(shape.height, 2)
         );
-        const dx = x - shape.x;
-        const dy = y - shape.y;
+        const dx = x1 - shape.x;
+        const dy = y1 - shape.y;
         return Math.sqrt(dx * dx + dy * dy) <= radius;
+      } else if (shape.type === 'arrow') {
+        return this.isPointNearArrow(shape, x1, y1);
       }
       return false;
   }
@@ -379,6 +424,9 @@ export class StudioComponent {
           y,
           width: 0,
           height: 0,
+          color: '',
+          endX: 0,
+          endY: 0,
           fillColor: 'rgba(0,0,0,0)', // Default fill color
           borderColor: '#000000', // Default border color
           borderWidth: 10, // Default border width
@@ -386,8 +434,27 @@ export class StudioComponent {
           moveMode: false,
         });
         this.selectedShapeIndex = this.shapes.length - 1; // Select the new shape
+    } else if (this.currentTool === 'arrow') {
+      // Start drawing an arrow
+        this.isDragging = true;
+        this.shapes.push({
+          type: 'arrow',
+          x: x,
+          y: y,
+          width: 0,
+          height: 0,
+          endX: x,
+          endY: y,
+          color: '#000000', // Default color
+          lineWidth: 10, // Default line width
+          fillColor: '', // Default fill color
+          borderColor: '', // Default border color
+          borderWidth: 0, // Default border width
+          selected: false,
+        });
+        this.selectedShapeIndex = this.shapes.length - 1; // Select the newly created arrow
     }
-       }
+  } 
   
   
   onCanvasMouseMove(event: MouseEvent): void {
@@ -432,6 +499,13 @@ export class StudioComponent {
       }
       // Update shape controller position
       this.updateShapeControllerPosition(selectedShape);
+    } else if (this.currentTool === 'arrow' && this.selectedShapeIndex !== null) {
+      const currentShape = this.shapes[this.selectedShapeIndex];
+      if (currentShape.type === 'arrow') {
+        currentShape.endX = x;
+        currentShape.endY = y;
+      }
+      this.updateCanvas();
     }
   
     this.updateCanvas();
@@ -461,12 +535,25 @@ export class StudioComponent {
         }
       }
     }
+
+    if (this.currentTool === 'arrow' && this.selectedShapeIndex !== null) {
+      const currentShape = this.shapes[this.selectedShapeIndex];
+      if (
+        currentShape.type === 'arrow' &&
+        currentShape.x === currentShape.endX &&
+        currentShape.y === currentShape.endY
+      ) {
+        // Remove the arrow if it's just a dot
+        this.shapes.pop();
+        this.selectedShapeIndex = null;
+      }
+    }
       // Reset drag and selection states
       this.updateCanvas();
   }
 
   private updateShapeControllerPosition(shape: {
-    type: 'rectangle' | 'circle';
+    type: 'rectangle' | 'circle' | 'arrow';
     x: number;
     y: number;
     width: number;
@@ -513,7 +600,30 @@ export class StudioComponent {
     }
   }
 
-
+  private isPointNearArrow(shape: { x: number; y: number; endX: number; endY: number; type: string }, x1: number, y1: number): boolean {
+    if (shape.type !== 'arrow') return false;
+  
+    // Calculate the distance of the point (x, y) to the line segment (startX, startY) -> (endX, endY)
+    const { x, y, endX, endY } = shape;
+  
+    const lineLength = Math.sqrt(Math.pow(endX - x, 2) + Math.pow(endY - y, 2));
+    if (lineLength === 0) return false; // Degenerate line
+  
+    // Project the point (x, y) onto the line segment
+    const t = ((x1 - x) * (endX - x) + (y1 - y) * (endY - y)) / Math.pow(lineLength, 2);
+    const clampedT = Math.max(0, Math.min(1, t)); // Clamp t to the range [0, 1]
+    const closestX = x + clampedT * (endX - x);
+    const closestY = y + clampedT * (endY - y);
+  
+    // Calculate the distance from the point to the closest point on the line
+    const distanceToLine = Math.sqrt(Math.pow(x1 - closestX, 2) + Math.pow(y1 - closestY, 2));
+  
+    // Define a threshold for selection (adjust this value for better user experience)
+    const selectionThreshold = 5; // Pixels
+  
+    return distanceToLine <= selectionThreshold;
+  }
+  
   
  
 }

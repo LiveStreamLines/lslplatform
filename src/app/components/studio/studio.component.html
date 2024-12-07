@@ -71,9 +71,17 @@
               <mat-icon>delete</mat-icon>
             </button>
             <button (click)="toggleShapeMove()" class="delete-button" [class.active]="isMoving">
-               <mat-icon>move</mat-icon>
+               <mat-icon>open_with</mat-icon>
             </button>
           </div>
+
+
+        <div *ngIf="selectedShapeIndex !== null && shapes[selectedShapeIndex]?.type === 'arrow'" 
+            [ngStyle]="{ position: 'absolute', top: shapeControllerPosition?.y + 'px', left: shapeControllerPosition?.x + 'px' }">
+            <button (click)="deleteShape()">Delete</button>
+            <input type="color" [(ngModel)]="shapes[selectedShapeIndex].color" />
+            <input type="range" min="1" max="10" [(ngModel)]="shapes[selectedShapeIndex].lineWidth" />
+        </div>
           
      
     </div>
