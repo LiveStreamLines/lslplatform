@@ -13,13 +13,16 @@ import { CameraFormComponent } from './components/cameras/camera-form/camera-for
 import { GalleryComponent } from './components/gallery/gallery.component';
 import { VideoRequestComponent } from './components/gallery/video-request/video-request.component';
 import { PhotoRequestComponent } from './components/gallery/photo-request/photo-request.component';
+import { MediaComponent } from './components/media/media.component';
+import { ServicesComponent } from './components/services/services.component';
 
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },  // Protect home with AuthGuard
   { path: 'main/:developerTag', component: ProjectListComponent },  // Project list for a specific developer
-  { path: 'main/:developerTag/:projectTag', component: CameraListComponent },  // Camera list for a specific project
+  { path: 'main/services/:developerTag/:projectTag', component: ServicesComponent},
+  { path: 'main/services/:developerTag/:projectTag/timelapse', component: CameraListComponent },  // Camera list for a specific project
   { path: 'main/:developerTag/:projectTag/:cameraName', component: CameraDetailComponent },  // Route for camera detail
   { path: 'compare', component: CameraCompareComponent },
   { path: 'developers', component: DevelopersComponent },
@@ -30,5 +33,6 @@ export const routes: Routes = [
   { path: 'gallery', component: GalleryComponent},
   { path: 'gallery/video-request', component: VideoRequestComponent},
   { path: 'gallery/photo-request', component: PhotoRequestComponent},
-    { path: '', redirectTo: '/login', pathMatch: 'full' }
+  { path: 'media', component: MediaComponent},
+  { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];

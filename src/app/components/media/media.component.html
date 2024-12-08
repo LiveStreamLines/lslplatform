@@ -1,0 +1,66 @@
+<div class="container">
+    <!-- Left Section: Form -->
+    <div class="form-section">
+      <p color="white">upload Media</p>
+        <form *ngIf="!uploadSuccess" [formGroup]="mediaForm" (ngSubmit)="submitForm()">
+            <mat-form-field appearance="fill">
+            <mat-label>Developer</mat-label>
+            <mat-select formControlName="developer">
+                <mat-option *ngFor="let dev of developers" [value]="dev._id">{{ dev.developerName }}</mat-option>
+            </mat-select>
+            </mat-form-field>
+        
+            <mat-form-field appearance="fill">
+            <mat-label>Project</mat-label>
+            <mat-select formControlName="project">
+                <mat-option *ngFor="let proj of projects" [value]="proj._id">{{ proj.projectName }}</mat-option>
+            </mat-select>
+            </mat-form-field>
+        
+            <mat-form-field appearance="fill">
+            <mat-label>Service</mat-label>
+            <mat-select formControlName="service">
+                <mat-option *ngFor="let service of services" [value]="service">{{ service }}</mat-option>
+            </mat-select>
+            </mat-form-field>
+        
+            <mat-form-field appearance="fill">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        
+            <div>
+                <label for="fileUpload" class="file-label">Upload Files</label>
+                <input
+                  id="fileUpload"
+                  type="file"
+                  (change)="onFileChange($event)"
+                  multiple
+                  class="file-input"
+                />
+              </div>
+
+              <div class="selected-files" *ngIf="files_List.length > 0">
+                <p>Selected Files:</p>
+                <ul>
+                  <li *ngFor="let file of files_List">{{ file.name }}</li>
+                </ul>
+              </div>
+                
+            <button mat-raised-button color="primary" type="submit" [disabled]="mediaForm.invalid">Submit</button>
+        
+            <div *ngIf="uploadProgress > 0">
+            <p>Upload Progress: {{ uploadProgress }}%</p>
+            <mat-progress-bar mode="determinate" [value]="uploadProgress"></mat-progress-bar>
+            </div>
+        </form>
+
+        <div *ngIf="uploadSuccess" class="success-message">
+            <p>Your upload was successful!</p>
+            <button mat-raised-button color="accent" (click)="resetForm()">Upload Another</button>
+        </div>
+    </div>
+</div>
+  

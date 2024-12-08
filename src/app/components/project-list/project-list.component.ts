@@ -64,7 +64,7 @@ export class ProjectListComponent implements OnInit {
 
    // This method is called when a project is clicked
    onProjectClick(project: Project): void {
-    this.router.navigate([`/main/${this.developerTag}/${project.projectTag}`]);
+    this.router.navigate([`/main/services/${this.developerTag}/${project.projectTag}`]);
   }
 
   goBack(): void {

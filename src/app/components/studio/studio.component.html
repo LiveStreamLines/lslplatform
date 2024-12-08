@@ -100,7 +100,7 @@
 
         <div *ngIf="shapeControllerPosition && currentShape.type === 'arrow'" 
             class="shape-controller"
-            [ngStyle]="{ position: 'absolute', top: shapeControllerPosition?.y + 'px', left: shapeControllerPosition?.x + 'px' }">
+            [ngStyle]="{ position: 'absolute', top: shapeControllerPosition.y + 'px', left: shapeControllerPosition.x + 'px' }">
             <label>
                 color:
             <input type="color" [(ngModel)]="currentShape.color" (ngModelChange)="updateShape()"/>
