@@ -15,6 +15,8 @@ import { VideoRequestComponent } from './components/gallery/video-request/video-
 import { PhotoRequestComponent } from './components/gallery/photo-request/photo-request.component';
 import { MediaComponent } from './components/media/media.component';
 import { ServicesComponent } from './components/services/services.component';
+import { UsersComponent } from './components/users/users.component';
+import { UserFormComponent } from './components/users/user-form/user-form.component';
 
 
 export const routes: Routes = [
@@ -28,8 +30,11 @@ export const routes: Routes = [
   { path: 'developers', component: DevelopersComponent },
   { path: 'projects', component: ProjectsComponent },
   { path: 'cameras', component: CameraComponent },
+  { path: 'users', component: UsersComponent },
   { path: 'camera-form', component: CameraFormComponent }, // Route for adding a new camera
   { path: 'camera-form/:id', component: CameraFormComponent }, // Route for editing a camera by ID
+  { path: 'users/add', component: UserFormComponent },
+  { path: 'users/edit/:id', component: UserFormComponent }, // Route for editing
   { path: 'gallery', component: GalleryComponent},
   { path: 'gallery/video-request', component: VideoRequestComponent},
   { path: 'gallery/photo-request', component: PhotoRequestComponent},

@@ -1,0 +1,33 @@
+.user-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #000; /* Black background */
+  color: #fff; /* White text for contrast */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Adjust gap between inputs */
+  margin-bottom: 20px;
+}
+
+.col {
+  flex: 1;
+  min-width: 300px;
+}
+
+button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+}

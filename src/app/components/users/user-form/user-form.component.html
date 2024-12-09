@@ -1,0 +1,107 @@
+<div class="user-form-container">
+  <h2 *ngIf="isEditing">Edit User</h2>
+  <h2 *ngIf="!isEditing">Add New User</h2>
+
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <!-- Name and Email in One Line -->
+    <div class="row">
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input matInput type="text" formControlName="name" />
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Password and Retype Password -->
+    <div class="row">
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" formControlName="password" />
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Retype Password</mat-label>
+          <input matInput type="password" formControlName="retypePassword" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Phone Number -->
+    <div class="row">
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Phone</mat-label>
+          <input matInput type="text" formControlName="phone" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Role -->
+    <div class="row">
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Role</mat-label>
+          <mat-select formControlName="role">
+            <mat-option value="admin">Admin</mat-option>
+            <mat-option value="project manager">Project Manager</mat-option>
+            <mat-option value="user">User</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Accessible Dropdowns -->
+    <div class="row">
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Accessible Developers</mat-label>
+          <mat-select formControlName="accessibleDevelopers" multiple>
+            <mat-option *ngFor="let dev of developers" [value]="dev._id">
+              {{ dev.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Accessible Projects</mat-label>
+          <mat-select formControlName="accessibleProjects" multiple>
+            <mat-option *ngFor="let proj of projects" [value]="proj._id">
+              {{ proj.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Accessible Cameras</mat-label>
+          <mat-select formControlName="accessibleCameras" multiple>
+            <mat-option *ngFor="let cam of cameras" [value]="cam._id">
+              {{ cam.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
+      {{ isEditing ? 'Update User' : 'Add User' }}
+    </button>
+  </form>
+</div>
