@@ -22,17 +22,25 @@
     <!-- Password and Retype Password -->
     <div class="row">
       <div class="col">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Password</mat-label>
           <input matInput type="password" formControlName="password" />
+          <mat-error *ngIf="userForm.get('password')?.hasError('required')">Password is required</mat-error>
         </mat-form-field>
       </div>
       <div class="col">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Retype Password</mat-label>
           <input matInput type="password" formControlName="retypePassword" />
+          <mat-error *ngIf="userForm.get('retypePassword')?.hasError('required')">
+            Retype password is required
+          </mat-error>
         </mat-form-field>
       </div>
+        <!-- Passwords Mismatch Error -->
+        <div *ngIf="userForm.hasError('passwordsMismatch')" class="error">
+          Passwords do not match
+        </div>
     </div>
 
     <!-- Phone Number -->
@@ -51,48 +59,48 @@
         <mat-form-field appearance="outline">
           <mat-label>Role</mat-label>
           <mat-select formControlName="role">
-            <mat-option value="admin">Admin</mat-option>
-            <mat-option value="project manager">Project Manager</mat-option>
-            <mat-option value="user">User</mat-option>
+            <mat-option value="Admin">Admin</mat-option>
+            <mat-option value="Developer">Developer</mat-option>
+            <mat-option value="User">User</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
     </div>
 
     <!-- Accessible Dropdowns -->
-    <div class="row">
+    <div class="row" *ngIf="userForm.get('role')?.value !== 'Admin'">
       <div class="col">
         <mat-form-field appearance="outline">
           <mat-label>Accessible Developers</mat-label>
           <mat-select formControlName="accessibleDevelopers" multiple>
             <mat-option *ngFor="let dev of developers" [value]="dev._id">
-              {{ dev.name }}
+              {{ dev.developerName }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="userForm.get('role')?.value !== 'Admin'">
       <div class="col">
         <mat-form-field appearance="outline">
           <mat-label>Accessible Projects</mat-label>
           <mat-select formControlName="accessibleProjects" multiple>
             <mat-option *ngFor="let proj of projects" [value]="proj._id">
-              {{ proj.name }}
+              {{ proj.projectName }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="userForm.get('role')?.value !== 'Admin'">
       <div class="col">
         <mat-form-field appearance="outline">
           <mat-label>Accessible Cameras</mat-label>
           <mat-select formControlName="accessibleCameras" multiple>
             <mat-option *ngFor="let cam of cameras" [value]="cam._id">
-              {{ cam.name }}
+              {{ cam.cameraDescription }}
             </mat-option>
           </mat-select>
         </mat-form-field>

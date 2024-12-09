@@ -26,6 +26,14 @@ h2 {
   min-width: 300px;
 }
 
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+
 button {
   display: block;
   margin: 20px auto;

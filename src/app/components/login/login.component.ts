@@ -12,29 +12,23 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  username: string = '';
+  email: string = '';
   password: string = '';
-  rememberMe: boolean = false;  // Add rememberMe field
   loginError: string | null = null;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   onLogin(): void {
-    // Call login with rememberMe
-    this.authService.login(this.username, this.password, this.rememberMe ? 'true' : '')
-   .subscribe({
-    next: (response: any) => {
-      if (response.authh) {
-        // Store auth data
-        this.authService.setAuthData(response.authh, response.developers, response.projects);
-
-        // Navigate to the dashboard (or another page)
-        this.router.navigate(['/home']);
-      }
-    },
-    error: (error) => {
-      this.loginError = error.error.msg || 'Login failed. Please try again.';
-    }
-  });
+    this.authService.login(this.email, this.password).subscribe({
+      next: () => {
+        this.router.navigate(['home']); // Redirect to dashboard on success
+      },
+      error: (err) => {
+        console.error('Login failed:', err);
+      },
+    });
   }
+
+  
+  
 }

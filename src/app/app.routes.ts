@@ -22,22 +22,22 @@ import { UserFormComponent } from './components/users/user-form/user-form.compon
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },  // Protect home with AuthGuard
-  { path: 'main/:developerTag', component: ProjectListComponent },  // Project list for a specific developer
-  { path: 'main/services/:developerTag/:projectTag', component: ServicesComponent},
-  { path: 'main/services/:developerTag/:projectTag/timelapse', component: CameraListComponent },  // Camera list for a specific project
-  { path: 'main/:developerTag/:projectTag/:cameraName', component: CameraDetailComponent },  // Route for camera detail
-  { path: 'compare', component: CameraCompareComponent },
-  { path: 'developers', component: DevelopersComponent },
-  { path: 'projects', component: ProjectsComponent },
-  { path: 'cameras', component: CameraComponent },
-  { path: 'users', component: UsersComponent },
-  { path: 'camera-form', component: CameraFormComponent }, // Route for adding a new camera
-  { path: 'camera-form/:id', component: CameraFormComponent }, // Route for editing a camera by ID
-  { path: 'users/add', component: UserFormComponent },
-  { path: 'users/edit/:id', component: UserFormComponent }, // Route for editing
-  { path: 'gallery', component: GalleryComponent},
-  { path: 'gallery/video-request', component: VideoRequestComponent},
-  { path: 'gallery/photo-request', component: PhotoRequestComponent},
-  { path: 'media', component: MediaComponent},
+  { path: 'main/:developerTag', component: ProjectListComponent,  canActivate: [AuthGuard] },  // Project list for a specific developer
+  { path: 'main/services/:developerTag/:projectTag', component: ServicesComponent,  canActivate: [AuthGuard]},
+  { path: 'main/services/:developerTag/:projectTag/timelapse', component: CameraListComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
+  { path: 'main/:developerTag/:projectTag/:cameraName', component: CameraDetailComponent,  canActivate: [AuthGuard] },  // Route for camera detail
+  { path: 'compare', component: CameraCompareComponent,  canActivate: [AuthGuard] },
+  { path: 'developers', component: DevelopersComponent,  canActivate: [AuthGuard] },
+  { path: 'projects', component: ProjectsComponent,  canActivate: [AuthGuard] },
+  { path: 'cameras', component: CameraComponent,  canActivate: [AuthGuard] },
+  { path: 'users', component: UsersComponent,  canActivate: [AuthGuard] },
+  { path: 'camera-form', component: CameraFormComponent,  canActivate: [AuthGuard] }, // Route for adding a new camera
+  { path: 'camera-form/:id', component: CameraFormComponent,  canActivate: [AuthGuard] }, // Route for editing a camera by ID
+  { path: 'users/add', component: UserFormComponent,  canActivate: [AuthGuard] },
+  { path: 'users/edit/:id', component: UserFormComponent,  canActivate: [AuthGuard] }, // Route for editing
+  { path: 'gallery', component: GalleryComponent,  canActivate: [AuthGuard]},
+  { path: 'gallery/video-request', component: VideoRequestComponent,  canActivate: [AuthGuard]},
+  { path: 'gallery/photo-request', component: PhotoRequestComponent,  canActivate: [AuthGuard]},
+  { path: 'media', component: MediaComponent,  canActivate: [AuthGuard]},
   { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];
