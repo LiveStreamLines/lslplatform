@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
@@ -19,7 +20,7 @@ import { User } from '../../../models/user.model';
   selector: 'app-user-form',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, MatInputModule,
-    MatFormFieldModule, MatSelectModule, MatButtonModule, ],
+    MatFormFieldModule, MatSelectModule, MatButtonModule, MatCheckboxModule],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.css'
 })
@@ -31,6 +32,15 @@ export class UserFormComponent implements OnInit {
   developers: any[] = []; // Replace with actual developer data
   projects: any[] = []; // Replace with actual project data
   cameras: any[] = []; // Replace with actual camera data
+  services: string[] = [
+    'Timelapse',
+    'Drone Shooting',
+    'Site Photography',
+    'Site Videography',
+    '360 Photography',
+    '360 Videography',
+    'Satellite Imagery'
+  ];
   userId: string | null = null; // Store user ID when editing
 
   constructor(private fb: FormBuilder, private userService: UserService, 
@@ -66,6 +76,7 @@ export class UserFormComponent implements OnInit {
     this.userForm.get('role')?.valueChanges.subscribe((role: string) => {
       if (role === 'Admin') {
         this.clearAccessibles();
+        this.clearPermissions();
       }
     });
 
@@ -92,6 +103,9 @@ export class UserFormComponent implements OnInit {
         accessibleDevelopers: [[]],
         accessibleProjects: [[]],
         accessibleCameras: [[]],
+        accessibleServices: [[]],
+        canAddUser: [false],        // Permission to add user
+        canUploadVideo: [false],    // Permission to upload video
       },
       { validators: this.passwordsMatchValidator() } // Attach validator here
     );
@@ -173,6 +187,12 @@ export class UserFormComponent implements OnInit {
     this.userForm.get('accessibleDevelopers')?.setValue([]);
     this.userForm.get('accessibleProjects')?.setValue([]);
     this.userForm.get('accessibleCameras')?.setValue([]);
+    this.userForm.get('accessibleServices')?.setValue([]);
+  }
+
+  clearPermissions(): void {
+    this.userForm.get('canAddUser')?.setValue(false);
+    this.userForm.get('canUploadVideo')?.setValue(false);
   }
 
 }

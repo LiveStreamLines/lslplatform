@@ -8,6 +8,14 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
+mat-form-field {
+  width: 100%;
+}
+
+.phone {
+  width: 50%;
+}
+
 h2 {
   text-align: center;
   color: #fff;

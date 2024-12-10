@@ -6,6 +6,7 @@
   import { MatButtonModule } from '@angular/material/button';
   import { DeveloperService } from '../../services/developer.service';
   import { Developer } from '../../models//developer.model';
+  import { AuthService } from '../../services/auth.service';
 
   @Component({
     selector: 'app-home',
@@ -20,14 +21,19 @@
     loading: boolean = true;
     filteredDevelopers: Developer[] = [];  // To store filtered developers
     searchTerm: string = '';  // This will be used for filtering developers
+    userRole: string | null = null;
+    accessibleDevelopers: string[] = [];
     logopath: string = 'http://5.9.85.250:5000/';
-    //logopath: string = 'https://lslcloud.com/media/';
 
     constructor(
       private developerService: DeveloperService, 
+      private authService: AuthService,
       private router: Router) {}
 
     ngOnInit(): void {
+      this.userRole = this.authService.getUserRole();
+      this.accessibleDevelopers = this.authService.getAccessibleDevelopers();
+
       this.developerService.getAllDevelopers().subscribe({
         next: (data: Developer[]) => {
           // If the logo is a relative path, prepend the base URL
@@ -35,7 +41,12 @@
             ...dev,
             logo: this.logopath + dev.logo  // Prepend the base URL if needed
           }));
-          this.filteredDevelopers = this.developers;// Initialize filteredDevelopers with all developers
+          // Filter developers based on role and accessible developers
+          this.filteredDevelopers = this.userRole === 'Admin'
+          ? this.developers // Admins see all developers
+          : this.developers.filter((dev) =>
+              this.accessibleDevelopers.includes(dev._id)
+            );
           this.loading = false;  // Stop loading when data is fetched
         },
         error: (err: any) => {
@@ -55,7 +66,13 @@
           developer.developerName.toLowerCase().includes(this.searchTerm.toLowerCase())
         );
       } else {
-        this.filteredDevelopers =  [...this.developers]; // Reset to original list if search is empty
+        // Reset to the full filtered list based on role and accessible developers
+        this.filteredDevelopers =
+          this.userRole === 'Admin'
+            ? this.developers
+            : this.developers.filter((dev) =>
+                this.accessibleDevelopers.includes(dev._id)
+            );
       }
     }
 

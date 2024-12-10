@@ -24,6 +24,7 @@ export class LoginComponent {
         this.router.navigate(['home']); // Redirect to dashboard on success
       },
       error: (err) => {
+        this.loginError = err.error.msg;
         console.error('Login failed:', err);
       },
     });

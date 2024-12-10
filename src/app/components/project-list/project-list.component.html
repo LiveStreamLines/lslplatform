@@ -6,7 +6,7 @@
     </div>
 
     <div *ngIf="!loading && projects.length > 0" class="projects-container">
-      <mat-card class="project-card" *ngFor="let project of projects" (click)="onProjectClick(project)">
+      <mat-card class="project-card" *ngFor="let project of filteredProjects" (click)="onProjectClick(project)">
         <img mat-card-image [src]="project.logo" alt="{{ project.projectName }}" />
         <mat-card-title>{{ project.projectName }}</mat-card-title>
         <mat-card-content>{{ project.description }}</mat-card-content>

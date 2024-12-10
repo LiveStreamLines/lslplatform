@@ -1,6 +1,6 @@
 <div class="grid-container">
     <mat-grid-list cols="3" rowHeight="1:1" gutterSize="20px">
-      <mat-grid-tile *ngFor="let service of services">
+      <mat-grid-tile *ngFor="let service of filteredServices">
         <mat-card class="service-card" (click)="navigateTo(service.route)">
           <mat-card-header>
             <mat-icon class="service-icon">{{ service.icon }}</mat-icon>

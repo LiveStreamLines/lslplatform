@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-services',
@@ -13,9 +14,13 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './services.component.html',
   styleUrl: './services.component.css'
 })
-export class ServicesComponent {
+export class ServicesComponent implements OnInit {
   developerTag!: string;
   projectTag!: string;
+  filteredServices: any[] = [];
+  accessibleServices: string[] = [];
+  userRole: string | null = null;
+
 
   services = [
     { name: 'Timelapse', icon: 'timelapse', route: '/timelapse' },
@@ -27,7 +32,7 @@ export class ServicesComponent {
     { name: 'Satellite Imagery', icon: 'satellite', route: '/satellite-imagery' }
   ];
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(private route: ActivatedRoute, private router: Router, private authService: AuthService) {
     // Retrieve the route parameters
     this.route.params.subscribe(params => {
       this.developerTag = params['developerTag'];
@@ -36,6 +41,19 @@ export class ServicesComponent {
   }
 
   
+  ngOnInit(): void {
+    // Get user role and accessible projects
+    this.userRole = this.authService.getUserRole();
+    this.accessibleServices = this.authService.getAccessibleServices();
+     // Filter projects based on role and accessible projects
+     this.filteredServices = this.userRole === 'Admin'
+     ? this.services // Admins see all projects
+     : this.services.filter((services) =>
+         this.accessibleServices.includes(services.name)
+     );
+
+
+  }
 
   navigateTo(serviceRoute: string) {
 

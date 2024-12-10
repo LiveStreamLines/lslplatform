@@ -19,6 +19,16 @@
       </div>
     </div>
 
+     <!-- Phone Number -->
+     <div class="row">
+      <div class="col">
+        <mat-form-field class="phone" appearance="outline">
+          <mat-label>Phone</mat-label>
+          <input matInput type="text" formControlName="phone" />
+        </mat-form-field>
+      </div>
+    </div>
+
     <!-- Password and Retype Password -->
     <div class="row">
       <div class="col">
@@ -28,6 +38,7 @@
           <mat-error *ngIf="userForm.get('password')?.hasError('required')">Password is required</mat-error>
         </mat-form-field>
       </div>
+       
       <div class="col">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Retype Password</mat-label>
@@ -43,16 +54,7 @@
         </div>
     </div>
 
-    <!-- Phone Number -->
-    <div class="row">
-      <div class="col">
-        <mat-form-field appearance="outline">
-          <mat-label>Phone</mat-label>
-          <input matInput type="text" formControlName="phone" />
-        </mat-form-field>
-      </div>
-    </div>
-
+  
     <!-- Role -->
     <div class="row">
       <div class="col">
@@ -94,16 +96,44 @@
       </div>
     </div>
 
+    <!-- Accessible Services -->
     <div class="row" *ngIf="userForm.get('role')?.value !== 'Admin'">
       <div class="col">
         <mat-form-field appearance="outline">
-          <mat-label>Accessible Cameras</mat-label>
+          <mat-label>Accessible Services</mat-label>
+          <mat-select formControlName="accessibleServices" multiple>
+            <mat-option *ngFor="let service of services" [value]="service">
+              {{ service }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="userForm.get('role')?.value !== 'Admin'">
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Accessible Timelapse Cameras</mat-label>
           <mat-select formControlName="accessibleCameras" multiple>
             <mat-option *ngFor="let cam of cameras" [value]="cam._id">
               {{ cam.cameraDescription }}
             </mat-option>
           </mat-select>
         </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Permissions -->
+    <div class="row" *ngIf="userForm.get('role')?.value !== 'admin'">
+      <div class="col">
+        <mat-checkbox formControlName="canAddUser">
+          Can Add User
+        </mat-checkbox>
+      </div>
+      <div class="col">
+        <mat-checkbox formControlName="canUploadVideo">
+          Can Upload Video
+        </mat-checkbox>
       </div>
     </div>
 

@@ -14,6 +14,8 @@ export class AuthService {
   private accessibleDevelopers: string[] = [];
   private accessibleProjects: string[] = [];
   private accessibleCameras: string[] = [];
+  private accessibleServices: string[] = [];
+
 
   constructor(private http: HttpClient, private router: Router) {
     // Initialize from localStorage
@@ -22,6 +24,7 @@ export class AuthService {
     this.accessibleDevelopers = JSON.parse(localStorage.getItem('accessibleDevelopers') || '[]');
     this.accessibleProjects = JSON.parse(localStorage.getItem('accessibleProjects') || '[]');
     this.accessibleCameras = JSON.parse(localStorage.getItem('accessibleCameras') || '[]');
+    this.accessibleServices = JSON.parse(localStorage.getItem('accessibleCameras') || '[]');
   }
 
   login(email: string, password: string): Observable<any> {
@@ -32,6 +35,7 @@ export class AuthService {
         this.accessibleDevelopers = response.developers;
         this.accessibleProjects = response.projects;
         this.accessibleCameras = response.cameras;
+        this.accessibleServices = response.services;
 
         // Save to localStorage
         localStorage.setItem('authToken', this.authToken || '');
@@ -39,6 +43,8 @@ export class AuthService {
         localStorage.setItem('accessibleDevelopers', JSON.stringify(this.accessibleDevelopers));
         localStorage.setItem('accessibleProjects', JSON.stringify(this.accessibleProjects));
         localStorage.setItem('accessibleCameras', JSON.stringify(this.accessibleCameras));
+        localStorage.setItem('accessibleServices', JSON.stringify(this.accessibleServices));
+
       })
     );
   }
@@ -59,6 +65,10 @@ export class AuthService {
     return this.accessibleProjects;
   }
 
+  getAccessibleServices(): string[] {
+    return this.accessibleServices;
+  }
+
   getAccessibleCameras(): string[] {
     return this.accessibleCameras;
   }
@@ -74,6 +84,7 @@ export class AuthService {
     this.accessibleDevelopers = [];
     this.accessibleProjects = [];
     this.accessibleCameras = [];
+    this.accessibleServices = [];
 
     // Remove from localStorage
     localStorage.removeItem('authToken');
@@ -81,6 +92,7 @@ export class AuthService {
     localStorage.removeItem('accessibleDevelopers');
     localStorage.removeItem('accessibleProjects');
     localStorage.removeItem('accessibleCameras');
+    localStorage.removeItem('accessibleServices');
 
     this.router.navigate(['/login']);
   }
