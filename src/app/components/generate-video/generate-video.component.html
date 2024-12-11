@@ -69,32 +69,64 @@
       </mat-form-field>
 
       <!-- Checkboxes -->
-      <mat-checkbox [(ngModel)]="showDate" (change)="onShowDateChange()" name="showDate">Show Date</mat-checkbox>
+      <div class="checkbox-container">
+        <div class="checkbox-column">
 
-      <mat-checkbox [(ngModel)]="showText" name="addText" (change)="onShowTextChange()">Add Text</mat-checkbox>
-      <div *ngIf="showText">
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Text</mat-label>
-          <input matInput [(ngModel)]="textOverlay" (ngModelChange)="onTextOverlayChange()" name="textOverlay" />
-        </mat-form-field>
+          <mat-checkbox [(ngModel)]="showDate" (change)="onShowDateChange()" name="showDate">Show Date</mat-checkbox>
+
+          <mat-checkbox [(ngModel)]="showText" name="addText" (change)="onShowTextChange()">Add Text</mat-checkbox>
+          <div *ngIf="showText">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Text</mat-label>
+              <input matInput [(ngModel)]="textOverlay" (ngModelChange)="onTextOverlayChange()" name="textOverlay" />
+            </mat-form-field>
+          </div>
+
+          <mat-checkbox [(ngModel)]="showImage" name="showImage" (change)="onShowImageChange()">Add logo</mat-checkbox>
+          <div *ngIf="showImage">
+            <p>Upload logo</p>
+            <input type="file" (change)="onImageUpload($event)" />
+          </div>
+        </div>
+
+        <div class="checkbox-column">
+
+          <mat-checkbox [(ngModel)]="showWatermark" name="addWatermark" (change)="onShowWatermarkChange()">Add Watermark</mat-checkbox>
+          <div *ngIf="showWatermark">
+            <p>Upload Watermark Image</p>
+            <input type="file" (change)="onWatermarkImageUpload($event)" />
+
+            <!-- Watermark Size Slider -->
+            <div class="slider2">
+              <label for="watermarkSize">Size</label>
+              <input
+                type="range"   id="watermarkSize"  name="watermarkSize"
+                [(ngModel)]="watermarkSize"
+                min="0.1"   max="2"    step="0.1"
+                (input)="onWatermarkSettingsChange()"
+              />
+              <span>{{ watermarkSize }}</span>
+            </div>
+
+            <!-- Watermark Transparency Slider -->
+            <div class="slider2">
+              <label for="watermarkTransparency">Transparency</label>
+              <input
+                type="range"   id="watermarkTransparency"    name="watermarkTransparency"
+                [(ngModel)]="watermarkTransparency"           
+                min="0"   max="1"    step="0.1"
+                (input)="onWatermarkSettingsChange()"
+              />
+              <span>{{ watermarkTransparency }}</span>
+            </div>
+
+          </div>
+          <mat-checkbox [(ngModel)]="addMusic" name="addMusic">Add Background Music</mat-checkbox>
+
+        </div>
       </div>
-
-      <mat-checkbox [(ngModel)]="showImage" name="showImage" (change)="onShowImageChange()">Add logo</mat-checkbox>
-      <div *ngIf="showImage">
-        <p>Upload logo</p>
-        <input type="file" (change)="onImageUpload($event)" />
-      </div>
-
-      <mat-checkbox [(ngModel)]="showWatermark" name="addWatermark" (change)="onShowWatermarkChange()">Add Watermark</mat-checkbox>
-      <div *ngIf="showWatermark">
-        <p>Upload Watermark Image</p>
-        <input type="file" (change)="onWatermarkImageUpload($event)" />
-      </div>
-
-      <mat-checkbox [(ngModel)]="addMusic" name="addMusic">Add Background Music</mat-checkbox>
-
-      <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">Filter Images</button>
-    </form>
+    <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">Filter Images</button>
+    </form>     
   </div>
 
   <!-- Success Message -->

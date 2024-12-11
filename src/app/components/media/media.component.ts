@@ -27,10 +27,9 @@ export class MediaComponent {
   projects: any[] = [];
   services: string[] = [
     'Drone Shooting',
-    'Site Photography',
-    'Site Videography',
-    '360 Photography',
-    '360 Videography',
+    'LSL Videos',
+    'Site Photography & Videography',
+    '360 Photography & Videography',
     'Satellite Imagery'
   ];
   files_List: File[] = [];

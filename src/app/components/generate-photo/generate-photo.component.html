@@ -47,7 +47,11 @@
             name="hour2"
             required />
         </mat-form-field>
-  
+
+        <mat-checkbox [(ngModel)]="showDate"  name="showDate">Show Date</mat-checkbox>
+        <mat-checkbox [(ngModel)]="showTime"  name="showDate">Show Time</mat-checkbox>
+
+        
         <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">Generate Photo Request</button>
       </form>
     </div>

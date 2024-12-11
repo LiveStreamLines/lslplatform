@@ -9,6 +9,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { PhotoService } from '../../services/photo.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-generate-photo',
@@ -20,7 +21,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatDatepickerModule,
     MatNativeDateModule,
     FormsModule,
-    CommonModule
+    CommonModule,
+    MatCheckboxModule
   ],
   templateUrl: './generate-photo.component.html',
   styleUrl: './generate-photo.component.css'
@@ -35,6 +37,9 @@ export class GeneratePhotoComponent implements OnInit {
   endDate!: Date;
   hour1: number = 8;
   hour2: number = 9;
+
+  showDate: boolean = false;
+  showTime: boolean = false;
 
   isLoading: boolean = false;
   errorMessage: string | null = null;

@@ -12,7 +12,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-
 @Component({
   selector: 'app-generate-video',
   standalone: true,
@@ -84,6 +83,9 @@ export class GenerateVideoComponent implements OnInit {
   filterMessage: string | null = null;
   filteredPicsCount!: number;
   isFilterComplete: boolean = false;
+
+  watermarkSize: number = 1; // Default size (1 means original size)
+  watermarkTransparency: number = 0.5; // Default transparency (1 means fully opaque)
 
   constructor(private videoService: VideoService, private route: ActivatedRoute) {}
 
@@ -173,15 +175,23 @@ export class GenerateVideoComponent implements OnInit {
         const watermarkImage = new Image();
         watermarkImage.src = reader.result as string;
         watermarkImage.onload = () => {
-          const x = (canvasWidth - watermarkImage.width) / 2; // Center horizontally
-          const y = (canvasHeight - watermarkImage.height) / 2; // Center vertically
-          context.globalAlpha = 0.5; // Make the watermark semi-transparent
-          context.drawImage(watermarkImage, x, y);
+          const scaledWidth = watermarkImage.width * this.watermarkSize;
+          const scaledHeight = watermarkImage.height * this.watermarkSize;
+  
+          const x = (canvasWidth - scaledWidth) / 2; // Center horizontally
+          const y = (canvasHeight - scaledHeight) / 2; // Center vertically
+         
+          context.globalAlpha = this.watermarkTransparency; // Apply transparency
+          context.drawImage(watermarkImage, x, y, scaledWidth, scaledHeight);
           context.globalAlpha = 1.0; // Reset transparency
         };
       };
       reader.readAsDataURL(this.watermarkImageFile);
     }   
+  }
+
+  onWatermarkSettingsChange(): void {
+    this.drawCanvas(); // Redraw the canvas with updated watermark settings
   }
 
   private drawUploadedImage(context: CanvasRenderingContext2D, canvasWidth: number): void {
