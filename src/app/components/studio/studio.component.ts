@@ -55,6 +55,10 @@ export class StudioComponent {
   shapeControllerPosition: { x: number; y: number } | null = null;
   currentShape!: any; // Placeholder for the currently selected shape
 
+  watermarks: any[] = []; // Store multiple watermarks
+  currentWatermark: any = null; // Selected watermark
+  watermarkControllerPosition: { x: number; y: number } | null = null; // Position for control
+
   brightness: number = 1; // Default brightness
   contrast: number = 1; // Default contrast
   saturation: number = 1; // Default saturation
@@ -106,38 +110,75 @@ export class StudioComponent {
   }
 
   // Method to trigger file upload for watermark
-addWatermark(): void {
-  this.watermarkInput.nativeElement.click();
-}
+  addWatermark(): void {
+    this.watermarkControllerPosition = null;
+    this.currentTool = 'watermark';
+    console.log(`Selected Tool: watermark`);
 
-// Handle watermark image upload
-handleWatermarkUpload(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (input.files && input.files[0]) {
-    const file = input.files[0];
-    const reader = new FileReader();
-    reader.onload = () => {
-      const img = new Image();
-      img.src = reader.result as string;
-      img.onload = () => {
-        this.watermarkImage = img;
-        this.placeWatermark();
-      };
+    const newWatermark = {
+      image: null, // Placeholder for the uploaded image
+      x: 100, // Default position
+      y: 100,
+      width: 200, // Default size
+      height: 100,
+      opacity: 0.5, // Default transparency
+      moveMode: false, // Default move state
+      selected: true,
     };
-    reader.readAsDataURL(file);
+    
+    this.watermarks.push(newWatermark);
+    this.currentWatermark = newWatermark;
+    this.watermarkInput.nativeElement.click();
   }
-}
 
-// Place watermark in the middle of the canvas
-placeWatermark(): void {
-  if (this.watermarkImage) {
-    const canvas = this.canvasRef.nativeElement;
-    this.watermarkPosition.x = (canvas.width - this.watermarkImage.width) / 2;
-    this.watermarkPosition.y = (canvas.height - this.watermarkImage.height) / 2;
-
-    this.updateCanvas(); // Ensure other elements are redrawn
+  updateWatermark() {
+    // Redraw or update the watermark properties on the canvas
+    if (this.currentWatermark) {
+        this.updateCanvas();
+    }
   }
-}
+
+  toggleWatermarkMove() {
+    if (this.currentWatermark) {
+        this.currentWatermark.moveMode = !this.currentWatermark.moveMode;
+    }
+  }
+
+  deleteWatermark() {
+    if (this.currentWatermark) {
+        this.watermarks = this.watermarks.filter(w => w !== this.currentWatermark);
+        this.currentWatermark = null;
+        this.updateCanvas();
+    }
+  }
+
+  // Handle watermark image upload
+  handleWatermarkUpload(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input && input.files && input.files.length > 0) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+            if (this.currentWatermark) {
+              const currentWatermark = this.currentWatermark;
+              const img = new Image(); // Create an HTMLImageElement
+              img.src = e.target.result; // Set the base64 string as the source
+              img.onload = () => {
+                currentWatermark.image = img; // Assign the loaded image to the watermark
+
+                  // Update the controller position to match the watermark
+                    this.watermarkControllerPosition = {
+                      x: (currentWatermark.x + currentWatermark.width) / this.scaleX,
+                      y: (currentWatermark.y + currentWatermark.height) / this.scaleY,
+                  };
+
+                  this.updateCanvas(); // Redraw the canvas after loading
+              };
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+  }
 
   // Apply effects and redraw the canvas
   applyEffects(): void {
@@ -155,12 +196,39 @@ placeWatermark(): void {
     // Apply effects using filter
     context.filter = `brightness(${this.brightness}) contrast(${this.contrast}) saturate(${this.saturation})`;
 
-     // Draw watermark
-      if (this.watermarkImage) {
-        context.globalAlpha = 0.5; // Semi-transparent
-        context.drawImage(this.watermarkImage, this.watermarkPosition.x, this.watermarkPosition.y);
-        context.globalAlpha = 1; // Reset transparency
-      }
+    //  // Draw watermark
+    //   if (this.watermarkImage) {
+    //     context.globalAlpha = 0.5; // Semi-transparent
+    //     context.drawImage(this.watermarkImage, this.watermarkPosition.x, this.watermarkPosition.y);
+    //     context.globalAlpha = 1; // Reset transparency
+    //   }
+
+    // Redraw all watermarks
+    this.watermarks.forEach(watermark => {
+        if (watermark.image) {
+            context.globalAlpha = watermark.opacity;
+            context.drawImage(
+                watermark.image,
+                watermark.x,
+                watermark.y,
+                watermark.width,
+                watermark.height
+            );
+        }
+
+         // Highlight selected watermark
+        if (watermark.selected) {
+          context.globalAlpha = 1; // Ensure full opacity for the border
+          context.strokeStyle = 'blue'; // Highlight color
+          context.lineWidth = 2;
+          context.strokeRect(
+              watermark.x - 2,
+              watermark.y - 2,
+              watermark.width + 4,
+              watermark.height + 4
+          );
+        }
+    });
   
     // Draw texts
     this.texts.forEach((t, index) => {
@@ -177,6 +245,9 @@ placeWatermark(): void {
         context.strokeRect(t.x - 5, t.y - textHeight, textWidth + 10, textHeight + 10);
       }
     });
+
+    // Reset globalAlpha for other elements
+    context.globalAlpha = 1;
   
     // Draw shapes
     this.shapes.forEach((shape, index) => {
@@ -278,6 +349,33 @@ placeWatermark(): void {
     }
     const { x, y } = this.getCanvasCoordinates(event);
 
+    // Deselect all watermarks initially
+    this.watermarks.forEach(watermark => (watermark.selected = false));
+    this.shapes.forEach(shape => (shape.selected = false));
+    this.texts.forEach(text => (text.selected = false));
+
+
+    if (this.currentTool ==='watermark') {
+      const clickedwatermarkIndex = this.watermarks.findIndex((watermark) =>
+        this.isPointInsideImage(watermark, x, y)
+      );
+
+      if (clickedwatermarkIndex !== -1) {
+        this.currentWatermark = this.watermarks[clickedwatermarkIndex];
+        this.currentWatermark.selected = true;
+        // Update the controller position to match the watermark
+        this.watermarkControllerPosition = {
+            x: (this.currentWatermark.x + this.currentWatermark.width) / this.scaleX,
+            y: (this.currentWatermark.y + this.currentWatermark.height) / this.scaleY,
+        };
+      } else {
+        this.currentWatermark = null;
+        this.watermarkControllerPosition = null;
+      }
+      this.updateCanvas();
+
+    }
+
 
     // Check if there's a selected text
     if (this.selectedTextIndex !== null) {
@@ -322,10 +420,12 @@ placeWatermark(): void {
       
       this.updateCanvas();
     }
+
+
   }
 
  
-   private isPointInsideText(text: { x: number; y: number; text: string; fontSize: number }, x: number, y: number): boolean {
+  private isPointInsideText(text: { x: number; y: number; text: string; fontSize: number }, x: number, y: number): boolean {
     const context = this.context;
   
     // Calculate the width and height of the text
@@ -343,8 +443,16 @@ placeWatermark(): void {
     return x >= left && x <= right && y >= top && y <= bottom;
   }
   
+  isPointInsideImage(image: any, px: number, py: number): boolean {
+    return (
+        px >= image.x &&
+        px <= image.x + image.width &&
+        py >= image.y &&
+        py <= image.y + image.height
+    );
+  }
 
-   private selectText(index: number): void {
+  private selectText(index: number): void {
     this.selectedTextIndex = index;
     this.texts.forEach((t, i) => (t.selected = i === index)); // Mark selected text
     const selectedText = this.texts[index];
@@ -373,7 +481,6 @@ placeWatermark(): void {
 
   }
     
-
    updateText(): void {
     if (this.selectedTextIndex !== null) {
       const selectedText = this.texts[this.selectedTextIndex];
@@ -452,7 +559,8 @@ placeWatermark(): void {
       this.deselectShape();
     }
   }  
-  
+
+    
   onCanvasMouseDown(event: MouseEvent): void {
     const { x, y } = this.getCanvasCoordinates(event);
   
@@ -509,6 +617,11 @@ placeWatermark(): void {
         });
         this.selectedShapeIndex = this.shapes.length - 1; // Select the newly created arrow
     }
+
+    if (this.currentWatermark && this.currentWatermark.selected) {
+      this.isDragging = true;
+    }
+    
   } 
   
   
@@ -574,6 +687,17 @@ placeWatermark(): void {
       }
       //this.updateShapeControllerPosition(currentShape);
 
+    } else if (this.currentTool === 'watermark' && this.currentWatermark) {
+      const currentWatermark = this.currentWatermark;
+      if (currentWatermark.moveMode) {
+        const dx = x - currentWatermark.x;
+        const dy = y - currentWatermark.y;
+        currentWatermark.x += dx;
+        currentWatermark.y += dy;
+      } else {
+        currentWatermark.width = x - currentWatermark.x;
+        currentWatermark.height = y - currentWatermark.y;
+      }
     }
 
     
@@ -749,7 +873,4 @@ placeWatermark(): void {
     link.click();
   }
   
-  
-  
- 
 }
