@@ -31,6 +31,7 @@
           [(ngModel)]="hour1"
           name="hour1"
           required
+          (keydown)="preventManualInput($event)"
           (change)="onHour1Change(hour1)" 
         />
       </mat-form-field>
@@ -43,6 +44,7 @@
           max="23"
           [(ngModel)]="hour2"
           name="hour2"
+          (keydown)="preventManualInput($event)"
           required />
       </mat-form-field>
 

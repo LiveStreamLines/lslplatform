@@ -373,4 +373,12 @@ export class GenerateVideoComponent implements OnInit {
       },
     });
   } 
+
+  preventManualInput(event: KeyboardEvent): void {
+    // Allow only arrow keys, tab, backspace, and delete
+    const allowedKeys = ['ArrowUp', 'ArrowDown', 'Tab', 'Backspace', 'Delete'];
+    if (!allowedKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
 }
