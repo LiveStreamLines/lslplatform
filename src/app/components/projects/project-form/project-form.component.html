@@ -31,6 +31,12 @@
           </mat-select>
           <mat-error *ngIf="projectForm.get('developerId')?.hasError('required')">Developer is required</mat-error>
         </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Index</mat-label>
+          <input matInput formControlName="index" type="number" required />
+          <mat-error *ngIf="projectForm.get('projectTag')?.hasError('required')">Index is required</mat-error>
+        </mat-form-field>
   
         <mat-checkbox formControlName="isActive">Is Active</mat-checkbox>
     

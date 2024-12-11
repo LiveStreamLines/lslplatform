@@ -55,10 +55,15 @@ export class ProjectFormComponent implements OnInit {
       projectTag: ['', Validators.required],
       description: ['', Validators.required],
       developerId: ['', Validators.required], // Add developerId field
+      index:['0', Validators.required],
       isActive: [true],
     });
 
     this.fetchDevelopers(); // Fetch developers list
+
+    if (!this.isEditMode && this.data.developerId) {
+      this.projectForm.patchValue({ developerId: this.data.developerId })
+    }
 
     if (this.isEditMode && this.data.project) {
       this.populateForm(this.data.project);
@@ -78,6 +83,7 @@ export class ProjectFormComponent implements OnInit {
       projectTag: project.projectTag,
       description: project.description,
       developerId: project.developer, // Set the developer ID if in edit mode
+      index: project.index,
       isActive: project.isActive,
     });
     this.logoPreview = 'http://5.9.85.250:5000/' + project.logo; // Show the existing logo if editing
@@ -111,6 +117,7 @@ export class ProjectFormComponent implements OnInit {
       formData.append('projectTag', projectData.projectTag);
       formData.append('description', projectData.description);
       formData.append('developer', projectData.developerId); // Include selected developer ID
+      formData.append('index', projectData.index);
       formData.append('isActive', projectData.isActive);
 
       // Append logo file if present

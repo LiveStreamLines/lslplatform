@@ -76,7 +76,7 @@ export class ProjectsComponent implements OnInit {
   // Add new project action
   openAddProjectDialog(): void {
     const dialogRef = this.dialog.open(ProjectFormComponent, {
-      data: { isEditMode: false },
+      data: { isEditMode: false, developerId: this.selectedDeveloperId },
       panelClass: 'custom-dialog-container',
       // width: '700px',      // Set desired width
       // maxHeight: '80vh'   // Limit height to 80% of viewport height
