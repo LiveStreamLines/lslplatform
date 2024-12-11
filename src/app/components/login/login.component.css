@@ -58,6 +58,7 @@
 
 /* Form styling */
 .login-form {
+  margin-top: 50px;
   width: 100%;
 }
 
@@ -90,13 +91,14 @@ label {
 
 /* Button styling */
 .btn-login {
-  width: 100%;
+  width: 80%;
+  margin-top: 30px;
   padding: 10px 0;
   background: red;
   color: white;
   border: none;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 2rem;
   cursor: pointer;
   transition: background 0.3s ease;
 }
@@ -115,4 +117,36 @@ label {
   color: red;
   font-size: 0.85rem;
   margin-top: 10px;
+}
+
+/* Tab styles */
+.mat-tab-group {
+  margin-top: 20px;
+  background: black;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.mat-tab-label {
+  color: #ccc;
+  font-weight: bold;
+}
+
+.mat-tab-label-active {
+  color: white;
+  background: red;
+  border-radius: 5px 5px 0 0;
+}
+
+.mat-tab-body-wrapper {
+  padding: 10px 0;
+}
+
+.mat-tab-body {
+  padding: 20px;
+  color: white;
+  font-size: 0.9rem;
+  background: black;
+  border-radius: 0 0 5px 5px;
 }

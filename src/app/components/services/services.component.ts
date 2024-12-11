@@ -64,4 +64,7 @@ export class ServicesComponent implements OnInit {
 
   }
 
+  goBack(): void {
+    this.router.navigate([`/main/${this.developerTag}`]);  // Go back to the project list with developer ID  }
+  }
 }

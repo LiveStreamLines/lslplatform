@@ -7,42 +7,89 @@
     <h2 class="login-title">Welcome Back</h2>
     <p class="login-subtitle">Monitor your timelapse and camera pictures seamlessly.</p>
 
-    <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="login-form">
-      <!-- Email Field -->
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input 
-          type="email" 
-          id="email" 
-          [(ngModel)]="email" 
-          name="email" 
-          required 
-          placeholder="Enter your email" 
-          class="form-control"
-        />
-      </div>
+    <mat-tab-group>
+      <!-- Regular Login Tab -->
+      <mat-tab label="Email Login">
+        <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="login-form">
+          <!-- Email Field -->
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input 
+              type="email" 
+              id="email" 
+              [(ngModel)]="email" 
+              name="email" 
+              required 
+              placeholder="Enter your email" 
+              class="form-control"
+            />
+          </div>
 
-      <!-- Password Field -->
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input 
-          type="password" 
-          id="password" 
-          [(ngModel)]="password" 
-          name="password" 
-          required 
-          placeholder="Enter your password" 
-          class="form-control"
-        />
-      </div>
+          <!-- Password Field -->
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              [(ngModel)]="password" 
+              name="password" 
+              required 
+              placeholder="Enter your password" 
+              class="form-control"
+            />
+          </div>
 
-      <!-- Submit Button -->
-      <button type="submit" [disabled]="loginForm.invalid" class="btn-login">Login</button>
+          <!-- Submit Button -->
+          <button type="submit" [disabled]="loginForm.invalid" class="btn-login">Login</button>
 
-      <!-- Error Message -->
-      <div *ngIf="loginError" class="error-message">
-        {{ loginError }}
-      </div>
-    </form>
+          <!-- Error Message -->
+          <div *ngIf="loginError" class="error-message">
+            {{ loginError }}
+          </div>
+        </form>
+      </mat-tab>
+
+      <!-- Phone Number Login Tab -->
+      <mat-tab label="Phone Login">
+        <form class="login-form">
+          <!-- Phone Number Field -->
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input 
+              type="text" 
+              id="phone" 
+              [(ngModel)]="phone" 
+              name="phone" 
+              placeholder="Enter your phone number" 
+              class="form-control" 
+              required
+            />
+          </div>
+
+          <!-- OTP Field -->
+          <div class="form-group" *ngIf="isOtpSent">
+            <label for="otp">Enter OTP</label>
+            <input 
+              type="text" 
+              id="otp" 
+              [(ngModel)]="otp" 
+              name="otp" 
+              placeholder="Enter OTP" 
+              class="form-control" 
+              required
+            />
+          </div>
+
+          <!-- Buttons -->
+          <button *ngIf="!isOtpSent" type="button" (click)="sendOtp()" [disabled]="!phone" class="btn-login">Send OTP</button>
+          <button *ngIf="isOtpSent" type="button" (click)="verifyOtp()" [disabled]="!otp" class="btn-login">Verify OTP</button>
+
+          <!-- Error Message -->
+          <div *ngIf="loginError" class="error-message">
+            {{ loginError }}
+          </div>
+        </form>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </div>

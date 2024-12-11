@@ -49,6 +49,33 @@ export class AuthService {
     );
   }
 
+   // Verify Phone Number
+   verifyPhone(phone: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/otp/send-otp`, { phone });
+  }
+
+  // Verify OTP
+  verifyOtp(phone: string, otp: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/otp/verify-otp`, { phone, otp }).pipe(
+      tap((response: any) => {
+        this.authToken = response.authh;
+        this.userRole = response.role;
+        this.accessibleDevelopers = response.developers;
+        this.accessibleProjects = response.projects;
+        this.accessibleCameras = response.cameras;
+        this.accessibleServices = response.services;
+  
+        // Save to localStorage
+        localStorage.setItem('authToken', this.authToken || '');
+        localStorage.setItem('userRole', this.userRole || '');
+        localStorage.setItem('accessibleDevelopers', JSON.stringify(this.accessibleDevelopers));
+        localStorage.setItem('accessibleProjects', JSON.stringify(this.accessibleProjects));
+        localStorage.setItem('accessibleCameras', JSON.stringify(this.accessibleCameras));
+        localStorage.setItem('accessibleServices', JSON.stringify(this.accessibleServices));
+      })
+    );
+  }
+
   getAuthToken(): string | null {
     return this.authToken;
   }
