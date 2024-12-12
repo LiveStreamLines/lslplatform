@@ -24,8 +24,9 @@
   justify-content: space-between;
   width: 100%;
   background-color: rgba(50, 50, 50, 0.9); /* Dark gray background */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 10px rgba(139, 6, 6, 0.2);
   border-radius: 8px;
+  border: 1px solid rgb(111, 10, 10);
   padding: 16px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -33,7 +34,10 @@
 
 .project-card:hover {
   transform: scale(1.02);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  /* color:rgb(111, 10, 10); */
+  background-color: rgba(88, 86, 86, 0.9); /* Dark gray background */
+
+  box-shadow: 0 4px 20px rgba(192, 6, 6, 0.89);
 }
 
 /* Card title styling */
@@ -41,11 +45,11 @@
   font-size: 1.5em;
   margin-bottom: 8px;
   color: #fff; /* White title */
-  text-align: center; /* Center the title */
+  /* text-align: center; Center the title */
 }
 
 .project-card img {
-  width: 80%; /* Image does not take full width */
+  width: 50%; /* Image does not take full width */
   height: auto; /* Maintain aspect ratio */
   max-height: 150px; /* Set max height for image */
   object-fit: cover; /* Ensure image covers the area evenly */
@@ -69,7 +73,7 @@
 
 .project-card mat-card-actions button {
   width: 100%; /* Full width button */
-  background-color: #ff0000; /* Red button color */
+  background-color: #640808; /* Red button color */
   color: white;
   font-weight: bold;
 }
@@ -87,7 +91,7 @@
 
 
 .back-button {
-  background-color: #007bff;
+  background-color: #590606;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -98,5 +102,5 @@
 }
 
 .back-button:hover {
-  background-color: #0056b3;
+  background-color: #d10b0b;
 }

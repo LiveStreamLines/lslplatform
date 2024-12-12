@@ -12,6 +12,8 @@ import { GoogleMapsModule } from '@angular/google-maps';  // Google Maps module
 import { MatTabsModule } from '@angular/material/tabs';
 import { CameraViewComponent } from './camera-view/camera-view.component';
 import { CameraMapComponent } from './camera-map/camera-map.component';
+import { Developer } from '../../models/developer.model';
+import { Project } from '../../models/project.model';
 
 
 
@@ -56,22 +58,18 @@ export class CameraListComponent implements OnInit {
     this.projectTag = this.route.snapshot.paramMap.get('projectTag')!;
          
       // Get Developer ID by developerTag
-    this.developerService.getDeveloperIdByTag(this.developerTag).subscribe((developerId: string | undefined) => {
-      if (developerId) {
-         this.developerId = developerId;
-         // Once we have the developerId, get the project ID
-         this.projectService.getProjectIdByTag(this.developerId, this.projectTag).subscribe((projectId: string | undefined) => {
-           if (projectId) {
-             this.projectId = projectId;
-             this.fetchCameras();  // Now that we have the projectId, fetch the cameras
-           } else {
-             console.error('Project not found.');
-           }
-         });
-      } else {
-        console.error('Developer not found.');
-      }
-    });
+         
+                // Once we have the developerId, get the project ID
+                this.projectService.getProjectIdByTag(this.projectTag).subscribe({
+                 next: (project: Project[]) => {
+                   this.projectId = project[0]._id;
+                   this.fetchCameras(); // Now that we have the projectId, fetch the cameras
+                 },
+                 error: (err: any) => {
+                   console.log(err);
+                 }
+                });         
+            
   }
 
   // Function to fetch the list of cameras

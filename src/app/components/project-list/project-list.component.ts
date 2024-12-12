@@ -8,6 +8,7 @@ import { ProjectService } from '../../services/project.service';
 import { DeveloperService } from '../../services/developer.service';
 import { AuthService } from '../../services/auth.service';
 import { Project } from '../../models/project.model';
+import { Developer } from '../../models/developer.model';
 
 @Component({
   selector: 'app-project-list',
@@ -21,6 +22,7 @@ export class ProjectListComponent implements OnInit {
   projects: Project[] = [];
   developerId: any = '';
   developerTag: string = '';
+  developerName: string = '';
   loading: boolean = true;
   logopath: string = 'http://5.9.85.250:5000/';
   userRole: string | null = null;
@@ -38,42 +40,47 @@ export class ProjectListComponent implements OnInit {
   ngOnInit(): void {
      // Get the developer ID from the route parameters
     this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;
-    this.developerService.getDeveloperIdByTag(this.developerTag).subscribe(
-      (developerId: string | undefined) => {
-      if (developerId) {
-        this.developerId = developerId;
-      } else {
-        console.error('Developer not found');
-      }
+    this.developerService.getDeveloperIdByTag(this.developerTag).subscribe({
+      next: (developer: Developer[]) => {
+        //console.log(developer);
+        this.developerId = developer[0]._id;
+        console.log(this.developerId);
+        // Fetch the projects for the selected developer    
+        this.projectService.getProjectsByDeveloper(this.developerId).subscribe({
+          next: (data: Project[]) => {
+            console.log(data);
+            this.projects = data.map(project => ({
+              ...project,
+              logo: this.logopath + project.logo
+            }));
+    
+             // Filter projects based on role and accessible projects
+             this.filteredProjects = this.userRole === 'Admin'
+             ? this.projects // Admins see all projects
+             : this.projects.filter((project) =>
+                 this.accessibleProjects.includes(project._id)
+             );
+            this.loading = false;
+          },
+          error: (err: any) => {
+            console.error('Error fetching projects:', err);
+            this.loading = false;
+          },
+          complete: () => {
+            console.log('Project under Developer ' + this.developerTag  + ' loading complete.');
+          }
+        });
+
+      },
+      error: (err: any) => {
+        console.error(err);
+      } 
     });
+      
     // Get user role and accessible projects
     this.userRole = this.authService.getUserRole();
     this.accessibleProjects = this.authService.getAccessibleProjects();
 
-     // Fetch the projects for the selected developer
-    this.projectService.getProjectsByDeveloper(this.developerId).subscribe({
-      next: (data: Project[]) => {
-        this.projects = data.map(project => ({
-          ...project,
-          logo: this.logopath + project.logo
-        }));
-
-         // Filter projects based on role and accessible projects
-         this.filteredProjects = this.userRole === 'Admin'
-         ? this.projects // Admins see all projects
-         : this.projects.filter((project) =>
-             this.accessibleProjects.includes(project._id)
-         );
-        this.loading = false;
-      },
-      error: (err: any) => {
-        console.error('Error fetching projects:', err);
-        this.loading = false;
-      },
-      complete: () => {
-        console.log('Project under Developer ' + this.developerTag  + ' loading complete.');
-      }
-    });
   }
 
    // This method is called when a project is clicked

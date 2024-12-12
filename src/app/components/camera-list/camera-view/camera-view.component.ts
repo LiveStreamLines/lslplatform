@@ -10,6 +10,7 @@ import { CameraService } from '../../../services/camera.service';
 import { CameraDetailService } from '../../../services/camera-detail.service';
 import { DeveloperService } from '../../../services/developer.service';
 import { ProjectService } from '../../../services/project.service';
+import { Project } from '../../../models/project.model';
 
 @Component({
   selector: 'app-camera-view',
@@ -41,20 +42,15 @@ export class CameraViewComponent implements OnInit{
 
 
   ngOnInit() {
-
      // Get the project ID from the route parameters
      this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;
      this.projectTag = this.route.snapshot.paramMap.get('projectTag')!;
           
        // Get Developer ID by developerTag
-     this.developerService.getDeveloperIdByTag(this.developerTag).subscribe((developerId: string | undefined) => {
-       if (developerId) {
-          this.developerId = developerId;
-          // Once we have the developerId, get the project ID
-          this.projectService.getProjectIdByTag(this.developerId, this.projectTag).subscribe((projectId: string | undefined) => {
-            if (projectId) {
-              this.projectId = projectId;
-              this.cameraService.getCamerasByProject(this.projectId).subscribe({
+        this.projectService.getProjectIdByTag(this.projectTag).subscribe({
+          next: (project: Project[]) => {
+            this.projectId = project[0]._id
+            this.cameraService.getCamerasByProject(this.projectId).subscribe({
                 next: (cameras) => {
                   this.cameras = cameras;
                   if (this.cameras.length > 0) {
@@ -66,14 +62,12 @@ export class CameraViewComponent implements OnInit{
                   console.error('Error fetching cameras:', err);
                 },
               });        
-            } else {
-              console.error('Project not found.');
-            }
-          });
-       } else {
-         console.error('Developer not found.');
-       }
-     });   
+          }, 
+          error: (err: any) => {
+            console.error(err);
+          }
+        });
+         
   }
 
   loadCameraImages(cameraId: string): void {

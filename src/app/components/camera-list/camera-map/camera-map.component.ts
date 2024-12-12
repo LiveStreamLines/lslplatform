@@ -8,6 +8,7 @@ import { CameraService } from '../../../services/camera.service';
 import { CameraDetailService } from '../../../services/camera-detail.service';
 import { Camera } from '../../../models/camera.model';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { Project } from '../../../models/project.model';
 
 @Component({
   selector: 'app-camera-map',
@@ -46,13 +47,10 @@ export class CameraMapComponent {
     this.projectTag = this.route.snapshot.paramMap.get('projectTag')!;
          
       // Get Developer ID by developerTag
-    this.developerService.getDeveloperIdByTag(this.developerTag).subscribe((developerId: string | undefined) => {
-      if (developerId) {
-         this.developerId = developerId;
-         // Once we have the developerId, get the project ID
-         this.projectService.getProjectIdByTag(this.developerId, this.projectTag).subscribe((projectId: string | undefined) => {
-           if (projectId) {
-             this.projectId = projectId;
+
+        this.projectService.getProjectIdByTag(this.projectTag).subscribe({
+           next: (project: Project[]) => {
+             this.projectId = project[0]._id
              this.cameraService.getCamerasByProject(this.projectId).subscribe({
                next: (cameras) => {
                  this.cameras = cameras;
@@ -63,14 +61,12 @@ export class CameraMapComponent {
                  console.error('Error fetching cameras:', err);
                },
              });        
-           } else {
+           },
+           error:  (err: any) => {
              console.error('Project not found.');
            }
-         });
-      } else {
-        console.error('Developer not found.');
-      }
-    });   
+        });
+     
  }
 
   ngAfterViewInit(): void {

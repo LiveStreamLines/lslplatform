@@ -9,8 +9,6 @@ import { RouterModule } from '@angular/router';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';  // Import Router and ActivatedRoute
 import { filter } from 'rxjs/operators';
 
-
-
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -26,8 +24,7 @@ import { filter } from 'rxjs/operators';
 export class HeaderComponent {
   @Input() sidenav!: MatSidenav;
   username: string = 'Admin';  // You can replace this with dynamic user data
-  breadcrumbs: string[] = [];
-
+  breadcrumbs: { label: string; url: string }[] = [];
 
   constructor(
     private authService: AuthService,
@@ -45,20 +42,26 @@ export class HeaderComponent {
 
    // Update the breadcrumbs dynamically based on the current route
    updateBreadcrumbs() {
-    const url = this.router.url;
-    const urlSegments = url.split('/').filter(segment => segment);  // Split the URL and remove empty segments
+    let currentRoute = this.route.root;
+    const breadcrumbs: { label: string; url: string }[] = [];
+    let url = '';
 
-    // Reset breadcrumbs to Main
-    this.breadcrumbs = ['Main'];
+    //console.log(currentRoute.snapshot);
+     while (currentRoute.firstChild) {
+       currentRoute = currentRoute.firstChild;
+       
+       // Process all segments in the current route
+        currentRoute.snapshot.url.forEach(segment => {
+          url += `/${segment.path}`; // Append each segment to the URL
 
-    if (urlSegments.length > 1) {
-      // Add developerTag if available
-      this.breadcrumbs.push(urlSegments[1]);  // Assuming developerTag is in second position
-    }
+          // Use the data['breadcrumb'] for the label if available, fallback to segment path
+          const label = currentRoute.snapshot.data['breadcrumb'] || segment.path;
 
-    if (urlSegments.length > 2) {
-      // Add projectTag if available
-      this.breadcrumbs.push(urlSegments[2]);  // Assuming projectTag is in third position
+          breadcrumbs.push({ label, url });
+        });
+      //console.log(breadcrumbs);
+      this.breadcrumbs = breadcrumbs;
+
     }
   }
 

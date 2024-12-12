@@ -5,7 +5,8 @@
 
   <div class="breadcrumbs">
     <ng-container *ngFor="let crumb of breadcrumbs; let isLast = last">
-      <span>{{ crumb }}</span>
+      <a *ngIf="!isLast" [routerLink]="crumb.url">{{ crumb.label }}</a>
+      <span *ngIf="isLast">{{ crumb.label }}</span>
       <ng-container *ngIf="!isLast"> / </ng-container>
     </ng-container>
   </div>
@@ -13,7 +14,7 @@
   <span class="spacer"></span>
 
   <div class="user-info">
-    <span>Welcome, User</span>
+    <span>Welcome, {{username}}</span>
     <mat-icon>account_circle</mat-icon>
     <button mat-button (click)="logout()">Logout</button>
   </div>

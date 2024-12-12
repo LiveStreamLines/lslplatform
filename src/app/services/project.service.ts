@@ -38,16 +38,26 @@ export class ProjectService {
     return this.http.get<Project>(`${this.baseUrl}/${projectId}`, { headers });
   }
 
-  getProjectIdByTag(developerId: string, projectTag: string): Observable<string | undefined> {
-    if (this.projects.length > 0) {
-      // If projects are already loaded, return the ID
-      return of(this.findProjectIdByTag(projectTag));
-    } else {
-      // Otherwise, fetch projects and then find the ID
-      return this.getProjectsByDeveloper(developerId).pipe(
-        map(() => this.findProjectIdByTag(projectTag))
-      );
-    }
+  // getProjectIdByTag(developerId: string, projectTag: string): Observable<string | undefined> {
+  //   if (this.projects.length > 0) {
+  //     // If projects are already loaded, return the ID
+  //     return of(this.findProjectIdByTag(projectTag));
+  //   } else {
+  //     // Otherwise, fetch projects and then find the ID
+  //     return this.getProjectsByDeveloper(developerId).pipe(
+  //       map(() => this.findProjectIdByTag(projectTag))
+  //     );
+  //   }
+  // }
+
+  getProjectIdByTag(projectTag: string): Observable<Project[]> {
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+
+    return this.http.get<Project[]>(`${this.baseUrl}/tag/${projectTag}`, { headers });
+
   }
 
   addOrUpdateProject(formData: FormData, isEditMode: boolean, projectId?: string): Observable<any> {

@@ -22,6 +22,9 @@ import { GeneratePhotoComponent } from '../generate-photo/generate-photo.compone
 import { CameraZoomComponent } from '../camera-zoom/camera-zoom.component';
 import { ShareComponent } from './share/share.component';
 import { StudioComponent } from "../studio/studio.component";
+import { Project } from '../../models/project.model';
+import { Developer } from '../../models/developer.model';
+
 
 @Component({
   selector: 'app-camera-detail',
@@ -93,20 +96,22 @@ export class CameraDetailComponent implements OnInit {
     this.projectTag = this.route.snapshot.paramMap.get('projectTag')!;
     
       // Get Developer ID by developerTag
-      this.developerService.getDeveloperIdByTag(this.developerTag).subscribe((developerId: string | undefined) => {
-        if (developerId) {
-           this.developerId = developerId;
+      this.developerService.getDeveloperIdByTag(this.developerTag).subscribe({
+        next: (developer: Developer[]) => {
+          this.developerId = developer[0]._id;
            // Once we have the developerId, get the project ID
-           this.projectService.getProjectIdByTag(this.developerId, this.projectTag).subscribe((projectId: string | undefined) => {
-             if (projectId) {
-               this.projectId = projectId;
-               this.getCameraDetails();  // Now that we have the projectId, fetch the cameras
-             } else {
-               console.error('Project not found.');
-             }
-           });
-        } else {
-          console.error('Developer not found.');
+           this.projectService.getProjectIdByTag(this.projectTag).subscribe({
+            next: (project: Project[]) => {
+              this.projectId = project[0]._id;
+              this.getCameraDetails(); // Now that we have the projectId, fetch the cameras
+            },
+            error: (err: any) => {
+              console.log(err);
+            }
+           });         
+        },
+        error: (err: any) => {
+          console.log(err);
         }
       });
   }
