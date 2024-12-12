@@ -1,69 +1,62 @@
-/* Full-page container with background */
 .login-page {
-  position: relative;
-  height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background: url('../../../assets/back.png') no-repeat center center/cover;
+  height: 100vh;
   font-family: 'Arial', sans-serif;
+  background-color: #333;
 }
 
-.overlay {
+.video-container {
+  position: relative;
+  width: 66.66%; /* Two-thirds width */
+  height: 100%;
+}
+
+.background-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay for better readability */
-  z-index: 0;
+  background: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay */
 }
 
-/* Card container */
 .login-card {
-  position: relative;
+  width: 33.33%; /* One-third width */
+  max-width: 400px;
+  margin: 50px;
   background: black;
+  color: white;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  max-width: 400px;
-  width: 100%;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+  border: 2px solid #333;
   text-align: center;
-  z-index: 1; /* Place above overlay */
-  color: white;
 }
 
-/* Logo container */
 .logo-container {
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .logo {
-  max-width: 80px;
+  max-width: 33%; /* One-third of the login card's width */
   height: auto;
-}
-
-/* Form Title */
-.login-title {
-  font-size: 1.8rem;
-  font-weight: bold;
-  margin: 10px 0;
-}
-
-.login-subtitle {
-  font-size: 1rem;
-  color: #ccc;
-  margin-bottom: 20px;
 }
 
 /* Form styling */
 .login-form {
-  margin-top: 50px;
+  margin-top: 15px;
   width: 100%;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   text-align: left;
 }
 
@@ -73,9 +66,15 @@ label {
   color: white;
 }
 
+.login-title {
+  font-size: 1.5rem; /* Reduce font size to half of the original */
+  font-weight: bold;
+  margin: 0;
+}
+
 .form-control {
   width: 90%;
-  padding: 10px;
+  padding: 5px;
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 0.9rem;
@@ -91,9 +90,9 @@ label {
 
 /* Button styling */
 .btn-login {
-  width: 80%;
-  margin-top: 30px;
-  padding: 10px 0;
+  width: 50%;
+  margin-top: 15px;
+  padding: 15px 0;
   background: red;
   color: white;
   border: none;
@@ -150,3 +149,4 @@ label {
   background: black;
   border-radius: 0 0 5px 5px;
 }
+
