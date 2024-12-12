@@ -1,7 +1,6 @@
 .login-page {
   display: flex;
   height: 100vh;
-  font-family: 'Arial', sans-serif;
   background-color: #333;
 }
 
@@ -28,13 +27,14 @@
 
 .login-card {
   width: 33.33%; /* One-third width */
+  height: auto;
   max-width: 400px;
   margin: 50px;
   background: black;
   color: white;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 16px rgba(88, 11, 11, 1);
   border: 2px solid #333;
   text-align: center;
 }
@@ -51,23 +51,23 @@
 
 /* Form styling */
 .login-form {
-  margin-top: 15px;
+  margin-top: 50px;
   width: 100%;
 }
 
 .form-group {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   text-align: left;
 }
 
 label {
-  font-weight: bold;
-  font-size: 0.9rem;
+  /* font-weight: bold; */
+  /* font-size: 0.9rem; */
   color: white;
 }
 
 .login-title {
-  font-size: 1.5rem; /* Reduce font size to half of the original */
+  /* font-size: 1.5rem; Reduce font size to half of the original */
   font-weight: bold;
   margin: 0;
 }
@@ -77,7 +77,7 @@ label {
   padding: 5px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  font-size: 0.9rem;
+  /* font-size: 0.9rem; */
   background: black;
   color: white;
   transition: border 0.3s ease;
@@ -93,11 +93,11 @@ label {
   width: 50%;
   margin-top: 15px;
   padding: 15px 0;
-  background: red;
+  background: rgba(88, 11, 11, 1);
   color: white;
   border: none;
   border-radius: 5px;
-  font-size: 2rem;
+  /* font-size: 2rem; */
   cursor: pointer;
   transition: background 0.3s ease;
 }
@@ -114,7 +114,7 @@ label {
 /* Error message */
 .error-message {
   color: red;
-  font-size: 0.85rem;
+  /* font-size: 0.85rem; */
   margin-top: 10px;
 }
 
@@ -145,7 +145,7 @@ label {
 .mat-tab-body {
   padding: 20px;
   color: white;
-  font-size: 0.9rem;
+  /* font-size: 0.9rem; */
   background: black;
   border-radius: 0 0 5px 5px;
 }

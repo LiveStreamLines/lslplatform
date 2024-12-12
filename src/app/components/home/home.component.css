@@ -1,8 +1,8 @@
 /* Style the search input */
 input[type="text"] {
-  width: 300px;
-  padding: 10px 15px;
-  font-size: 16px;
+  width: 150px;
+  padding: 10px 10px;
+  font-size: 0.5rem;
   border: 2px solid #ccc;
   border-radius: 25px;
   outline: none;
@@ -65,7 +65,7 @@ input[type="text"]:focus {
 
 /* Image within developer cards */
 .developer-card img {
-  width: 80%; /* Image does not take full width */
+  width: 50%; /* Image does not take full width */
   height: auto; /* Maintain aspect ratio */
   max-height: 150px; /* Set max height for image */
   object-fit: cover; /* Ensure image covers the area evenly */

@@ -1,14 +1,49 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+
 
 html, body { height: 100%; }
 
 /* Global font size */
-body {
+
+  body {
     margin: 0;
-    font-size: 10px; /* Adjust this value to your preferred font size */
-    font-family: 'Roboto', sans-serif; /* Ensure you're using a consistent font */
+    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    font-size: 0.7rem !important; */
   }
-  
+
+  .mat-body-large, .mat-typography .mat-body-large, .mat-typography {
+    font: 200 0.5rem / 0.75rem 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+
+  html {
+  --mdc-tab-indicator-active-indicator-color: #9b0606;
+    --mdc-tab-indicator-active-indicator-height: 2px;
+    --mdc-tab-indicator-active-indicator-shape: 0;
+    --mat-tab-header-divider-color: #4e444b;
+    --mat-tab-header-pagination-icon-color: #e9e0e4;
+    --mat-tab-header-inactive-label-text-color: #e9e0e4;
+    --mat-tab-header-active-label-text-color: #e9e0e4;
+    --mat-tab-header-active-ripple-color: #e9e0e4;
+    --mat-tab-header-inactive-ripple-color: #e9e0e4;
+    --mat-tab-header-inactive-focus-label-text-color: #e9e0e4;
+    --mat-tab-header-inactive-hover-label-text-color: #e9e0e4;
+    --mat-tab-header-active-focus-label-text-color: #e9e0e4;
+    --mat-tab-header-active-hover-label-text-color: #e9e0e4;
+    --mat-tab-header-active-focus-indicator-color: #9b0606;
+    --mat-tab-header-active-hover-indicator-color: #a10e0e;
+    --mat-tab-header-label-text-font: Roboto, sans-serif;
+    --mat-tab-header-label-text-size: 0.875rem;
+    --mat-tab-header-label-text-tracking: 0.006rem;
+    --mat-tab-header-label-text-line-height: 1.25rem;
+    --mat-tab-header-label-text-weight: 500;
+    --mat-tab-header-divider-height: 1px;
+  }
+
+
+
   mat-toolbar,
   mat-sidenav,
   mat-nav-list,

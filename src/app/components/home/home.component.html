@@ -8,8 +8,8 @@
     
   <div *ngIf="!loading && filteredDevelopers.length > 0" class="developers-container">
       <mat-card class="developer-card" *ngFor="let developer of filteredDevelopers" (click)="onDeveloperClick(developer)">
-        <img mat-card-image [src]="developer.logo" alt="{{ developer.developerName }}" />
         <mat-card-title>{{ developer.developerName }}</mat-card-title>
+        <img mat-card-image [src]="developer.logo" alt="{{ developer.developerName }}" />
         <mat-card-content>{{ developer.description }}</mat-card-content>
         <mat-card-actions>
           <button mat-button>View Projects</button>

@@ -1,7 +1,10 @@
 .main-container {
   height: 100vh;
   display: flex;
+  background-image: url(../assets/effect-ondark.png);
+  background-repeat: no-repeat;
 }
+
 
 .logo-container {
   text-align: center;
@@ -9,7 +12,7 @@
 }
 
 .logo {
-  max-width: 150px;
+  max-width: 100px;
   height: auto;
 }
 
@@ -26,6 +29,7 @@
 
 mat-sidenav {
   width: 250px;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 mat-sidenav-content {
