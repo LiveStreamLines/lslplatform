@@ -1,14 +1,12 @@
 <button (click)="goBack()" class="back-button">← Back to Projects</button>
-<div class="grid-container">
-    <mat-grid-list cols="3" rowHeight="1:1" gutterSize="20px">
-      <mat-grid-tile *ngFor="let service of filteredServices">
-        <mat-card class="service-card" (click)="navigateTo(service.route)">
-          <mat-card-header>
-            <mat-icon class="service-icon">{{ service.icon }}</mat-icon>
-          </mat-card-header>
-          <mat-card-title>{{ service.name }}</mat-card-title>
-        </mat-card>
-      </mat-grid-tile>
-    </mat-grid-list>
+
+<div class="tile-container">
+  <div class="tile" *ngFor="let service of filteredServices" (click)="navigateTo(service.route)">
+    <div class="logo-container">
+      <mat-icon class="service-icon">{{ service.icon }}</mat-icon>
+    </div>
+    <div class="title-container">
+      <span class="service-title">{{ service.name }}</span>
+    </div>
   </div>
-  
+</div>

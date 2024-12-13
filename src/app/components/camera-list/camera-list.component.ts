@@ -12,6 +12,7 @@ import { GoogleMapsModule } from '@angular/google-maps';  // Google Maps module
 import { MatTabsModule } from '@angular/material/tabs';
 import { CameraViewComponent } from './camera-view/camera-view.component';
 import { CameraMapComponent } from './camera-map/camera-map.component';
+import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { Developer } from '../../models/developer.model';
 import { Project } from '../../models/project.model';
 
@@ -34,10 +35,12 @@ import { Project } from '../../models/project.model';
 export class CameraListComponent implements OnInit {
 
   cameras: Camera[] = [];
-  projectId: any = '';  // Project ID from the route
-  developerId: any = '';  // Store the developer ID
+  projectId!: string; // Project ID from the route
+  developerId!: string;  // Store the developer ID
   developerTag: string = '';
   projectTag: string = '';
+  developerName!: string;
+  projectName!: string;
   loading: boolean = true;  // Loading state
 
    // Current active tab index
@@ -49,6 +52,7 @@ export class CameraListComponent implements OnInit {
     private cameraService: CameraService, 
     private projectService: ProjectService,
     private developerService: DeveloperService,
+    private breadcrumbService: BreadcrumbService,
     private route: ActivatedRoute, 
   ) {}
 
@@ -56,19 +60,33 @@ export class CameraListComponent implements OnInit {
     // Get the project ID from the route parameters
     this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;
     this.projectTag = this.route.snapshot.paramMap.get('projectTag')!;
-         
+      
       // Get Developer ID by developerTag
-         
-                // Once we have the developerId, get the project ID
-                this.projectService.getProjectIdByTag(this.projectTag).subscribe({
-                 next: (project: Project[]) => {
-                   this.projectId = project[0]._id;
-                   this.fetchCameras(); // Now that we have the projectId, fetch the cameras
-                 },
-                 error: (err: any) => {
-                   console.log(err);
-                 }
-                });         
+      this.developerService.getDeveloperIdByTag(this.developerTag).subscribe({
+        next: (developer: Developer[]) => {
+          this.developerName = developer[0].developerName;
+          // Once we have the developerId, get the project ID
+          this.projectService.getProjectIdByTag(this.projectTag).subscribe({
+            next: (project: Project[]) => {
+              this.projectId = project[0]._id;
+              this.projectName = project[0].projectName;
+              this.fetchCameras(); // Now that we have the projectId, fetch the cameras
+              this.breadcrumbService.setBreadcrumbs([
+                { label: 'Home ', url: '/home' },
+                { label: `${this.developerName}`, url: `home/${this.developerTag}` },
+                { label: `${this.projectName}`, url: `home/${this.developerTag}/${this.projectTag}` },
+                { label: `TimeLapse`}
+              ]);
+            },
+            error: (err: any) => {
+              console.log(err);
+            }
+          });         
+        },
+        error:(err: any) => {
+          console.log(err);
+        }
+    });    
             
   }
 

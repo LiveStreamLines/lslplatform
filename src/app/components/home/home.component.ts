@@ -7,6 +7,7 @@
   import { DeveloperService } from '../../services/developer.service';
   import { Developer } from '../../models//developer.model';
   import { AuthService } from '../../services/auth.service';
+  import { BreadcrumbService } from '../../services/breadcrumb.service';
 
   @Component({
     selector: 'app-home',
@@ -27,6 +28,7 @@
 
     constructor(
       private developerService: DeveloperService, 
+      private breadcrumbService: BreadcrumbService,
       private authService: AuthService,
       private router: Router) {}
 
@@ -57,6 +59,11 @@
           console.log('Developer data loading complete.');
         }
       });
+
+      this.breadcrumbService.setBreadcrumbs([
+        { label: 'Home' },
+      ]);
+
     }
 
     // This function will filter developers based on the search term
@@ -77,7 +84,7 @@
     }
 
     onDeveloperClick(developer: Developer): void {
-      this.router.navigate(['/main', developer.developerTag]);  // Navigate to ProjectListComponent with developer ID
+      this.router.navigate(['/home', developer.developerTag]);  // Navigate to ProjectListComponent with developer ID
     }
 
   }

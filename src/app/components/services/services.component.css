@@ -1,41 +1,50 @@
-.grid-container {
-    padding: 20px;
-  }
-  
-  .service-card {
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    background-color: #282626;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  }
-  
-  .service-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  }
-  
-  .service-icon {
-    font-size: 100px;
-    text-align: center;
-    width:100%;
-    height: 100%;
-    color: #e80a0a;
-    margin-top: 50px;
-    margin-bottom: 10px;
-  }
-  
-  mat-card-title {
-    font-size: 1.2rem;
-    font-weight: 500;
-    margin-bottom: 20px;
-  }
+.tile-container {
+  width: 100%;
+}
+
+.tile {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  /* background-color: #590606; */
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tile:hover {
+  background-color: #910a0a;
+}
+
+.logo-container {
+  flex: 0 0 25%; /* 1/4 of the tile width */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title-container {
+  flex: 1; /* Remaining 3/4 of the tile width */
+  padding-left: 10px;
+}
+
+.service-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+}
+
+.service-title {
+  font-size: 18px;
+  font-weight: bold;
+}
   
   
 .back-button {
-  background-color: #007bff;
+  background-color: #590606;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -46,5 +55,5 @@
 }
 
 .back-button:hover {
-  background-color: #0056b3;
+  background-color: #d10b0b;
 }

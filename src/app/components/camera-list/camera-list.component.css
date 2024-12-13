@@ -94,7 +94,7 @@
 
 
 .back-button {
-  background-color: #007bff;
+  background-color: #590606;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -105,5 +105,5 @@
 }
 
 .back-button:hover {
-  background-color: #0056b3;
+  background-color: #d10b0b;
 }

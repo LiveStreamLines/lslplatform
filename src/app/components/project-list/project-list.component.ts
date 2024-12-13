@@ -9,6 +9,8 @@ import { DeveloperService } from '../../services/developer.service';
 import { AuthService } from '../../services/auth.service';
 import { Project } from '../../models/project.model';
 import { Developer } from '../../models/developer.model';
+import { BreadcrumbService } from '../../services/breadcrumb.service';
+
 
 @Component({
   selector: 'app-project-list',
@@ -32,6 +34,7 @@ export class ProjectListComponent implements OnInit {
   constructor(
     private projectService: ProjectService, 
     private developerService: DeveloperService,
+    private breadcrumbService: BreadcrumbService,
     private authService: AuthService,
     private route: ActivatedRoute, 
     private router: Router, 
@@ -44,7 +47,8 @@ export class ProjectListComponent implements OnInit {
       next: (developer: Developer[]) => {
         //console.log(developer);
         this.developerId = developer[0]._id;
-        console.log(this.developerId);
+        this.developerName = developer[0].developerName;
+        console.log(this.developerName);
         // Fetch the projects for the selected developer    
         this.projectService.getProjectsByDeveloper(this.developerId).subscribe({
           next: (data: Project[]) => {
@@ -67,7 +71,12 @@ export class ProjectListComponent implements OnInit {
             this.loading = false;
           },
           complete: () => {
-            console.log('Project under Developer ' + this.developerTag  + ' loading complete.');
+            this.breadcrumbService.setBreadcrumbs([
+              { label: 'Home ', url: '/home' },
+              { label: ` ${this.developerName}` },
+            ]);
+             // Get user role and accessible projects
+             console.log('Project under Developer ' + this.developerTag  + ' loading complete.');
           }
         });
 
@@ -76,16 +85,15 @@ export class ProjectListComponent implements OnInit {
         console.error(err);
       } 
     });
-      
-    // Get user role and accessible projects
+
     this.userRole = this.authService.getUserRole();
-    this.accessibleProjects = this.authService.getAccessibleProjects();
+    this.accessibleProjects = this.authService.getAccessibleProjects();    
 
   }
 
    // This method is called when a project is clicked
    onProjectClick(project: Project): void {
-    this.router.navigate([`/main/services/${this.developerTag}/${project.projectTag}`]);
+    this.router.navigate([`/home/${this.developerTag}/${project.projectTag}`]);
   }
 
   goBack(): void {
