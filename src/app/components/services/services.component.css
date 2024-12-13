@@ -1,46 +1,85 @@
-.tile-container {
-  width: 100%;
-}
-
-.tile {
-  width: 50%;
+.card-container {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  border: 1px solid #ccc;
-  /* background-color: #590606; */
-  border-radius: 8px;
+  background: url('/assets/bg1.png') no-repeat center;
+  background-size: cover;
+  width: 100%;
+  max-width: 390px;
+  height: 200px;
+  margin-right: 25px;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 60%;
+}
+
+.service-title {
+  font-size: 18px;
+  line-height: normal;
+  Color: #611414;
+  font-weight: bold;
   margin-bottom: 10px;
+}
+
+.service-description {
+  font-size: 14px;
+    font-family: emoji;
+    line-height: normal;
+    font-weight: bold;
+    color: #231d1d;
+    margin-bottom: 15px;
+}
+
+.discover-button {
+  background-color: #611414;
+  color: #fff;
+  border: none;
+  margin: 35px 50px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
 }
 
-.tile:hover {
-  background-color: #910a0a;
+.discover-button:hover {
+  background-color: #cd3119;
 }
 
-.logo-container {
-  flex: 0 0 25%; /* 1/4 of the tile width */
+.card-right {
+  max-width: 35%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.title-container {
-  flex: 1; /* Remaining 3/4 of the tile width */
-  padding-left: 10px;
+.service-image {
+  width: 215%;
+  height: auto;
+  object-fit: contain;
 }
 
-.service-icon {
-  font-size: 36px;
-  width: 36px;
-  height: 36px;
-}
-
-.service-title {
-  font-size: 18px;
-  font-weight: bold;
-}
   
   
 .back-button {

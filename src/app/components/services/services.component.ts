@@ -31,13 +31,11 @@ export class ServicesComponent implements OnInit {
 
 
   services = [
-    { name: 'Timelapse', icon: 'timelapse', route: '/timelapse' },
-    { name: 'Drone Shooting', icon: 'flight', route: '/drone-shooting' },
-    { name: 'Site Photography & Videography', icon: 'camera_alt', route: '/site-photography' },
-    // { name: 'Site ', icon: 'videocam', route: '/site-videography' },
-    { name: '360 Photography & Videography', icon: '360', route: '/360-photography' },
-    // { name: '360 ', icon: 'movie', route: '/360-videography' },
-    { name: 'Satellite Imagery', icon: 'satellite', route: '/satellite-imagery' }
+    { name: 'Timelapse', image: 'assets/Eq-1.png', route: '/timelapse' },
+    { name: 'Drone Shooting', image: 'assets/Eq-4.png', route: '/drone-shooting' },
+    { name: 'Site Photography & Videography', image: 'assets/Eq-5.png', route: '/site-photography' },
+    { name: '360 Photography & Videography', image: 'assets/Eq-1.png', route: '/360-photography' },
+    { name: 'Satellite Imagery', image: 'assets/Eq-4.png', route: '/satellite-imagery' }
   ];
 
   constructor(

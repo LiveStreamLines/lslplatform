@@ -1,12 +1,15 @@
 <button (click)="goBack()" class="back-button">← Back to Projects</button>
 
-<div class="tile-container">
-  <div class="tile" *ngFor="let service of filteredServices" (click)="navigateTo(service.route)">
-    <div class="logo-container">
-      <mat-icon class="service-icon">{{ service.icon }}</mat-icon>
+<div class="card-container">
+  <div class="card" *ngFor="let service of filteredServices">
+    <div class="card-left">
+      <h3 class="service-title">{{ service.name }}</h3>
+      <p class="service-description">Lorem ipsum dolor sit amet consectetur adipiscing elit.</p>
+      <button class="discover-button" (click)="navigateTo(service.route)">DISCOVER</button>
     </div>
-    <div class="title-container">
-      <span class="service-title">{{ service.name }}</span>
+    <div class="card-right">
+      <img [src]="service.image" alt="{{ service.name }}" class="service-image" />
     </div>
   </div>
 </div>
+
