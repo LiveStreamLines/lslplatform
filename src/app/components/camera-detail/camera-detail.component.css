@@ -1,6 +1,7 @@
 /* Back button styling */
+
 .back-button {
-  background-color: #007bff;
+  background-color: #590606;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -8,11 +9,10 @@
   cursor: pointer;
   margin-bottom: 20px;
   font-size: 16px;
-  transition: background-color 0.3s ease;
 }
 
 .back-button:hover {
-  background-color: #0056b3;
+  background-color: #d10b0b;
 }
 
 /* Toolbar styling */
@@ -30,12 +30,12 @@
 }
 
 .camera-detail-toolbar button.active {
-  background-color: #ff5500;
+  background-color: #302c2c;
   color: white;
 }
 
 .camera-detail-toolbar button:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(40, 37, 37, 1);
 }
 
 /* .compare-toolbar {
@@ -43,7 +43,7 @@
 } */
 
 .compare-toolbar button.active {
-  background-color: #df1212;
+  background-color: #7b1313;
 }
 
 /* Spinner for loading state */
@@ -80,8 +80,8 @@
 
 .weather-label {
   position: absolute;
-  top: 50px;
-  left: 10px;
+  top: 10px;
+  left: 850px;
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
   padding: 5px 10px;
@@ -133,7 +133,7 @@ mat-icon {
 }
 
 .thumbnail-strip::-webkit-scrollbar-thumb {
-  background-color: #ff0000;  /* Customize the scrollbar color */
+  background-color: #681111;  /* Customize the scrollbar color */
   border-radius: 10px;
 }
 
@@ -141,6 +141,12 @@ mat-icon {
   background-color: #f1f1f1;
 }
 
+.share {
+  background-color: #470707;
+  color: white;
+  font-size: 14px;
+  padding: 10px;
+}
 
 /* Larger thumbnail styling */
 .thumbnail {
@@ -152,13 +158,13 @@ mat-icon {
 }
 
 .thumbnail.selected {
-  border-color: #007bff;  /* Highlight the selected thumbnail */
+  border-color: #7a1111;  /* Highlight the selected thumbnail */
 }
 
 /* Larger Thumbnail image styling */
 .thumbnail-img {
-  width: 150px;  /* Increased width */
-  height: 150px; /* Increased height */
+  width: 120px;  /* Increased width */
+  height: 120px; /* Increased height */
   object-fit: cover;
   border-radius: 5px;
   transition: transform 0.2s ease;

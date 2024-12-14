@@ -24,6 +24,7 @@ import { ShareComponent } from './share/share.component';
 import { StudioComponent } from "../studio/studio.component";
 import { Project } from '../../models/project.model';
 import { Developer } from '../../models/developer.model';
+import { BreadcrumbService } from '../../services/breadcrumb.service';
 
 
 @Component({
@@ -56,6 +57,8 @@ export class CameraDetailComponent implements OnInit {
   developerId!: any;  
   projectTag!: string;
   developerTag!: string;
+  projectName!: string;
+  developerName!: string;
   cameraName!: string;
   cameraDetails!: CameraDetail;
   firstPhoto!: string;
@@ -77,6 +80,7 @@ export class CameraDetailComponent implements OnInit {
   showWeather: boolean = true;
   weatherString: string = '';
 
+
   isShareModalOpen: boolean = false;
   currentPhotoUrl: string = '';
   photoUrl: string ='';
@@ -87,7 +91,8 @@ export class CameraDetailComponent implements OnInit {
     private developerService: DeveloperService,
     private projectService: ProjectService,
     private cameraDetailService: CameraDetailService,
-    private weatherService: WeatherService
+    private weatherService: WeatherService,
+    private breadcrumbService: BreadcrumbService
   ) {}
 
   ngOnInit(): void {
@@ -99,11 +104,20 @@ export class CameraDetailComponent implements OnInit {
       this.developerService.getDeveloperIdByTag(this.developerTag).subscribe({
         next: (developer: Developer[]) => {
           this.developerId = developer[0]._id;
+          this.developerName = developer[0].developerName;
            // Once we have the developerId, get the project ID
            this.projectService.getProjectIdByTag(this.projectTag).subscribe({
             next: (project: Project[]) => {
               this.projectId = project[0]._id;
+              this.projectName = project[0].projectName;
               this.getCameraDetails(); // Now that we have the projectId, fetch the cameras
+              this.breadcrumbService.setBreadcrumbs([
+                { label: 'Home ', url: '/home' },
+                { label: `${this.developerName}`, url: `home/${this.developerTag}` },
+                { label: `${this.projectName}`, url: `home/${this.developerTag}/${this.projectTag}` },
+                { label: `Timelapse`, url: `home/${this.developerTag}/${this.projectTag}/timelapse` },
+                { label: `${this.cameraName}`}
+              ]);
             },
             error: (err: any) => {
               console.log(err);
@@ -270,7 +284,7 @@ export class CameraDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate([`/main/${this.developerTag}/${this.projectTag}`]);
+    this.router.navigate([`home/${this.developerTag}/${this.projectTag}/timelapse`]);
   }
 
   openShareModal(photoUrl: string) {

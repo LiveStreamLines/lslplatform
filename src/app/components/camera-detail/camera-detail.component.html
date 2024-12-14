@@ -130,14 +130,14 @@
 
         <!-- Date selector -->
         <div class="date-selector">
-          <mat-form-field>
+          <mat-form-field appearance="outline" class="red-outline">
             <mat-label>Photo Date:</mat-label>
             <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" (dateChange)="onDateChange($event)" />
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
-          <button mat-icon-button (click)="openShareModal(photoUrl)">
-            <mat-icon>share</mat-icon> Share X
+          <button class="share" mat-icon-button (click)="openShareModal(photoUrl)">
+            <mat-icon>share</mat-icon> Share
           </button>
           <app-share *ngIf="isShareModalOpen"
             [photoUrl]="selectedPictureUrl"

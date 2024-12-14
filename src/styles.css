@@ -85,17 +85,20 @@ html, body { height: 100%; }
     --mat-slider-value-indicator-container-transform: translateX(-50%) rotate(-45deg);
     --mat-slider-value-indicator-opacity: 1;
 
+
+    --mat-datepicker-calendar-date-selected-state-background-color: #be0606;
+
   }
 
 
 
-  mat-toolbar,
+  /* mat-toolbar,
   mat-sidenav,
   mat-nav-list,
   mat-card,
   button {
-    font-size: 10px !important;  /* Ensure consistency for Material components */
-  }
+    font-size: 10px !important;  /* Ensure consistency for Material components 
+  } */
 
   .custom-dialog-container {
     border: 2px solid #3f51b5;
@@ -104,4 +107,17 @@ html, body { height: 100%; }
     background-color: #060000; /* Background color of the dialog */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow for elevation */
   }
+
+  .red-outline {
+      
+    .mat-datepicker-toggle button {
+      color: red !important; /* Datepicker toggle color */
+    }  
+   
+  }
+
+  .mat-calendar-body-selected {
+    background-color: var(--mat-datepicker-calendar-date-selected-state-background-color, var(--mat-app-primary));
+    color: var(--mat-datepicker-calendar-date-selected-state-text-color, var(--mat-app-on-primary));
+}
   

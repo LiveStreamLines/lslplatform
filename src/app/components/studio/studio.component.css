@@ -20,7 +20,7 @@
   }
   
   .toolbar button {
-    background-color: red;
+    background-color: rgb(96, 15, 15);
     color: white;
     font-size: 18px; /* Make the buttons larger */
     padding: 10px 20px; /* Add padding for a bigger feel */

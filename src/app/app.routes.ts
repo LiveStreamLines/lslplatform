@@ -24,8 +24,8 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },  // Protect home with AuthGuard
   { path: 'home/:developerTag', component: ProjectListComponent,  canActivate: [AuthGuard] },  // Project list for a specific developer
   { path: 'home/:developerTag/:projectTag', component: ServicesComponent,  canActivate: [AuthGuard]},
-  { path: 'main/services/:developerTag/:projectTag/timelapse', component: CameraListComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
-  { path: 'main/:developerTag/:projectTag/:cameraName', component: CameraDetailComponent,  canActivate: [AuthGuard] },  // Route for camera detail
+  { path: 'home/:developerTag/:projectTag/timelapse', component: CameraListComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
+  { path: 'home/:developerTag/:projectTag/:cameraName', component: CameraDetailComponent,  canActivate: [AuthGuard] },  // Route for camera detail
   { path: 'compare', component: CameraCompareComponent,  canActivate: [AuthGuard] },
   { path: 'developers', component: DevelopersComponent,  canActivate: [AuthGuard] },
   { path: 'projects', component: ProjectsComponent,  canActivate: [AuthGuard] },

@@ -130,7 +130,7 @@ export class CameraListComponent implements OnInit {
   }
 
   viewCameraDetails(camera: Camera): void {
-    this.router.navigate([`/main/${this.developerTag}/${this.projectTag}/${camera.camera}`]);
+    this.router.navigate([`/home/${this.developerTag}/${this.projectTag}/${camera.camera}`]);
   }
 
   // Function to switch tabs (in case we want to handle custom tab switching logic)

@@ -93,7 +93,7 @@ export class ServicesComponent implements OnInit {
 
     // Navigate to the selected service, including developerTag and projectTag
     this.router.navigate([
-      `main/services/${this.developerTag}/${this.projectTag}/${serviceRoute}`
+      `home/${this.developerTag}/${this.projectTag}/${serviceRoute}`
     ]);
 
   }
