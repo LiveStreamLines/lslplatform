@@ -15,5 +15,7 @@ export interface Camera {
     "isDeleted": boolean,
     "isActive": boolean,
     "createdDate": string,
+    "screenX"?: number,
+    "screenY"?: number,
   }
   

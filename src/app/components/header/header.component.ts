@@ -24,7 +24,7 @@ import { RouterLink } from '@angular/router';
 })
 export class HeaderComponent {
   @Input() sidenav!: MatSidenav;
-  username: string = 'Admin';  // You can replace this with dynamic user data
+  username: string | null = null;  // You can replace this with dynamic user data
   breadcrumbs: { label: string; url?: string }[] = [];
 
   constructor(
@@ -33,9 +33,10 @@ export class HeaderComponent {
   ) {}
 
   ngOnInit() {
+    this.username = this.authService.getUsername();
     this.breadcrumbService.breadcrumbs$.subscribe((breadcrumbs) => {
       this.breadcrumbs = breadcrumbs;
-      console.log(this.breadcrumbs);
+      //console.log(this.breadcrumbs);
     });
   }
 

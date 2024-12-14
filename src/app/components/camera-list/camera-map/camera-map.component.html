@@ -1,6 +1,34 @@
 <!-- <div #mapContainer class="map-container"></div> -->
-<google-map 
- *ngIf="cameras"
-height="400px" width="100%" [center]="{lat: +cameras[0].lat, lng: +cameras[0].lng}" [zoom]="12">
-<map-marker *ngFor="let camera of cameras" [position]="{lat: +camera.lat, lng: +camera.lng}" [label]="camera.cameraDescription"></map-marker>
+<div class="container">
+<google-map
+  *ngIf="cameras"
+  height="400px"
+  width="100%"
+  [center]="{ lat: +cameras[0].lat, lng: +cameras[0].lng }"
+  [zoom]="12"
+  (mapReady)="onMapReady($event)"
+>
+  <map-marker
+    *ngFor="let camera of cameras"
+    [position]="{ lat: +camera.lat, lng: +camera.lng }"
+    (mapClick)="onMarkerClick(camera)"
+  ></map-marker>
 </google-map>
+
+<!-- Custom Labels -->
+<div
+  *ngFor="let camera of cameras"
+  class="custom-label"
+  [style.left]="(camera.screenX ?? 0) + 'px'"
+  [style.top]="((camera.screenY ?? 0) - 20) + 'px'"
+>
+  {{ camera.cameraDescription }}
+</div>
+
+  <div *ngIf="selectedCamera" class="camera-info-popup">
+    <h4>{{ selectedCamera.cameraDescription }}</h4>
+    <p>Latitude: {{ selectedCamera.lat }}</p>
+    <p>Longitude: {{ selectedCamera.lng }}</p>
+    <button (click)="closeInfoPopup()">Close</button>
+  </div>
+</div>

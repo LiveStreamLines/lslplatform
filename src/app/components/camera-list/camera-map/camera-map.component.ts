@@ -26,13 +26,10 @@ export class CameraMapComponent {
   developerId!: string;
   projectId!: string;
   cameras: Camera[] = [];
+  selectedCamera: Camera | null = null;
+  map: google.maps.Map | null = null;
 
-  cameras1 = [
-    { lat: 37.7749, lng: -122.4194, name: 'Camera 1' },
-    { lat: 34.0522, lng: -118.2437, name: 'Camera 2' },
-    // Add other cameras here
-  ];
-
+ 
   constructor (
     private route: ActivatedRoute,
     private developerService: DeveloperService,
@@ -92,5 +89,39 @@ export class CameraMapComponent {
   //     });
   //   });
   // }
+  onMapReady(event: any): void {
+    console.log('Map Ready Event:', event);
+
+  // Check if the map instance is part of the event object
+  if (event instanceof google.maps.Map) {
+    this.map = event; // Assign the map instance
+    this.updateLabelPositions();
+  } else {
+    console.error('Unexpected event object:', event);
+  }
+  }
+  
+
+  onMarkerClick(camera: Camera): void {
+    this.selectedCamera = camera;
+  }
+
+  closeInfoPopup(): void {
+    this.selectedCamera = null;
+  }
+
+  updateLabelPositions(): void {
+    if (!this.map) return;
+
+    this.cameras.forEach((camera) => {
+      const latLng = new google.maps.LatLng(Number(camera.lat), Number(camera.lng));
+      const point = this.map!.getProjection()?.fromLatLngToPoint(latLng);
+
+      if (point) {
+        camera.screenX = point.x;
+        camera.screenY = point.y;
+      }
+    });
+  }
   
 }
