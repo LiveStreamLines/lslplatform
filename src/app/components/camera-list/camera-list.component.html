@@ -4,7 +4,7 @@
   <div class="content">
 
     <mat-tab-group (selectedTabChange)="onTabChange($event.index)">
-      <mat-tab label="Cameras">
+      <mat-tab label="List of Cameras">
         <div *ngIf="loading">
           <p>Loading cameras...</p>
         </div>
@@ -28,7 +28,16 @@
         </div>
       </mat-tab>
 
-      <mat-tab label="Views">
+      <mat-tab label="Cameras in map">
+        <div *ngIf="loading">
+          <p>Loading cameras...</p>
+        </div>
+        <div *ngIf="!loading && cameras.length > 0">
+            <app-camera-map></app-camera-map>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Cameras Slideshow">
         <div *ngIf="loading">
           <p>Loading cameras...</p>
         </div>
@@ -37,14 +46,7 @@
         </div>
       </mat-tab>
     
-      <mat-tab label="Maps">
-        <div *ngIf="loading">
-          <p>Loading cameras...</p>
-        </div>
-        <div *ngIf="!loading && cameras.length > 0">
-            <app-camera-map></app-camera-map>
-        </div>
-      </mat-tab>
+    
     </mat-tab-group>  
 
 

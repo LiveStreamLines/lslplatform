@@ -1,86 +1,99 @@
-.card-container {
+.tile-container {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 20px;
+  flex-direction: column;
+  gap: 20px; /* Vertical spacing between tiles */
   padding: 20px;
 }
 
-.card {
+.tile {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   align-items: center;
-  background: url('/assets/bg1.png') no-repeat center;
-  background-size: cover;
-  width: 100%;
-  max-width: 390px;
-  height: 200px;
-  margin-right: 25px;
+  background-color: #2a2828;
+  border: 1px solid #e0e0e0;
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
+  position: relative; /* For positioning the overflowing image */
+  overflow: visible; /* Allows the image to overflow the tile */
 }
 
-.card:hover {
+.tile:hover {
   transform: translateY(-5px);
 }
 
-.card-left {
+.tile-content {
+  flex: 1; /* Content occupies the majority of the space */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  max-width: 60%;
+  justify-content: center;
 }
 
-.service-title {
+.tile-title {
   font-size: 18px;
-  line-height: normal;
-  Color: #611414;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
-.service-description {
-  font-size: 14px;
-    font-family: emoji;
-    line-height: normal;
-    font-weight: bold;
-    color: #231d1d;
-    margin-bottom: 15px;
-}
-
-.discover-button {
-  background-color: #611414;
+.tile-button {
+  background-color: #7e1919;
   color: #fff;
   border: none;
-  margin: 35px 50px;
-  padding: 8px 16px;
+  padding: 10px 20px;
   border-radius: 4px;
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  align-self: flex-start;
 }
 
-.discover-button:hover {
-  background-color: #cd3119;
+.tile-button:hover {
+  background-color: #c71c1c;
 }
 
-.card-right {
-  max-width: 35%;
+.tile-image {
+  flex: 0 0 30%; /* Image occupies 30% of the tile width */
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative; /* Needed for the overflowing effect */
 }
 
-.service-image {
-  width: 215%;
+.tile-image img {
+  width: 120%; /* Slightly larger than its container */
   height: auto;
   object-fit: contain;
+  border-radius: 8px;
+  position: absolute;
+  right: -10%; /* Overflow to the right of the tile */
+  top: 50%; /* Center the image vertically */
+  transform: translateY(-50%); /* Align image properly */
 }
 
-  
+@media (max-width: 768px) {
+  .tile {
+    flex-direction: column; /* Stack the content vertically on small screens */
+    align-items: flex-start;
+    padding-bottom: 40px;
+  }
+
+  .tile-image {
+    width: 100%; /* Make the image full width */
+    position: static; /* Default position for smaller screens */
+    margin-top: 15px;
+  }
+
+  .tile-image img {
+    width: 100%; /* Ensure the image fits within the screen width */
+    position: static; /* No overflow effect for smaller screens */
+    transform: none;
+  }
+
+  .tile-button {
+    align-self: stretch; /* Stretch the button to fit full width on small screens */
+  }
+}
+
   
 .back-button {
   background-color: #590606;
