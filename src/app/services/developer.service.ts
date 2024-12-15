@@ -12,7 +12,7 @@ import { AuthService } from './auth.service';  // Import AuthService to access t
 })
 export class DeveloperService {
   //private apiUrl = 'https://lslcloud.com/api/main/developers';  // API URL for fetching developers
-  private apiUrl = environment.apiUrl + +'/developers'; 
+  private apiUrl = environment.apiUrl + '/developers'; 
   private baseUrl = environment.apiUrl + '/developers'; 
 
  // private baseUrl = 'https://liveview.lslcloud.com/api/admin';
