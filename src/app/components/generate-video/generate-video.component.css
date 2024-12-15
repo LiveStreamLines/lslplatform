@@ -6,8 +6,13 @@
   margin: 20px;
 }
 
+.form-title {
+  font-size: 2rem;
+}
+
 .form-section {
   flex: 1;
+  max-width: 50%;
 }
 
 .preview-section {
@@ -35,7 +40,28 @@
 .form-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
+}
+
+.control-group {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #3c3838;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.form-field {
+  width: 150px;
+  margin-right: 50px;
+}
+
+.group-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #f7f1f1;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
 }
 
 .loading-spinner {
@@ -60,6 +86,7 @@
 
 .slider label {
   flex: 1;
+  font-size: 14px;
 }
 
 .slider input {
@@ -85,9 +112,8 @@
   flex: 1;
   text-align: right;
   font-size: 14px;
-  color: #fffcfc;
+  color: #333;
 }
-
 
 .slider2 {
   display: flex;
@@ -136,4 +162,26 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.submit {
+  background-color: rgb(121, 19, 19);
+  color: white;
+}
+
+/* Additional Styles for Responsiveness */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .form-section, .preview-section {
+    max-width: 100%;
+  }
+
+  .control-group {
+    margin-bottom: 15px;
+  }
 }
