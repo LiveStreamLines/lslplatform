@@ -238,8 +238,11 @@ export class CameraDetailComponent implements OnInit {
     // Implement the functionality to generate photo
   }
   
-  onDateChange(event: MatDatepickerInputEvent<Date>): void {
-    const selectedDate : Date = event.value !;
+  onDateChange(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+
+    // const selectedDate : Date = event.value !;
+    const selectedDate = new Date(inputElement.value);
     const formattedDate = this.formatDate(selectedDate);  // Format the date to yyyymmdd
   
     // Fetch camera details with the selected date

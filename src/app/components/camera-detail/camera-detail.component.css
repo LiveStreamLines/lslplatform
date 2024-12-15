@@ -42,6 +42,12 @@
   background-color: #e0e0e0;
 } */
 
+
+
+.red-outline .mat-mdc-form-field-flex {
+  height: 3.1rem;
+}
+
 .compare-toolbar button.active {
   background-color: #7b1313;
 }
@@ -141,11 +147,27 @@ mat-icon {
   background-color: #f1f1f1;
 }
 
-.share {
+/* Style the share button for proper alignment */
+.share-button {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  gap: 4px; /* Space between the icon and the text */
+  padding: 4px 8px; /* Add padding for better click area */
+  font-size: 14px; /* Ensure consistent font size */
+  text-transform: none; /* Prevent Material's default uppercase */
   background-color: #470707;
   color: white;
-  font-size: 14px;
-  padding: 10px;
+}
+
+/* Optional: style the icon */
+.share-icon {
+  font-size: 18px; /* Adjust icon size */
+  vertical-align: middle; /* Ensure proper alignment with the text */
+}
+
+/* Optional: style the text */
+.share-text {
+  line-height: 1; /* Prevent text from being pushed down */
 }
 
 /* Larger thumbnail styling */
@@ -203,3 +225,72 @@ h2 {
 p {
   font-size: 1.2em;
 }
+
+/* Style for the container */
+.form-field {
+  position: relative;
+  display: flex;
+  flex-direction: column; /* Stack label and input vertically */
+  gap: 8px; /* Spacing between label and input */
+  margin-bottom: 16px;
+}
+
+/* Style for the label */
+.form-field label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #fcfcfc; /* Dark gray for text */
+}
+
+/* Style for the date input */
+.native-date-picker {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  /* border: 1px solid #ccc; Light gray border */
+  border-radius: 4px;
+  background-color: #433a3a; /* Subtle background color */
+  color: #fffefe; /* Text color */
+  transition: all 0.3s ease; /* Smooth transitions for hover/focus */
+  border-bottom: 1px;
+}
+
+/* Input hover effect */
+.native-date-picker:hover {
+  border-color: #a80e0e; /* Highlight border on hover */
+}
+
+/* Input focus effect */
+.native-date-picker:focus {
+  border-color: #871010; /* Blue border for focus */
+  box-shadow: 0 0 5px rgba(255, 38, 0, 0.788); /* Glow effect */
+  outline: none; /* Remove default outline */
+}
+
+/* Style for invalid input (optional, if validation is needed) */
+.native-date-picker:invalid {
+  border-color: #ff4d4d; /* Red border for invalid input */
+  background-color: #ffe6e6; /* Light red background */
+}
+
+/* Style for disabled input (optional) */
+.native-date-picker:disabled {
+  background-color: #e9ecef; /* Gray background */
+  color: #6c757d; /* Light gray text */
+  border-color: #ddd; /* Light gray border */
+  cursor: not-allowed;
+}
+
+/* Style the custom calendar icon */
+.calendar-icon {
+  position: absolute;
+  top: 38px;
+  right: -28px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #eeeeee;
+  font-size: 19px;
+  background: #7f1515;
+  padding: 6px;
+}
+
