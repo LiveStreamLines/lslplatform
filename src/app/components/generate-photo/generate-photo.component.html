@@ -1,68 +1,79 @@
 <div class="container">
-    <!-- Left Section: Form -->
-    <div class="form-section" *ngIf="!isFilterComplete">
-      <p>Generate Photo Request</p>
-  
-      <form (ngSubmit)="filterImages()" class="form-container">
-        <!-- Start Date -->
+  <!-- Left Section: Form -->
+  <div class="form-section" *ngIf="!isFilterComplete">
+    <p class="form-title">Generate Photo Request</p>
+
+    <form (ngSubmit)="filterImages()" class="form-container">
+      <!-- Group 1: Date Range -->
+      <div class="control-group">
+        <p class="group-title">Date Range</p>
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Start Date</mat-label>
           <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="startDate" name="startDate" required />
           <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #startDatePicker></mat-datepicker>
         </mat-form-field>
-  
-        <!-- End Date -->
+
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>End Date</mat-label>
           <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="endDate" name="endDate" required />
           <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
           <mat-datepicker #endDatePicker></mat-datepicker>
         </mat-form-field>
-  
-        <!-- Start Hour -->
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Start Hour (HH)</mat-label>
-          <input 
-            matInput
-            type="number"
-            min="0"
-            max="23"
-            [(ngModel)]="hour1"
-            name="hour1"
-            required
-            (change)="onHour1Change(hour1)" 
-            (keydown)="preventManualInput($event)"
-          />
-        </mat-form-field>
-  
-        <!-- End Hour -->
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>End Hour (HH)</mat-label>
-          <input matInput type="number"
-            [min]="hour1 + 1"
-            max="23"
-            [(ngModel)]="hour2"
-            (keydown)="preventManualInput($event)"
-            name="hour2"
-            required />
-        </mat-form-field>
+      </div>
 
-        <mat-checkbox [(ngModel)]="showDate"  name="showDate">Show Date</mat-checkbox>
-        <mat-checkbox [(ngModel)]="showTime"  name="showDate">Show Time</mat-checkbox>
+      <!-- Group 2: Time Range -->
+      <div class="control-group">
+        <p class="group-title">Time Range</p>
+        <div class="time-range-group">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Start Hour (HH)</mat-label>
+            <input
+              matInput
+              type="number"
+              min="0"
+              max="23"
+              [(ngModel)]="hour1"
+              name="hour1"
+              required
+              (change)="onHour1Change(hour1)"
+              (keydown)="preventManualInput($event)"
+            />
+          </mat-form-field>
 
-        
-        <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">Generate Photo Request</button>
-      </form>
-    </div>
-  
-    <!-- Success Message -->
-    <div class="success-message" *ngIf="isFilterComplete">
-      <h3>Photo Request Queued Successfully</h3>
-      <p>Date From: {{ formatDate(startDate) }} To: {{ formatDate(endDate) }}</p>
-      <p>Hours: {{ hour1 }} - {{ hour2 }}</p>
-      <p>No. of Pictures Filtered: {{ filteredPicsCount }}</p>
-      <p>Check the gallery to download the ZIP file.</p>
-    </div>
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>End Hour (HH)</mat-label>
+            <input
+              matInput
+              type="number"
+              [min]="hour1 + 1"
+              max="23"
+              [(ngModel)]="hour2"
+              name="hour2"
+              required
+              (keydown)="preventManualInput($event)"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Group 3: Options -->
+      <div class="control-group">
+        <p class="group-title">Options</p>
+        <mat-checkbox [(ngModel)]="showDate" name="showDate">Show Date</mat-checkbox>
+        <mat-checkbox [(ngModel)]="showTime" name="showTime">Show Time</mat-checkbox>
+      </div>
+
+      <button mat-raised-button class="submit" color="primary" type="submit" [disabled]="isLoading">Generate Photo Request</button>
+    </form>
   </div>
-  
+
+  <!-- Success Message -->
+  <div class="success-message" *ngIf="isFilterComplete">
+    <h3>Photo Request Queued Successfully</h3>
+    <p>Date From: {{ formatDate(startDate) }} To: {{ formatDate(endDate) }}</p>
+    <p>Hours: {{ hour1 }} - {{ hour2 }}</p>
+    <p>No. of Pictures Filtered: {{ filteredPicsCount }}</p>
+    <p>Check the gallery to download the ZIP file.</p>
+  </div>
+</div>

@@ -8,6 +8,7 @@
 
 .tile {
   display: flex;
+  margin-right: 130px;
   align-items: center;
   border-radius: 12px;
   padding: 20px;
