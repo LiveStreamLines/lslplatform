@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environment/environments';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -8,7 +9,7 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://5.9.85.250:5000/api';
+  private apiUrl = environment.apiUrl;
   private authToken: string | null = null;
   private userRole: string | null = null;
   private username: string | null = null;

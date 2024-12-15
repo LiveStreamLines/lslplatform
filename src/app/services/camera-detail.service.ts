@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
-//import { environment } from '../../environments/environment';
+import { environment } from '../../environment/environments';
 import { CameraDetail } from '../models/camera-detail.model';
 import { AuthService } from './auth.service';  // Assuming you have AuthService to manage auth token
 
@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';  // Assuming you have AuthService 
 })
 export class CameraDetailService {
   //private apiUrl = 'https://lslcloud.com/api/main/projectcamerafiles';
-  private apiUrl = 'http://5.9.85.250:5000/api/camerapics';
+  private apiUrl = environment.apiUrl + '/camerapics';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environment/environments';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -6,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class PhotoRequestService {
-  private apiUrl = 'http://5.9.85.250:5000/api/video'; // Replace with your backend URL
+  private apiUrl = environment.apiUrl + '/video'; // Replace with your backend URL
 
   constructor(private http: HttpClient) {}
 

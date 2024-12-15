@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environment/environments';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -11,7 +12,7 @@ import { AuthService } from './auth.service';  // To access the auth token
 export class CameraService {
   
   //private apiUrl = 'https://lslcloud.com/api/main/projects/cameras';  // API base URL for fetching cameras
-  private apiUrl = 'http://5.9.85.250:5000/api/cameras/';
+  private apiUrl =   environment.apiUrl + '/cameras/';
   private cameras: Camera[] = [];
   constructor(private http: HttpClient, private authService: AuthService) {}
 

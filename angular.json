@@ -34,7 +34,8 @@
               "node_modules/swiper/swiper-bundle.min.css"
             ],
             "scripts": [
-              "node_modules/swiper/swiper-bundle.min.js"
+              "node_modules/swiper/swiper-bundle.min.js",
+              "src/scripts/load-env.js"
             ]
           },
           "configurations": {

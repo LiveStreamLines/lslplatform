@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environment/environments';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
@@ -10,8 +11,8 @@ import { AuthService } from './auth.service';  // To access the auth token
 })
 export class ProjectService {
   //private apiUrl = 'https://lslcloud.com/api/main/developer';  // Base URL for fetching projects
-  private apiUrl = 'http://5.9.85.250:5000/api/projects/dev';
-  private baseUrl = 'http://5.9.85.250:5000/api/projects';
+  private apiUrl = environment.apiUrl + '/projects/dev';
+  private baseUrl = environment.apiUrl + '/projects';
   private projects: Project[] = [];  // Store projects here
 
   constructor(private http: HttpClient, private authService: AuthService) {}
