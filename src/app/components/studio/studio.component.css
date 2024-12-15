@@ -3,12 +3,6 @@
     gap: 20px;
   }
   
-  .toolbar {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
   .canvas-area {
     position: relative;
   }
@@ -30,17 +24,6 @@
     transition: background-color 0.3s ease;
   }
   
-  .toolbar button:hover {
-    background-color: darkred; /* Add hover effect */
-  }
-  
-  .toolbar button.active {
-    background-color: darkred; /* Highlight active button */
-    color: white;
-    border: 2px solid white; /* Optional border */
-  }
-
-
   .text-controls {
     position: absolute;
     background-color: black; /* Black background */
@@ -167,11 +150,70 @@
   font-size: 20px;
 }
 
-.canvas-actions {
-  text-align: center;
-  margin-top: 20px;
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Add more space between buttons */
+  align-items: center; /* Center align buttons */
 }
 
-  
+.toolbar button {
+  background-color: rgb(96, 15, 15);
+  color: white;
+  font-size: 14px; /* Smaller font size */
+  padding: 8px 10px; /* Adjust padding for smaller buttons */
+  border: none;
+  border-radius: 50%; /* Make buttons circular */
+  width: 50px; /* Set fixed width for uniform size */
+  height: 50px; /* Set fixed height for uniform size */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.toolbar button span {
+  display: none; /* Hide the text by default */
+}
+
+.toolbar button:hover span {
+  display: inline; /* Show text on hover */
+  font-size: 12px; /* Adjust font size for text */
+  margin-top: 5px; /* Add space between icon and text */
+}
+
+.toolbar button mat-icon {
+  font-size: 24px; /* Size of the icons */
+}
+
+.toolbar button:hover {
+  background-color: darkred; /* Add hover effect */
+}
+
+.toolbar button.active {
+  background-color: darkred; /* Highlight active button */
+  color: white;
+  border: 2px solid white; /* Optional border for active state */
+}
+
+.canvas-actions {
+  margin-top: 20px; /* Add space between canvas actions and tools */
+}
+
+.download-button {
+  background-color: darkgreen; /* Custom color for the download button */
+  color: white;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+  background-color: green;
+}
+
   
   

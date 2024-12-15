@@ -1,39 +1,47 @@
 <div class="studio-container">
+    
     <div class="toolbar">
         <button (click)="selectTool('text')" [ngClass]="{ active: currentTool === 'text' }">
-            Text
+          <mat-icon>text_fields</mat-icon>
+          <span>Text</span>
         </button>
         <button (click)="selectTool('rectangle')" [ngClass]="{ active: currentTool === 'rectangle' }">
-            Rectangle
+          <mat-icon>crop_square</mat-icon>
+          <span>Rectangle</span>
         </button>
         <button (click)="selectTool('circle')" [ngClass]="{ active: currentTool === 'circle' }">
-            Circle
+          <mat-icon>circle</mat-icon>
+          <span>Circle</span>
         </button>
         <button (click)="selectTool('arrow')" [ngClass]="{ active: currentTool === 'arrow' }">
-            Arrow
+          <mat-icon>arrow_forward</mat-icon>
+          <span>Arrow</span>
         </button>
         <button (click)="addWatermark()" [ngClass]="{ active: currentTool === 'watermark'}">
-           Add Image
+          <mat-icon>image</mat-icon>
+          <span>Add Image</span>
         </button>
-          <input
-            #watermarkInput
-            type="file"
-            accept="image/*"
-            (change)="handleWatermarkUpload($event)"
-            style="display: none"
-          />
+        <input
+          #watermarkInput
+          type="file"
+          accept="image/*"
+          (change)="handleWatermarkUpload($event)"
+          style="display: none"
+        />
         <button (click)="selectTool('effect')" [ngClass]="{ active: currentTool === 'effect' }">
-            Effect
+          <mat-icon>filter</mat-icon>
+          <span>Effect</span>
         </button>
         <button (click)="clearCanvas()" class="clear-button">
-            Clear Canvas
+          <mat-icon>clear</mat-icon>
+          <span>Clear</span>
         </button>
-
         <div class="canvas-actions">
-            <button (click)="downloadCanvas()" class="download-button">
-              <mat-icon>download</mat-icon> Download
-            </button>
-          </div>
+          <button (click)="downloadCanvas()" class="download-button">
+            <mat-icon>download</mat-icon>
+            <span>Download</span>
+          </button>
+        </div>
     </div>
   
     <div class="canvas-area">

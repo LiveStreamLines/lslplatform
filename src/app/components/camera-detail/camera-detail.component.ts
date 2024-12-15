@@ -38,7 +38,6 @@ import { BreadcrumbService } from '../../services/breadcrumb.service';
     MatDatepickerModule,
     MatInputModule,
     MatNativeDateModule,
-    MatFormField,
     FormsModule,
     CameraZoomComponent,
     CameraCompareComponent,
