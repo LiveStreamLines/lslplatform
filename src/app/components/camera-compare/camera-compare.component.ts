@@ -12,7 +12,7 @@ import { CameraCompareService } from '../../services/camera-compare-service';
 @Component({
   selector: 'app-camera-compare',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatFormField, MatInputModule ,MatDatepickerModule, MatLabel],
+  imports: [CommonModule, FormsModule, MatInputModule ,MatDatepickerModule],
   templateUrl: './camera-compare.component.html',
   styleUrl: './camera-compare.component.css'
 })

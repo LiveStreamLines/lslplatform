@@ -12,7 +12,7 @@ import { MatLabel } from '@angular/material/input';
 @Component({
   selector: 'app-camera-compare-magnify',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatFormField, MatInputModule ,MatDatepickerModule, MatLabel],
+  imports: [CommonModule, FormsModule, MatInputModule ,MatDatepickerModule],
   templateUrl: './camera-compare-magnify.component.html',
   styleUrl: './camera-compare-magnify.component.css'
 })

@@ -5,13 +5,11 @@ import { FormsModule } from '@angular/forms';  // Import FormsModule for ngModel
 import { CommonModule } from '@angular/common'; // Import CommonModule for ngFor and ngIf
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormField } from '@angular/material/input';
-import { MatLabel } from '@angular/material/input';
 
 @Component({
   selector: 'app-camera-compare-side',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatFormField, MatInputModule ,MatDatepickerModule, MatLabel],
+  imports: [CommonModule, FormsModule, MatInputModule ,MatDatepickerModule],
   templateUrl: './camera-compare-side.component.html',
   styleUrl: './camera-compare-side.component.css'
 })
