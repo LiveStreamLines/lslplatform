@@ -112,5 +112,19 @@ export class GeneratePhotoComponent implements OnInit {
     }
   }
   
+  
+  increment(fieldName: string): void {
+    const field = (this as any)[fieldName];
+    if (field !== undefined && field < 23) {
+      (this as any)[fieldName] = field + 1;
+    }
+  }
+  
+  decrement(fieldName: string): void {
+    const field = (this as any)[fieldName];
+    if (field !== undefined && field > 0) {
+      (this as any)[fieldName] = field - 1;
+    }
+  }
 
 }

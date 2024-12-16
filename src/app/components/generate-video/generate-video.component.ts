@@ -44,8 +44,6 @@ export class GenerateVideoComponent implements OnInit {
   watermarkImageFile: File | null = null; // Store the uploaded watermark image
   addMusic: boolean = false; // Whether to include background music
 
-
-
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
   private image = new Image(); // To load and draw the image on the canvas
   private logoimage = new Image();
@@ -55,8 +53,8 @@ export class GenerateVideoComponent implements OnInit {
   projectTag!: string;
   developerTag!: string;
 
-  startDate!: Date;
-  endDate!: Date;
+  startDate!: string;
+  endDate!: string;
   hour1: number = 8;
   hour2: number = 9;
   
@@ -92,6 +90,7 @@ export class GenerateVideoComponent implements OnInit {
   ngOnInit(): void {
     this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;
     this.projectTag = this.route.snapshot.paramMap.get('projectTag')!;
+    this.setDefaultDates();
 
     // Simulate fetching a preview image
     this.loadImage();
@@ -101,9 +100,10 @@ export class GenerateVideoComponent implements OnInit {
     const now = new Date(); // Current date
     const firstDayLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1); // First day of last month
     const lastDayLastMonth = new Date(now.getFullYear(), now.getMonth(), 0); // Last day of last month
+    this.startDate = this.formatDate(firstDayLastMonth);
+    this.endDate = this.formatDate(lastDayLastMonth);
+    console.log(this.startDate, this.endDate);
 
-    this.startDate = firstDayLastMonth;
-    this.endDate = lastDayLastMonth;
   }
 
    // Extract the date from the image URL
@@ -310,13 +310,6 @@ export class GenerateVideoComponent implements OnInit {
     }
   }
 
-  formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2);
-    const day = ('0' + date.getDate()).slice(-2);
-    return `${year}${month}${day}`;
-  }
-
   onEffectChange(): void {
     const canvas = this.canvasRef.nativeElement;
     const context = canvas.getContext('2d');
@@ -346,6 +339,19 @@ export class GenerateVideoComponent implements OnInit {
     this.drawUploadedImage(context, canvas.width);
   }
 
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
+
+  formatDateForInput(dateString: string): string {
+    return dateString.replace(/-/g, '');
+
+  }
+
+ 
   filterImages() {
     this.isLoading = true;
     this.errorMessage = null;
@@ -355,8 +361,8 @@ export class GenerateVideoComponent implements OnInit {
       formData.append('developerId', this.developerTag);
       formData.append('projectId', this.projectTag);
       formData.append('cameraId', this.cameraName);
-      formData.append('date1', this.formatDate(this.startDate));
-      formData.append('date2', this.formatDate(this.endDate));
+      formData.append('date1', this.formatDateForInput(this.startDate));
+      formData.append('date2', this.formatDateForInput(this.endDate));
       formData.append('hour1', this.hour1.toString().padStart(2, '0'));
       formData.append('hour2', this.hour2.toString().padStart(2, '0'));
       formData.append('duration', this.duration.toString());

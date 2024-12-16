@@ -82,6 +82,8 @@ body {
 .slider input {
   flex: 2;
   margin: 0 10px;
+  accent-color: #891919; /* For modern browsers */
+
 }
 
 .slider span {
@@ -210,7 +212,6 @@ button.submit:hover {
 }
 
 .number-input-wrapper input[type="number"] {
-  padding-right: 30px; /* Space for the arrows */
   padding-left: 10px;
   border: 1px solid #776c6c; /* White border */
   border-radius: 4px;
@@ -227,7 +228,8 @@ button.submit:hover {
 .arrows {
   position: absolute;
   top: 0;
-  right: 27px; /* Align to the right edge */
+  right: 38px; /* Align to the right edge */
+  background-color: #3c3838;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -240,7 +242,7 @@ button.submit:hover {
   background-color: #6f1414; /* Red background for arrows */
   color: #ffffff; /* White arrow color */
   border: none;
-  width: 20px;
+  width: 30px;
   height: 20px;
   line-height: 16px;
   cursor: pointer;
