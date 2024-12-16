@@ -139,23 +139,31 @@ export class CameraCompareSideComponent implements OnInit {
   }
 
 
-  // Example of date change handling functions
-onDate1Change(event: MatDatepickerInputEvent<Date>): void {
-  const selectedDate = event.value!;
-  const formattedDate = this.formatDate(selectedDate); // Format the date as needed
-  const otherDate = this.formatDate(this.selectedDate2);
-  //console.log("Selected Date1:", formattedDate);  // Debug log
-  // Fetch date1Pictures based on selectedDate
-  this.loadComparisonPhotos(formattedDate, otherDate); // Load date1 photos
+  onDate1Change(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const selectedDate = new Date(inputElement.value); // Parse the date
+    const formattedDate = this.formatDate(selectedDate); // Format it for API call
+    const otherDate = this.formatDate(this.selectedDate2); // Format the other date
+    this.selectedDate1 = selectedDate; // Update bound Date object
+    this.loadComparisonPhotos(formattedDate, otherDate); // Load photos
+  }
+  
+  onDate2Change(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const selectedDate = new Date(inputElement.value);
+    const formattedDate = this.formatDate(selectedDate);
+    const otherDate = this.formatDate(this.selectedDate1);
+    this.selectedDate2 = selectedDate;
+    this.loadComparisonPhotos(otherDate, formattedDate);
+  }
+
+  // Ensure `selectedDate1` and `selectedDate2` are in `yyyy-MM-dd` format for input binding
+get date1InputValue(): string {
+  return this.selectedDate1.toISOString().split('T')[0]; // Format for HTML input
 }
 
-onDate2Change(event: MatDatepickerInputEvent<Date>): void {
-  const selectedDate = event.value!;
-  const formattedDate = this.formatDate(selectedDate); // Format the date as needed
-  const otherDate = this.formatDate(this.selectedDate1);
-  //console.log("Selected Date2:", formattedDate);  // Debug log
-  // Fetch date2Pictures based on selectedDate
-  this.loadComparisonPhotos(otherDate, formattedDate); // Load date2 photos
+get date2InputValue(): string {
+  return this.selectedDate2.toISOString().split('T')[0];
 }
 
 formatDate(date: Date): string {

@@ -38,12 +38,19 @@
   <div class="compare-layout">
     <!-- Left-side for date1 thumbnails -->
     <div class="date1-section">
-      <mat-form-field class="date-selector">
-        <mat-label>Date 1:</mat-label>
-        <input matInput [matDatepicker]="picker1" [(ngModel)]="selectedDate1" (dateChange)="onDate1Change($event)" />
-        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-        <mat-datepicker #picker1></mat-datepicker>
-      </mat-form-field>
+      <div class="form-field">
+        <label for="photoDate">Photo Date:</label>
+        <input
+          type="date"
+          id="photoDate1"
+          [value]="date1InputValue"
+          (change)="onDate1Change($event)"
+          class="native-date-picker"
+        />
+        <span class="calendar-icon">
+          <i class="material-icons">calendar_today</i>
+        </span>
+      </div>
   
       <div class="thumbnail-strip">
         <div *ngFor="let picture of date1Pictures" 
@@ -60,12 +67,19 @@
   
     <!-- Right-side for date2 thumbnails -->
     <div class="date2-section">
-      <mat-form-field class="date-selector">
-        <mat-label>Date 2:</mat-label>
-        <input matInput [matDatepicker]="picker2" [(ngModel)]="selectedDate2" (dateChange)="onDate2Change($event)" />
-        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-        <mat-datepicker #picker2></mat-datepicker>
-      </mat-form-field>
+      <div class="form-field">
+        <label for="photoDate">Photo Date:</label>
+        <input
+          type="date"
+          id="photoDate2"
+          [value]="date2InputValue"
+          (change)="onDate2Change($event)"
+          class="native-date-picker"
+        />
+        <span class="calendar-icon">
+          <i class="material-icons">calendar_today</i>
+        </span>
+      </div>
   
       <div class="thumbnail-strip">
         <div *ngFor="let picture of date2Pictures" 
