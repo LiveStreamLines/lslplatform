@@ -1,127 +1,111 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { DeveloperService } from '../../../services/developer.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Camera } from '../../../models/camera.model';
+import { Project } from '../../../models/project.model';
 import { ProjectService } from '../../../services/project.service';
 import { CameraService } from '../../../services/camera.service';
-import { CameraDetailService } from '../../../services/camera-detail.service';
-import { Camera } from '../../../models/camera.model';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { Project } from '../../../models/project.model';
 
 @Component({
   selector: 'app-camera-map',
   standalone: true,
-  imports: [GoogleMapsModule, CommonModule, FormsModule],
+  imports: [GoogleMapsModule, CommonModule],
   templateUrl: './camera-map.component.html',
-  styleUrl: './camera-map.component.css'
+  styleUrl: './camera-map.component.css',
 })
 export class CameraMapComponent {
-
-  // @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;
-  // map!: google.maps.Map;
   developerTag!: string;
   projectTag!: string;
-  developerId!: string;
-  projectId!: string;
   cameras: Camera[] = [];
   selectedCamera: Camera | null = null;
   map: google.maps.Map | null = null;
+  popupX: number | null = null;
+  popupY: number | null = null;
 
- 
-  constructor (
+  constructor(
     private route: ActivatedRoute,
-    private developerService: DeveloperService,
+    private router: Router,
     private projectService: ProjectService,
-    private cameraService: CameraService,
+    private cameraService: CameraService
   ) {}
 
   ngOnInit() {
-
-    // Get the project ID from the route parameters
-    this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;
     this.projectTag = this.route.snapshot.paramMap.get('projectTag')!;
-         
-      // Get Developer ID by developerTag
+    this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;
 
-        this.projectService.getProjectIdByTag(this.projectTag).subscribe({
-           next: (project: Project[]) => {
-             this.projectId = project[0]._id
-             this.cameraService.getCamerasByProject(this.projectId).subscribe({
-               next: (cameras) => {
-                 this.cameras = cameras;
-                 //console.log (cameras);
-                 this.loadMap();
-               },
-               error: (err) => {
-                 console.error('Error fetching cameras:', err);
-               },
-             });        
-           },
-           error:  (err: any) => {
-             console.error('Project not found.');
-           }
+    this.projectService.getProjectIdByTag(this.projectTag).subscribe({
+      next: (projects: Project[]) => {
+        const projectId = projects[0]._id;
+        this.cameraService.getCamerasByProject(projectId).subscribe({
+          next: (cameras) => (this.cameras = cameras),
+          error: (err) => console.error('Error fetching cameras:', err),
         });
-     
- }
+      },
+      error: (err) => console.error('Project not found:', err),
+    });
 
-  ngAfterViewInit(): void {
-    //this.loadMap();
   }
 
-  loadMap(): void {
-    const mapOptions: google.maps.MapOptions = {
-      center: { lat: Number(this.cameras[0].lat), lng: Number(this.cameras[0].lng)},
-      zoom: 10,
-    };
 
-   // this.map = new google.maps.Map(this.mapContainer.nativeElement, mapOptions);
-   // this.addMarkers();
-  }
-
-  // addMarkers(): void {
-  //   this.cameras.forEach((camera) => {
-  //     const marker = new google.maps.marker.AdvancedMarkerElement({
-  //       position: { lat: Number(camera.lat), lng: Number(camera.lng) },
-  //       map: this.map,
-  //       title: camera.cameraDescription,
-  //     });
-  //   });
-  // }
   onMapReady(event: any): void {
-    console.log('Map Ready Event:', event);
-
-  // Check if the map instance is part of the event object
-  if (event instanceof google.maps.Map) {
-    this.map = event; // Assign the map instance
-    this.updateLabelPositions();
-  } else {
-    console.error('Unexpected event object:', event);
+    const map = event as google.maps.Map;
+    if (map) {
+      this.map = map;
+      this.map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+      console.log('Map is ready:', map);
+    } else {
+      console.error('Map instance not found.');
+    }
   }
-  }
-  
 
   onMarkerClick(camera: Camera): void {
-    this.selectedCamera = camera;
+    this.selectedCamera = camera; // Set the selected camera
+
+    if (!this.map) return;
+  
+    const projection = this.map.getProjection();
+    if (!projection) {
+      console.error('Map projection not available.');
+      return;
+    }
+
+    const mapBounds = this.map.getBounds();
+    if (!mapBounds) {
+      console.error('Map bounds are not available.');
+      return;
+    }
+
+    const topRight = projection.fromLatLngToPoint(mapBounds.getNorthEast());
+    const bottomLeft = projection.fromLatLngToPoint(mapBounds.getSouthWest());
+    const scale = Math.pow(2, this.map.getZoom() ?? 0); // Zoom scale factor
+    
+    const latLng = new google.maps.LatLng(Number(camera.lat), Number(camera.lng));
+    const point = projection.fromLatLngToPoint(latLng);
+  
+    if (!point) {
+      console.error('Projection point calculation failed.');
+      return;
+    }
+
+    if (point && topRight && bottomLeft) {
+       this.popupX = (point.x - bottomLeft.x) * scale;
+      this.popupY = (point.y - topRight.y) * scale;
+    }
+  
+    console.log('Popup X:', this.popupX, 'Popup Y:', this.popupY);
+    console.log(this.selectedCamera);
   }
+  
 
   closeInfoPopup(): void {
     this.selectedCamera = null;
-  }
-
-  updateLabelPositions(): void {
-    if (!this.map) return;
-
-    this.cameras.forEach((camera) => {
-      const latLng = new google.maps.LatLng(Number(camera.lat), Number(camera.lng));
-      const point = this.map!.getProjection()?.fromLatLngToPoint(latLng);
-
-      if (point) {
-        camera.screenX = point.x;
-        camera.screenY = point.y;
-      }
-    });
+    this.popupX = null;
+    this.popupY = null;
   }
   
+  viewCameraDetails(camera: Camera): void {
+    this.router.navigate([`/home/${this.developerTag}/${this.projectTag}/${camera.camera}`]);
+  }
+
 }
