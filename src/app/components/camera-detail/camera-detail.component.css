@@ -8,7 +8,7 @@
   border-radius: 5px;
   cursor: pointer;
   margin-bottom: 20px;
-  font-size: 16px;
+  font-size: 10px;
 }
 
 .back-button:hover {
@@ -17,7 +17,7 @@
 
 /* Toolbar styling */
 .camera-detail-toolbar {
-  background-color: #470707;
+  background-color: #54090959;
   color: white;
   display: flex;
   justify-content: space-around;

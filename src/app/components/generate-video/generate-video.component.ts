@@ -97,6 +97,15 @@ export class GenerateVideoComponent implements OnInit {
     this.loadImage();
   }
 
+  private setDefaultDates(): void {
+    const now = new Date(); // Current date
+    const firstDayLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1); // First day of last month
+    const lastDayLastMonth = new Date(now.getFullYear(), now.getMonth(), 0); // Last day of last month
+
+    this.startDate = firstDayLastMonth;
+    this.endDate = lastDayLastMonth;
+  }
+
    // Extract the date from the image URL
    private extractDateFromUrl(url: string): string {
     const match = url.match(/\/large\/(\d{14})\.jpg$/);
@@ -389,6 +398,20 @@ export class GenerateVideoComponent implements OnInit {
     const allowedKeys = ['ArrowUp', 'ArrowDown', 'Tab', 'Backspace', 'Delete'];
     if (!allowedKeys.includes(event.key)) {
       event.preventDefault();
+    }
+  }
+
+  increment(fieldName: string): void {
+    const field = (this as any)[fieldName];
+    if (field !== undefined && field < 23) {
+      (this as any)[fieldName] = field + 1;
+    }
+  }
+  
+  decrement(fieldName: string): void {
+    const field = (this as any)[fieldName];
+    if (field !== undefined && field > 0) {
+      (this as any)[fieldName] = field - 1;
     }
   }
 }
