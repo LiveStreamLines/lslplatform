@@ -157,6 +157,7 @@ mat-icon {
   text-transform: none; /* Prevent Material's default uppercase */
   background-color: #470707;
   color: white;
+  margin-right: 10px;
 }
 
 /* Optional: style the icon */

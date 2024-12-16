@@ -29,13 +29,28 @@
   }
   
   .date1-section, .date2-section {
-    width: 50%;
+    width: 49%;
   }
   
   .thumbnail-strip {
     display: flex;
     gap: 10px;
     overflow-x: auto;
+  }
+
+  
+
+  .thumbnail-strip::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .thumbnail-strip::-webkit-scrollbar-thumb {
+    background-color: #681111;  /* Customize the scrollbar color */
+    border-radius: 10px;
+  }
+
+  .thumbnail-strip::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
   }
   
   .thumbnail {
@@ -152,7 +167,7 @@
 .calendar-icon {
   position: absolute;
   top: 38px;
-  right: 315px;
+  left: 30%;
   transform: translateY(-50%);
   pointer-events: none;
   color: #eeeeee;

@@ -6,7 +6,7 @@
     <div class="form-section" *ngIf="!isFilterComplete">
       <p class="form-title">Generate Video</p>
 
-      <form (ngSubmit)="filterImages()" class="form-container">
+      <form class="form-container">
         <!-- Group 1: Date Range -->
         <div class="control-group group">
           <div class="group-title">Date Range</div>
@@ -211,11 +211,7 @@
           </div>
         </div>
       
-        <button class="submit" type="submit" [disabled]="isLoading">Generate Video</button>
       </form>
-      
-      
-      
     </div>
 
     <!-- Success Message -->
@@ -283,6 +279,9 @@
             </div>
           </div>
       </div>
+
+      <button class="submit" (click)="filterImages()" [disabled]="isLoading">Generate Video</button>
+
     </div>
 
   </div>
