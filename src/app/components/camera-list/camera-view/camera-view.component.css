@@ -41,3 +41,16 @@ mat-slider {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+.navigate-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.navigate-button-container button {
+  color: white;
+  background-color: rgb(100, 9, 9);
+  padding: 10px 20px;
+  font-size: 12px;
+}

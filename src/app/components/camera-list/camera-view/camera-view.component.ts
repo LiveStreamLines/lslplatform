@@ -6,6 +6,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { CameraService } from '../../../services/camera.service';
 import { CameraDetailService } from '../../../services/camera-detail.service';
 import { DeveloperService } from '../../../services/developer.service';
@@ -15,7 +16,7 @@ import { Project } from '../../../models/project.model';
 @Component({
   selector: 'app-camera-view',
   standalone: true,
-  imports: [MatSliderModule, FormsModule, MatTab, MatTabGroup, CommonModule, ReactiveFormsModule],
+  imports: [MatSliderModule, FormsModule, MatTab, MatTabGroup, CommonModule, ReactiveFormsModule, MatProgressSpinner],
   templateUrl: './camera-view.component.html',
   styleUrl: './camera-view.component.css'
 })
@@ -31,6 +32,9 @@ export class CameraViewComponent implements OnInit{
   projectId!: string;
   path!: string;
   sliderInterval: any;
+  videoUrl!: string; // Store video URL
+  loadingVideo: boolean = false; // Track video loading state
+
 
 
   constructor(
@@ -86,6 +90,8 @@ export class CameraViewComponent implements OnInit{
     });
   }
 
+
+
   preloadImages() {
     this.images.forEach(image => {
       const img = new Image();
@@ -118,6 +124,39 @@ export class CameraViewComponent implements OnInit{
 
   onSliderMove(event: any) {
     this.imageIndex = event.target.value; // Updates the image index to match the slider position
+  }
+
+  navigateToVideo(cameraId: string): void {
+    this.loadingVideo = true; // Show spinner
+    this.loadCameraVideo(cameraId).then((videoUrl) => {
+      this.loadingVideo = false; // Hide spinner
+      if (videoUrl) {
+        window.open(videoUrl, '_blank');
+      } else {
+        console.error('Video URL is not available');
+      }
+    }).catch((error) => {
+      this.loadingVideo = false; // Hide spinner
+      console.error('Error loading video:', error);
+    });
+  }
+  
+  loadCameraVideo(cameraId: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.cameraDetailService.getVideoPreview(this.developerTag, this.projectTag, cameraId).subscribe({
+        next: response => {
+          const videoUrl = response.videoPath; // Extract the video URL
+          if (videoUrl) {
+            resolve(videoUrl);
+          } else {
+            reject('Video URL not found in response');
+          }
+        },
+        error: err => {
+          reject(err);
+        }
+      });
+    });
   }
 
 }

@@ -52,4 +52,14 @@ export class CameraDetailService {
     return this.http.get<CameraDetail>(`${this.apiUrl}/preview/${developerTag}/${projectTag}/${cameraTag}`, { headers });
   }
 
+  getVideoPreview(developerTag: string, projectTag: string, cameraTag: string): Observable<any> {
+    const authh = this.authService.getAuthToken();  // Get the auth token from AuthService
+    const headers = new HttpHeaders({
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+      });          
+      
+    return this.http.get<CameraDetail>(`${this.apiUrl}/preview-video/${developerTag}/${projectTag}/${cameraTag}`, { headers });
+  }
+  
+
 }
