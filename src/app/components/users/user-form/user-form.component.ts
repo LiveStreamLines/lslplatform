@@ -166,8 +166,9 @@ export class UserFormComponent implements OnInit {
           console.log('User updated successfully');
         });
     } else {
-      this.userService.addUser(userData).subscribe(() => {
+      this.userService.addUser(userData).subscribe((response: any) => {
         this.submitted = true;
+        this.userId = response._id; // Assuming the backend returns `user_id` in the response
         this.resetEmail = userData.email;
         console.log('User added successfully');
       });
@@ -188,12 +189,12 @@ export class UserFormComponent implements OnInit {
   }
 
   sendResetPasswordLink(): void {
-    if (!this.resetEmail) {
-      alert('Please provide an email address.');
+    if (!this.resetEmail || !this.userId) {
+      alert('Missing user ID or email address.');
       return;
     }
 
-    this.userService.sendResetPasswordLink("", this.resetEmail).subscribe({
+    this.userService.sendResetPasswordLink(this.userId, this.resetEmail).subscribe({
       next: () => alert('Reset password link sent successfully.'),
       error: () => alert('Failed to send reset password link.'),
     });
