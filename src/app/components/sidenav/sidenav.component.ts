@@ -29,7 +29,7 @@ export class SidenavComponent implements OnInit {
   ngOnInit(): void {
     this.userRole = this.authService.getUserRole() || '';
 
-    if (this.userRole === 'Admin') {
+    if (this.userRole === 'Super Admin') {
       this.isAdmin = true;
     }
 

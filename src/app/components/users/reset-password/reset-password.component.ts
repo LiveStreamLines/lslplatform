@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderService } from '../../../services/header.service';
@@ -8,14 +9,15 @@ import { AuthService } from '../../../services/auth.service';
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './reset-password.component.html',
-  styleUrl: './reset-password.component.css'
+  styleUrls: ['./reset-password.component.css']
 })
 export class ResetPasswordComponent implements OnInit {
 
   resetForm: FormGroup;
   token: string | null = null;
+  message: string | null = null; // To store success or error messages
 
   constructor(
     private fb: FormBuilder,
@@ -38,7 +40,7 @@ export class ResetPasswordComponent implements OnInit {
 
   onSubmit(): void {
     if (this.resetForm.invalid || !this.token) {
-      alert('Invalid form or token');
+      this.message = 'Invalid form or token';
       return;
     }
 
@@ -46,12 +48,12 @@ export class ResetPasswordComponent implements OnInit {
     this.authService.resetpassword(this.token, newPassword)
       .subscribe({
         next: () => {
-          alert('Password reset successfully');
-          this.router.navigate(['/login']);
+          this.message = 'Password reset successfully.';
+          setTimeout(() => this.router.navigate(['/login']), 2000); // Redirect after 2 seconds
         },
         error: (err) => {
           console.error('Error resetting password:', err);
-          alert('Failed to reset password');
+          this.message = 'Failed to reset password. Please try again.';
         },
       });
   }
