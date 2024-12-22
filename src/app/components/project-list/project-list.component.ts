@@ -59,7 +59,7 @@ export class ProjectListComponent implements OnInit {
             }));
     
              // Filter projects based on role and accessible projects
-             this.filteredProjects = this.userRole === 'Admin'
+             this.filteredProjects = this.userRole === 'Super Admin'
              ? this.projects // Admins see all projects
              : this.projects.filter((project) =>
                  this.accessibleProjects.includes(project._id)

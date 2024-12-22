@@ -35,7 +35,7 @@
       </div>
 
 
-    <div class="dropdowns">
+    <div class="dropdowns" *ngIf="!hidepermissions">
       <div class="row">
       <mat-form-field appearance="outline" style="--mat-primary-color: #8B0000;">
         <mat-label>Accessible Developers</mat-label>
@@ -81,7 +81,7 @@
       </div>
     </div>
       
-      <div class="row">
+      <div class="row" *ngIf="!hidepermissions">
         <div class="col-6">
           <input style="width: 5%" type="checkbox" formControlName="canAddUser" />
           <label> Can Add Users </label>

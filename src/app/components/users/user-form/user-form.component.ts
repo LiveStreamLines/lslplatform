@@ -26,6 +26,7 @@ export class UserFormComponent implements OnInit {
   submitted: boolean = false;
   resetEmail: string = '';
   userId: string | null = null; // Store user ID when editing
+  hidepermissions: boolean = false;
 
   roles: string[] = ['Super Admin', 'Developer Admin', 'User'];
   developers: any[] = []; // Replace with actual developer data
@@ -63,6 +64,7 @@ export class UserFormComponent implements OnInit {
     // Watch for changes in the role field
     this.userForm.get('role')?.valueChanges.subscribe((role: string) => {
       if (role === 'Super Admin') {
+        this.hidepermissions = true;
         this.clearAccessibles();
         this.clearPermissions();
       }

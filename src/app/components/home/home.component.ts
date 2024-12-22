@@ -44,7 +44,7 @@
             logo: this.logopath + dev.logo  // Prepend the base URL if needed
           }));
           // Filter developers based on role and accessible developers
-          this.filteredDevelopers = this.userRole === 'Admin'
+          this.filteredDevelopers = this.userRole === 'Super Admin'
           ? this.developers // Admins see all developers
           : this.developers.filter((dev) =>
               this.accessibleDevelopers.includes(dev._id)
@@ -75,7 +75,7 @@
       } else {
         // Reset to the full filtered list based on role and accessible developers
         this.filteredDevelopers =
-          this.userRole === 'Admin'
+          this.userRole === 'Super Admin'
             ? this.developers
             : this.developers.filter((dev) =>
                 this.accessibleDevelopers.includes(dev._id)

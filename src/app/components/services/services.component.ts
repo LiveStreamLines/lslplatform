@@ -80,7 +80,7 @@ export class ServicesComponent implements OnInit {
     this.userRole = this.authService.getUserRole();
     this.accessibleServices = this.authService.getAccessibleServices();
      // Filter projects based on role and accessible projects
-     this.filteredServices = this.userRole === 'Admin'
+     this.filteredServices = this.userRole === 'Super Admin'
      ? this.services // Admins see all projects
      : this.services.filter((services) =>
          this.accessibleServices.includes(services.name)
