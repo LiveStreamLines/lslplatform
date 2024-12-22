@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { HeaderService } from '../../../services/header.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -20,9 +20,9 @@ export class ResetPasswordComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private http: HttpClient,
     private router: Router,
-    private headerService: HeaderService
+    private headerService: HeaderService,
+    private authService: AuthService
   ) {
     this.resetForm = this.fb.group({
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -43,8 +43,7 @@ export class ResetPasswordComponent implements OnInit {
     }
 
     const newPassword = this.resetForm.value.newPassword;
-    this.http
-      .post('/auth/reset-password', { token: this.token, newPassword })
+    this.authService.resetpassword(this.token, newPassword)
       .subscribe({
         next: () => {
           alert('Password reset successfully');

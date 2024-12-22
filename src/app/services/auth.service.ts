@@ -32,6 +32,7 @@ export class AuthService {
     this.accessibleServices = JSON.parse(localStorage.getItem('accessibleCameras') || '[]');
   }
 
+  
   login(email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/login`, { email, password }).pipe(
       tap((response: any) => {
@@ -56,6 +57,10 @@ export class AuthService {
 
       })
     );
+  }
+
+  resetpassword (token: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}`, { token, newPassword });    
   }
 
    // Verify Phone Number
