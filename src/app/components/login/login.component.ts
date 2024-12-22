@@ -20,6 +20,10 @@ export class LoginComponent implements OnInit {
   otp: string = '';
   loginError: string | null = null;
   isOtpSent: boolean = false;
+  isPhoneRequired: boolean = false;
+  isPhoneSubmitted: boolean = false;
+  userId: string | null = null;
+  loading: boolean = false; // Flag to manage loading state
 
 
   constructor(private authService: AuthService, private router: Router, private headerService: HeaderService) {}
@@ -30,12 +34,21 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(): void {
+    this.loading = true;
     this.authService.login(this.email, this.password).subscribe({
-      next: () => {
-        this.router.navigate(['home']); // Redirect to dashboard on success
-        this.headerService.showHeaderAndSidenav = true;
+      next: (response) => {
+        this.loading = false;
+        if (response.phoneRequired) {
+          // If phone verification is required
+          this.isPhoneRequired = true;
+        } else {
+          // Login successful
+          this.router.navigate(['home']);
+          this.headerService.showHeaderAndSidenav = true;
+        }
       },
       error: (err) => {
+        this.loading = false;
         this.loginError = err.error.msg;
         console.error('Login failed:', err);
       },
@@ -44,12 +57,16 @@ export class LoginComponent implements OnInit {
 
   // Send OTP
   sendOtp(): void {
+    this.loading = true;
     this.authService.verifyPhone(this.phone).subscribe({
       next: () => {
+        this.loading = false;
         this.isOtpSent = true;
+        this.isPhoneSubmitted = true;
         console.log('OTP sent successfully');
       },
       error: (err) => {
+        this.loading = false;
         this.loginError = 'Failed to send OTP.';
         console.error('Error:', err);
       },
@@ -58,11 +75,15 @@ export class LoginComponent implements OnInit {
 
   // Verify OTP
   verifyOtp(): void {
+    this.loading = true;
     this.authService.verifyOtp(this.phone, this.otp).subscribe({
       next: () => {
+        this.loading = false;
         this.router.navigate(['home']); // Redirect to dashboard on success
+        this.headerService.showHeaderAndSidenav = true;
       },
       error: (err) => {
+        this.loading = false;
         this.loginError = 'Failed to verify OTP.';
         console.error('Error:', err);
       },

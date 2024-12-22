@@ -27,6 +27,7 @@ export class UserFormComponent implements OnInit {
   resetEmail: string = '';
   userId: string | null = null; // Store user ID when editing
   hidepermissions: boolean = false;
+  
 
   roles: string[] = ['Super Admin', 'Developer Admin', 'User'];
   developers: any[] = []; // Replace with actual developer data
@@ -67,6 +68,8 @@ export class UserFormComponent implements OnInit {
         this.hidepermissions = true;
         this.clearAccessibles();
         this.clearPermissions();
+      } else {
+        this.hidepermissions = false;
       }
     });
 

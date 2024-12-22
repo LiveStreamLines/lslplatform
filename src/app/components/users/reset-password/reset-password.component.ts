@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderService } from '../../../services/header.service';
 import { AuthService } from '../../../services/auth.service';
@@ -26,17 +26,55 @@ export class ResetPasswordComponent implements OnInit {
     private headerService: HeaderService,
     private authService: AuthService
   ) {
-    this.resetForm = this.fb.group({
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
-    });
+    
+    const passwordValidators = [
+      Validators.required,
+      Validators.minLength(6),
+      this.passwordStrengthValidator(),
+    ];    
+    const confirmPasswordValidators = [Validators.required];    
+    const formGroupValidators = [this.matchPasswordsValidator()];
+    
+    this.resetForm = this.fb.group(
+      {
+        newPassword: ['', passwordValidators],
+        confirmPassword: ['', confirmPasswordValidators],
+      },
+      {
+        validators: formGroupValidators,
+      }
+    );
 
     // Get the token from the URL
     this.token = this.route.snapshot.paramMap.get('token');
   }
 
+  
   ngOnInit(): void {
     this.headerService.showHeaderAndSidenav = false;
   }
+
+  // Custom validator for password strength
+  private passwordStrengthValidator(): Validators {
+    return (control: AbstractControl) => {
+      const value = control.value || '';
+      const hasUpperCase = /[A-Z]/.test(value);
+      const hasLowerCase = /[a-z]/.test(value);
+      const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+      const isValid = hasUpperCase && hasLowerCase && hasSpecialChar;
+      return isValid ? null : { weakPassword: true };
+    };
+  }
+
+   // Custom validator to match passwords
+   private matchPasswordsValidator(): Validators {
+    return (group: AbstractControl) => {
+      const password = group.get('newPassword')?.value;
+      const confirmPassword = group.get('confirmPassword')?.value;
+      return password === confirmPassword ? null : { passwordsMismatch: true };
+    };
+  }
+
 
   onSubmit(): void {
     if (this.resetForm.invalid || !this.token) {

@@ -4,11 +4,42 @@
       <mat-label>Filter by Role</mat-label>
       <mat-select [(ngModel)]="selectedRole" (selectionChange)="onRoleChange()">
         <mat-option value="">All</mat-option>
-        <mat-option value="Admin">Admin</mat-option>
-        <mat-option value="Developer">Developer</mat-option>
+        <mat-option value="Super Admin">Admin</mat-option>
+        <mat-option value="Developer Admin">Developer</mat-option>
         <mat-option value="User">User</mat-option>
       </mat-select>
     </mat-form-field>
+
+    <!-- Developer Filter -->
+    <mat-form-field appearance="outline">
+      <mat-label>Filter by Developer</mat-label>
+      <mat-select [(ngModel)]="selectedDeveloperId" (selectionChange)="onDeveloperChange()">
+        <mat-option *ngFor="let developer of developers" [value]="developer._id">
+          {{ developer.developerName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Project Filter -->
+    <mat-form-field appearance="outline" *ngIf="projects.length">
+      <mat-label>Filter by Project</mat-label>
+      <mat-select [(ngModel)]="selectedProjectId" (selectionChange)="onProjectChange()">
+        <mat-option *ngFor="let project of projects" [value]="project._id">
+          {{ project.projectName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Camera Filter -->
+    <mat-form-field appearance="outline" *ngIf="cameras.length">
+      <mat-label>Filter by Camera</mat-label>
+      <mat-select [(ngModel)]="selectedCameraId" (selectionChange)="filterUsersByAccess()">
+        <mat-option *ngFor="let camera of cameras" [value]="camera._id">
+          {{ camera.cameraDescription }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
   
     <button class="add-new-button" mat-raised-button color="primary" (click)="openAddUser()">Add New User</button>
   
