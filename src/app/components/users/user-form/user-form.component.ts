@@ -195,7 +195,10 @@ export class UserFormComponent implements OnInit {
     }
 
     this.userService.sendResetPasswordLink(this.userId, this.resetEmail).subscribe({
-      next: () => alert('Reset password link sent successfully.'),
+      next: () => { 
+        alert('Reset password link sent successfully.');
+        this.router.navigate(['/users']);
+      },
       error: () => alert('Failed to send reset password link.'),
     });
   }
