@@ -3,32 +3,31 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatButtonModule } from '@angular/material/button';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { UserService } from '../../../services/users.service';
 import { DeveloperService } from '../../../services/developer.service';
 import { ProjectService } from '../../../services/project.service';
 import { CameraService } from '../../../services/camera.service';
-import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-user-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatInputModule,
-    MatFormFieldModule, MatSelectModule, MatButtonModule, MatCheckboxModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule],
   templateUrl: './user-form.component.html',
-  styleUrl: './user-form.component.css'
+  styleUrl: './user-form.component.css',
 })
 
 export class UserFormComponent implements OnInit {
 
   userForm!: FormGroup;
   isEditing: boolean = false;
+  submitted: boolean = false;
+  resetEmail: string = '';
+  userId: string | null = null; // Store user ID when editing
+
+  roles: string[] = ['Super Admin', 'Developer Admin', 'User'];
   developers: any[] = []; // Replace with actual developer data
   projects: any[] = []; // Replace with actual project data
   cameras: any[] = []; // Replace with actual camera data
@@ -41,28 +40,17 @@ export class UserFormComponent implements OnInit {
     '360 Videography',
     'Satellite Imagery'
   ];
-  userId: string | null = null; // Store user ID when editing
 
-  constructor(private fb: FormBuilder, private userService: UserService, 
+  constructor(
+    private fb: FormBuilder, 
+    private userService: UserService, 
     private developerService: DeveloperService,
     private projectService: ProjectService,
     private cameraService: CameraService,
     private route: ActivatedRoute,
     private router: Router) {}
   
-  // Validator function for password match
-  private passwordsMatchValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const password = control.get('password')?.value;
-      const retypePassword = control.get('retypePassword')?.value;
-
-      if (password && retypePassword && password !== retypePassword) {
-        return { passwordsMismatch: true };
-      }
-      return null;
-    };
-  }
-
+  
   ngOnInit(): void {
     this.userId = this.route.snapshot.paramMap.get('id'); // Get the user ID from the route
     this.isEditing = !!this.userId; // If there's an ID, it's edit mode
@@ -74,7 +62,7 @@ export class UserFormComponent implements OnInit {
 
     // Watch for changes in the role field
     this.userForm.get('role')?.valueChanges.subscribe((role: string) => {
-      if (role === 'Admin') {
+      if (role === 'Super Admin') {
         this.clearAccessibles();
         this.clearPermissions();
       }
@@ -96,20 +84,16 @@ export class UserFormComponent implements OnInit {
       {
         name: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
-        password: ['', Validators.required],
-        retypePassword: ['', Validators.required],
-        phone: ['', Validators.required],
+        phone: [''],
         role: ['', Validators.required],
         accessibleDevelopers: [[]],
         accessibleProjects: [[]],
         accessibleCameras: [[]],
         accessibleServices: [[]],
         canAddUser: [false],        // Permission to add user
-        canUploadVideo: [false],    // Permission to upload video
-      },
-      { validators: this.passwordsMatchValidator() } // Attach validator here
+        canGenerateVideoAndPics: [false],    // Permission to upload video
+      }
     );
-
     if (this.isEditing) {
       this.loadUserData();
     }
@@ -160,27 +144,35 @@ export class UserFormComponent implements OnInit {
     if (this.userId) {
       this.userService.getUserById(this.userId).subscribe((user) => {
         this.userForm.patchValue(user);
-        this.userForm.get('retypePassword')?.setValue(user.password);
+        this.resetEmail = user.email;
       });
     }
   }
 
   onSubmit(): void {
+    if (this.userForm.invalid) {
+      alert('Please fill all required fields correctly.');
+      return;
+    }
+
+    const userData = this.userForm.value;
+
     if (this.isEditing) {
       this.userService
-        .updateUser(this.userId!, this.userForm.value)
+        .updateUser(this.userId!, userData)
         .subscribe(() => {
+          this.submitted = true;
+          this.resetEmail = userData.email;
           console.log('User updated successfully');
-          this.router.navigate(['/users']); // Navigate back to the user list
         });
     } else {
-      this.userService.addUser(this.userForm.value).subscribe(() => {
+      this.userService.addUser(userData).subscribe(() => {
+        this.submitted = true;
+        this.resetEmail = userData.email;
         console.log('User added successfully');
-        this.router.navigate(['/users']); // Navigate back to the user list
       });
     }
   }
-
 
   clearAccessibles(): void {
     // Clear accessible fields and their dependent dropdowns
@@ -192,7 +184,24 @@ export class UserFormComponent implements OnInit {
 
   clearPermissions(): void {
     this.userForm.get('canAddUser')?.setValue(false);
-    this.userForm.get('canUploadVideo')?.setValue(false);
+    this.userForm.get('canGenerateVideoAndPics')?.setValue(false);
   }
+
+  sendResetPasswordLink(): void {
+    if (!this.resetEmail) {
+      alert('Please provide an email address.');
+      return;
+    }
+
+    this.userService.sendResetPasswordLink("", this.resetEmail).subscribe({
+      next: () => alert('Reset password link sent successfully.'),
+      error: () => alert('Failed to send reset password link.'),
+    });
+  }
+
+  useCurrentPassword(): void {
+    this.router.navigate(['/users']);
+  }
+
 
 }

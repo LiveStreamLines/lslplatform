@@ -1,4 +1,4 @@
-<div *ngIf="showHeaderAndSidenav">
+<div *ngIf="headerService.showHeaderAndSidenav">
   <mat-sidenav-container class="main-container">
     <!-- Sidenav on the left -->
     <mat-sidenav #sidenav mode="side" [opened]="true">
@@ -22,6 +22,6 @@
   </mat-sidenav-container>  
 </div>
 
-<div *ngIf="!showHeaderAndSidenav">
+<div *ngIf="!headerService.showHeaderAndSidenav">
   <router-outlet></router-outlet>
 </div>

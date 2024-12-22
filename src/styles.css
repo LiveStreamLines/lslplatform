@@ -17,8 +17,40 @@ html, body { height: 100%; }
     font: 200 0.5rem / 0.75rem 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
+    
+   mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
+    color: #fbfbfb !important;
+   }
+
+   .mat-pseudo-checkbox-full.mat-pseudo-checkbox-checked {
+    background-color: #a30a0a !important;
+    /* border-color: rgb(255 255 255 / 0%); */
+   }
+
+   .mdc-text-field--outlined .mat-mdc-form-field-infix, .mdc-text-field--no-label .mat-mdc-form-field-infix {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+   }
+
+
+
+  :root {
+    --mat-primary-color: #00796b; /* Update primary color */
+    --mat-accent-color: #c2185b; /* Update accent color */
+    --mat-warn-color: #d32f2f; /* Update warn color */
+    --mat-app-background-color: #ffffff;
+    --mat-app-text-color: #000000;
+  }  
+
+
+
 
   html {
+    --mat-form-field-container-height: 30px;
+    --mat-full-pseudo-checkbox-selected-checkmark-color: white;
+    --mdc-outlined-text-field-focus-outline-color: #710707;
+    --mdc-outlined-text-field-focus-label-text-color: white;
+    --mdc-outlined-text-field-focus-outline-coloor: red;
     --mdc-tab-indicator-active-indicator-color: #9b0606;
     --mdc-tab-indicator-active-indicator-height: 2px;
     --mdc-tab-indicator-active-indicator-shape: 0;
@@ -87,6 +119,7 @@ html, body { height: 100%; }
 
 
     --mat-datepicker-calendar-date-selected-state-background-color: #be0606;
+    
 
   }
 

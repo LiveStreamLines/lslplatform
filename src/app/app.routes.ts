@@ -17,10 +17,11 @@ import { MediaComponent } from './components/media/media.component';
 import { ServicesComponent } from './components/services/services.component';
 import { UsersComponent } from './components/users/users.component';
 import { UserFormComponent } from './components/users/user-form/user-form.component';
-
+import { ResetPasswordComponent } from './components/users/reset-password/reset-password.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'reset-password/:token', component: ResetPasswordComponent},
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },  // Protect home with AuthGuard
   { path: 'home/:developerTag', component: ProjectListComponent,  canActivate: [AuthGuard] },  // Project list for a specific developer
   { path: 'home/:developerTag/:projectTag', component: ServicesComponent,  canActivate: [AuthGuard]},

@@ -54,6 +54,15 @@ export class UserService {
     return this.http.put<User>(`${this.apiUrl}/${id}`, user, { headers });
   }
 
+  sendResetPasswordLink(userId: string, resetEmail: string) {
+    const authh = this.authService.getAuthToken();  // Get auth token from AuthService
+    // Set the custom header with the authh token
+    const headers = new HttpHeaders({
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    return this.http.post<string>(`${this.apiUrl}/reset-password`, { user_id: userId, reset_email: resetEmail } , { headers });
+  }
+
   // Delete a user
   deleteUser(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);

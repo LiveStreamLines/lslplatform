@@ -1,145 +1,126 @@
 <div class="user-form-container">
   <h2 *ngIf="isEditing">Edit User</h2>
-  <h2 *ngIf="!isEditing">Add New User</h2>
+  <h2 *ngIf="!isEditing">Add User</h2>
 
-  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-    <!-- Name and Email in One Line -->
-    <div class="row">
-      <div class="col">
-        <mat-form-field appearance="outline">
-          <mat-label>Name</mat-label>
-          <input matInput type="text" formControlName="name" />
-        </mat-form-field>
-      </div>
-      <div class="col">
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" />
-        </mat-form-field>
-      </div>
-    </div>
-
-     <!-- Phone Number -->
-     <div class="row">
-      <div class="col">
-        <mat-form-field class="phone" appearance="outline">
-          <mat-label>Phone</mat-label>
-          <input matInput type="text" formControlName="phone" />
-        </mat-form-field>
-      </div>
-    </div>
-
-    <!-- Password and Retype Password -->
-    <div class="row">
-      <div class="col">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" formControlName="password" />
-          <mat-error *ngIf="userForm.get('password')?.hasError('required')">Password is required</mat-error>
-        </mat-form-field>
-      </div>
-       
-      <div class="col">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Retype Password</mat-label>
-          <input matInput type="password" formControlName="retypePassword" />
-          <mat-error *ngIf="userForm.get('retypePassword')?.hasError('required')">
-            Retype password is required
-          </mat-error>
-        </mat-form-field>
-      </div>
-        <!-- Passwords Mismatch Error -->
-        <div *ngIf="userForm.hasError('passwordsMismatch')" class="error">
-          Passwords do not match
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" *ngIf="!submitted">
+    <!-- User Info Section -->
+    <fieldset>
+      <legend>User Info</legend>
+      <div class="row">
+        <div class="col-4">
+          <label>Name:</label>
+          <input type="text" formControlName="name" />
         </div>
-    </div>
+        <div class="col-4">
+          <label>Email:</label>
+          <input type="email" formControlName="email" />
+        </div>
+        <div class="col-4">
+          <label>Phone:</label>
+          <input type="text" formControlName="phone" />
+        </div>
+      </div>
+    </fieldset>
 
-  
-    <!-- Role -->
-    <div class="row">
-      <div class="col">
-        <mat-form-field appearance="outline">
-          <mat-label>Role</mat-label>
-          <mat-select formControlName="role">
-            <mat-option value="Admin">Admin</mat-option>
-            <mat-option value="Developer">Developer</mat-option>
-            <mat-option value="User">User</mat-option>
-          </mat-select>
-        </mat-form-field>
+    <!-- Permissions Section -->
+    <fieldset>
+      <legend>Permissions</legend>
+      <div class="row">
+        <div class="col-4">
+          <label>Role:</label>
+          <select formControlName="role">
+            <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+          </select>
+        </div>
+      </div>
+
+
+    <div class="dropdowns">
+      <div class="row">
+      <mat-form-field appearance="outline" style="--mat-primary-color: #8B0000;">
+        <mat-label>Accessible Developers</mat-label>
+        <mat-select formControlName="accessibleDevelopers" multiple>
+          <mat-option *ngFor="let dev of developers" [value]="dev._id">
+            {{ dev.developerName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      </div>
+
+      <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Accessible Projects</mat-label>
+        <mat-select formControlName="accessibleProjects" multiple>
+          <mat-option *ngFor="let proj of projects" [value]="proj._id">
+            {{ proj.projectName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      </div>
+      
+      <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Accessible Services</mat-label>
+        <mat-select formControlName="accessibleServices" multiple>
+          <mat-option *ngFor="let service of services" [value]="service">
+            {{ service }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      </div>
+      
+      <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Accessible Cameras</mat-label>
+        <mat-select formControlName="accessibleCameras" multiple>
+          <mat-option *ngFor="let cam of cameras" [value]="cam._id">
+            {{ cam.cameraDescription }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       </div>
     </div>
-
-    <!-- Accessible Dropdowns -->
-    <div class="row" *ngIf="userForm.get('role')?.value !== 'Admin'">
-      <div class="col">
-        <mat-form-field appearance="outline">
-          <mat-label>Accessible Developers</mat-label>
-          <mat-select formControlName="accessibleDevelopers" multiple>
-            <mat-option *ngFor="let dev of developers" [value]="dev._id">
-              {{ dev.developerName }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      
+      <div class="row">
+        <div class="col-6">
+          <input style="width: 5%" type="checkbox" formControlName="canAddUser" />
+          <label> Can Add Users </label>
+        </div>
+        <div class="col-6">
+            <input style="width: 5%" type="checkbox" formControlName="canGenerateVideoAndPics" /> 
+            <label> Can Generate Video and Pics </label>
+        </div>
       </div>
+    </fieldset>
+
+    <div class="submit-button" style="width: 100%; display: flex;">
+    <button type="submit">Submit</button>
     </div>
-
-    <div class="row" *ngIf="userForm.get('role')?.value !== 'Admin'">
-      <div class="col">
-        <mat-form-field appearance="outline">
-          <mat-label>Accessible Projects</mat-label>
-          <mat-select formControlName="accessibleProjects" multiple>
-            <mat-option *ngFor="let proj of projects" [value]="proj._id">
-              {{ proj.projectName }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <!-- Accessible Services -->
-    <div class="row" *ngIf="userForm.get('role')?.value !== 'Admin'">
-      <div class="col">
-        <mat-form-field appearance="outline">
-          <mat-label>Accessible Services</mat-label>
-          <mat-select formControlName="accessibleServices" multiple>
-            <mat-option *ngFor="let service of services" [value]="service">
-              {{ service }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <div class="row" *ngIf="userForm.get('role')?.value !== 'Admin'">
-      <div class="col">
-        <mat-form-field appearance="outline">
-          <mat-label>Accessible Timelapse Cameras</mat-label>
-          <mat-select formControlName="accessibleCameras" multiple>
-            <mat-option *ngFor="let cam of cameras" [value]="cam._id">
-              {{ cam.cameraDescription }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <!-- Permissions -->
-    <div class="row" *ngIf="userForm.get('role')?.value !== 'admin'">
-      <div class="col">
-        <mat-checkbox formControlName="canAddUser">
-          Can Add User
-        </mat-checkbox>
-      </div>
-      <div class="col">
-        <mat-checkbox formControlName="canUploadVideo">
-          Can Upload Video
-        </mat-checkbox>
-      </div>
-    </div>
-
-    <!-- Submit Button -->
-    <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
-      {{ isEditing ? 'Update User' : 'Add User' }}
-    </button>
   </form>
+
+    <!-- Success Message Section -->
+    <div *ngIf="submitted" class="success-message">
+      <h3 style="font-size: 14px;">User {{ isEditing ? 'updated' : 'added' }} successfully!</h3>
+  
+      <!-- Reset Password Section -->
+      <fieldset>
+        <legend>Adjust Password</legend>
+        <div class="row">
+          <div class="col-6">
+            <label>Send the password link to Email:</label>
+            <input type="text" [(ngModel)]="resetEmail" />
+          </div>
+          <div class="col-4">
+            <button style="width: 165px;" (click)="sendResetPasswordLink()">Send Password Link</button>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Use Current Password Button -->
+      <div *ngIf="isEditing" class="current-password">
+        <button style="width: 200px;" (click)="useCurrentPassword()">Use Current Password</button>
+      </div>
+
+    </div>
+  
 </div>
