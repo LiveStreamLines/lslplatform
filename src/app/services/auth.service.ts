@@ -60,7 +60,7 @@ export class AuthService {
   }
 
   resetpassword (token: string, newPassword: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}`, { token, newPassword });    
+    return this.http.post(`${this.apiUrl}/auth/reset-password`, { token, newPassword });    
   }
 
    // Verify Phone Number
