@@ -95,8 +95,8 @@ export class UserFormComponent implements OnInit {
         accessibleProjects: [[]],
         accessibleCameras: [[]],
         accessibleServices: [[]],
-        canAddUser: [false],        // Permission to add user
-        canGenerateVideoAndPics: [false],    // Permission to upload video
+        canAddUser: [true],        // Permission to add user
+        canGenerateVideoAndPics: [true],    // Permission to upload video
       }
     );
     if (this.isEditing) {
