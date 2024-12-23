@@ -15,6 +15,8 @@ interface AuthResponse {
   projects?: string[];
   cameras?: string[];
   services?: string[];
+  canAdduser: string;
+  canGenerateVideoAndPics: string;
   phoneRequired?: boolean; // Indicates if phone verification is needed
   message?: string; // Optional message
   userId?: string;
@@ -34,6 +36,8 @@ export class AuthService {
   private accessibleProjects: string[] = [];
   private accessibleCameras: string[] = [];
   private accessibleServices: string[] = [];
+  private canAdduser: string | null = null;
+  private canGenerateVideoAndPics: string | null = null;
   userId: string | null = null;
 
   constructor(private http: HttpClient, private router: Router) {
@@ -47,6 +51,8 @@ export class AuthService {
     this.accessibleProjects = JSON.parse(localStorage.getItem('accessibleProjects') || '[]');
     this.accessibleCameras = JSON.parse(localStorage.getItem('accessibleCameras') || '[]');
     this.accessibleServices = JSON.parse(localStorage.getItem('accessibleServices') || '[]');
+    this.canAdduser = localStorage.getItem('canAdduser');
+    this.canGenerateVideoAndPics = localStorage.getItem('canGenerateVideoAndPics');
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
@@ -92,6 +98,9 @@ export class AuthService {
     this.accessibleProjects = response.projects || [];
     this.accessibleCameras = response.cameras || [];
     this.accessibleServices = response.services || [];
+    this.canAdduser = response.canAdduser || null;
+    this.canGenerateVideoAndPics = response.canGenerateVideoAndPics || null;
+
 
     // Save to localStorage
     localStorage.setItem('username', this.username || '');
@@ -103,6 +112,8 @@ export class AuthService {
     localStorage.setItem('accessibleProjects', JSON.stringify(this.accessibleProjects));
     localStorage.setItem('accessibleCameras', JSON.stringify(this.accessibleCameras));
     localStorage.setItem('accessibleServices', JSON.stringify(this.accessibleServices));
+    localStorage.setItem('canAdduser', JSON.stringify(this.canAdduser));
+    localStorage.setItem('canGenerateVideoAndPics', JSON.stringify(this.canGenerateVideoAndPics));
   }
   
 
@@ -117,6 +128,8 @@ export class AuthService {
     this.accessibleProjects = [];
     this.accessibleCameras = [];
     this.accessibleServices = [];
+    this.canAdduser = null;
+    this.canGenerateVideoAndPics = null;
 
     // Remove from localStorage
     localStorage.clear();
@@ -151,6 +164,14 @@ export class AuthService {
 
   getAccessibleCameras(): string[] {
     return this.accessibleCameras;
+  }
+
+  getCanAddUser(): string | null {
+    return this.canAdduser;
+  }
+
+  getCanGenerateVideoAndPics(): string | null {
+    return this.canGenerateVideoAndPics;
   }
 
   isLoggedIn(): boolean {

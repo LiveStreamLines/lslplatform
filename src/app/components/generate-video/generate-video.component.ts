@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-generate-video',
@@ -85,7 +86,10 @@ export class GenerateVideoComponent implements OnInit {
   watermarkSize: number = 1; // Default size (1 means original size)
   watermarkTransparency: number = 0.5; // Default transparency (1 means fully opaque)
 
-  constructor(private videoService: VideoService, private route: ActivatedRoute) {}
+  constructor(
+    private videoService: VideoService, 
+    private authService: AuthService,
+    private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;
@@ -353,50 +357,63 @@ export class GenerateVideoComponent implements OnInit {
 
  
   filterImages() {
-    this.isLoading = true;
-    this.errorMessage = null;
-    this.filterMessage = null;
+    const role = this.authService.getUserRole();
+    console.log(this.authService.getCanGenerateVideoAndPics());
+    const permission = this.authService.getCanGenerateVideoAndPics(); // Convert to boolean
 
-    const formData = new FormData();
-      formData.append('developerId', this.developerTag);
-      formData.append('projectId', this.projectTag);
-      formData.append('cameraId', this.cameraName);
-      formData.append('date1', this.formatDateForInput(this.startDate));
-      formData.append('date2', this.formatDateForInput(this.endDate));
-      formData.append('hour1', this.hour1.toString().padStart(2, '0'));
-      formData.append('hour2', this.hour2.toString().padStart(2, '0'));
-      formData.append('duration', this.duration.toString());
-      formData.append('showdate', this.showDate ? 'true' : 'false');
-      formData.append('showedText', this.showText ? this.textOverlay : '');
-      formData.append('resolution', this.resolution || '720');
-      formData.append('music', this.addMusic ? 'true' : 'false');
-      
-      // Add visual effect parameters
-      formData.append('contrast', this.contrast.toString());
-      formData.append('brightness', this.brightness.toString());
-      formData.append('saturation', this.saturation.toString());
-  
-    if (this.imageFile) {
-      formData.append('logo', this.imageFile); // Append the file to the FormData
+    // Check if the user has the required role or permission
+    const hasAccess = role === 'Super Admin' || role === 'Developer Admin' || permission;
+
+    if (hasAccess) {
+      this.isLoading = true;
+      this.errorMessage = null;
+      this.filterMessage = null;
+
+      const formData = new FormData();
+        formData.append('developerId', this.developerTag);
+        formData.append('projectId', this.projectTag);
+        formData.append('cameraId', this.cameraName);
+        formData.append('date1', this.formatDateForInput(this.startDate));
+        formData.append('date2', this.formatDateForInput(this.endDate));
+        formData.append('hour1', this.hour1.toString().padStart(2, '0'));
+        formData.append('hour2', this.hour2.toString().padStart(2, '0'));
+        formData.append('duration', this.duration.toString());
+        formData.append('showdate', this.showDate ? 'true' : 'false');
+        formData.append('showedText', this.showText ? this.textOverlay : '');
+        formData.append('resolution', this.resolution || '720');
+        formData.append('music', this.addMusic ? 'true' : 'false');
+        
+        // Add visual effect parameters
+        formData.append('contrast', this.contrast.toString());
+        formData.append('brightness', this.brightness.toString());
+        formData.append('saturation', this.saturation.toString());
+    
+      if (this.imageFile) {
+        formData.append('logo', this.imageFile); // Append the file to the FormData
+      }
+
+      if (this.watermarkImageFile) {
+        formData.append('showedWatermark', this.watermarkImageFile);
+      }
+
+      this.videoService.generateVideo(formData).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.filterMessage = response.message; // Message from the backend (e.g., "Pictures filtered successfully")
+          this.filteredPicsCount = response.filteredImageCount;
+          this.isFilterComplete = true; // Enable video generation
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.errorMessage = 'Failed to filter images. Please try again.';
+          console.error(error);
+        },
+      });
+    } else {
+      alert(
+        `Role: ${role}, Permission: ${permission}. You don't have the permission to generate video. Contact your admin.`
+      );
     }
-
-    if (this.watermarkImageFile) {
-      formData.append('showedWatermark', this.watermarkImageFile);
-    }
-
-    this.videoService.generateVideo(formData).subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        this.filterMessage = response.message; // Message from the backend (e.g., "Pictures filtered successfully")
-        this.filteredPicsCount = response.filteredImageCount;
-        this.isFilterComplete = true; // Enable video generation
-      },
-      error: (error) => {
-        this.isLoading = false;
-        this.errorMessage = 'Failed to filter images. Please try again.';
-        console.error(error);
-      },
-    });
   } 
 
   preventManualInput(event: KeyboardEvent): void {
