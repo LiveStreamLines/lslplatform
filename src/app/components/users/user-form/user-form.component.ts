@@ -29,7 +29,7 @@ export class UserFormComponent implements OnInit {
   hidepermissions: boolean = false;
   
 
-  roles: string[] = ['Super Admin', 'Developer Admin', 'User'];
+  roles: string[] = ['Super Admin', 'Admin', 'User'];
   developers: any[] = []; // Replace with actual developer data
   projects: any[] = []; // Replace with actual project data
   cameras: any[] = []; // Replace with actual camera data

@@ -22,16 +22,29 @@ import { AuthService } from '../../services/auth.service';
 })
 export class SidenavComponent implements OnInit {
   userRole: string = '';
+  permission: string | null = null;
   isAdmin: boolean = false;  // You can set this dynamically later
+  isSuper: boolean = false;
+  isAddingUser: boolean = false;
 
   constructor(private authService:AuthService){}
 
   ngOnInit(): void {
     this.userRole = this.authService.getUserRole() || '';
+    this.permission = this.authService.getCanAddUser() || null;
 
     if (this.userRole === 'Super Admin') {
+      this.isSuper = true;
+    }
+
+    if (this.userRole === 'Admin') {
       this.isAdmin = true;
     }
+
+    if(this.permission) {
+      this.isAddingUser = true;
+    }
+
 
   }
 }

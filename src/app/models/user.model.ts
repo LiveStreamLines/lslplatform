@@ -4,7 +4,7 @@ export interface User {
     email: string;
     password?: string; // Optional if passwords are not exposed
     phone: string;
-    role: 'Super Admin' | 'Developer Admin' | 'User';
+    role: 'Super Admin' | 'Admin' | 'User';
     accessibleDevelopers: string[]; // Array of developer IDs
     accessibleProjects: string[]; // Array of project IDs
     accessibleCameras: string[]; // Array of camera IDs

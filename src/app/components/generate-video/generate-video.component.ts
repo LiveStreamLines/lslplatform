@@ -362,7 +362,7 @@ export class GenerateVideoComponent implements OnInit {
     const permission = this.authService.getCanGenerateVideoAndPics(); // Convert to boolean
 
     // Check if the user has the required role or permission
-    const hasAccess = role === 'Super Admin' || role === 'Developer Admin' || permission;
+    const hasAccess = role === 'Super Admin' || role === 'Admin' || permission;
 
     if (hasAccess) {
       this.isLoading = true;

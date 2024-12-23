@@ -10,6 +10,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { PhotoService } from '../../services/photo.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-generate-photo',
@@ -48,6 +49,7 @@ export class GeneratePhotoComponent implements OnInit {
 
   constructor(
     private photoService: PhotoService,
+    private authService: AuthService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar
   ) {}
@@ -92,34 +94,47 @@ export class GeneratePhotoComponent implements OnInit {
   }
 
   filterImages() {
-    this.isLoading = true;
-    this.errorMessage = null;
+    const role = this.authService.getUserRole();
+    console.log(this.authService.getCanGenerateVideoAndPics());
+    const permission = this.authService.getCanGenerateVideoAndPics(); // Convert to boolean
 
-    const formData = new FormData();
-    formData.append('developerId', this.developerTag);
-    formData.append('projectId', this.projectTag);
-    formData.append('cameraId', this.cameraName);
-    formData.append('date1', this.formatDateForInput(this.startDate));
-    formData.append('date2', this.formatDateForInput(this.endDate));
-    formData.append('hour1', this.hour1.toString().padStart(2, '0'));
-    formData.append('hour2', this.hour2.toString().padStart(2, '0'));
+    // Check if the user has the required role or permission
+    const hasAccess = role === 'Super Admin' || role === 'Admin' || permission;
 
-    this.photoService.generatePhoto(formData).subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        this.filteredPicsCount = response.filteredImageCount;
-        this.isFilterComplete = true;
-        this.snackBar.open('Photo request queued successfully!', 'Close', {
-          duration: 3000,
-        });
-      },
-      error: (error) => {
-        this.isLoading = false;
-        this.errorMessage = 'Failed to generate photo request. Please try again.';
-        console.error(error);
-        this.snackBar.open(this.errorMessage, 'Close', { duration: 3000 });
-      },
-    });
+    if (hasAccess) {
+      this.isLoading = true;
+      this.errorMessage = null;
+
+      const formData = new FormData();
+      formData.append('developerId', this.developerTag);
+      formData.append('projectId', this.projectTag);
+      formData.append('cameraId', this.cameraName);
+      formData.append('date1', this.formatDateForInput(this.startDate));
+      formData.append('date2', this.formatDateForInput(this.endDate));
+      formData.append('hour1', this.hour1.toString().padStart(2, '0'));
+      formData.append('hour2', this.hour2.toString().padStart(2, '0'));
+
+      this.photoService.generatePhoto(formData).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.filteredPicsCount = response.filteredImageCount;
+          this.isFilterComplete = true;
+          this.snackBar.open('Photo request queued successfully!', 'Close', {
+            duration: 3000,
+          });
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.errorMessage = 'Failed to generate photo request. Please try again.';
+          console.error(error);
+          this.snackBar.open(this.errorMessage, 'Close', { duration: 3000 });
+        },
+      });
+    } else {
+      alert(
+        `Role: ${role}, Permission: ${permission}. You don't have the permission to generate photo. Contact your admin.`
+      );
+    }
   }
 
   preventManualInput(event: KeyboardEvent): void {

@@ -9,38 +9,38 @@
     <mat-icon>photo</mat-icon>
     <span>Gallery</span>
   </a>
-  <a mat-list-item routerLink="/users">
+  <!-- <a mat-list-item routerLink="/users">
     <mat-icon>people</mat-icon>
     <span>Users</span>
-  </a>
+  </a> -->
 
-  <h3 *ngIf="isAdmin">Admin</h3>
-  <a mat-list-item *ngIf="isAdmin" routerLink="/developers" routerLinkActive="active">
+  <h3 *ngIf="isSuper || isAdmin">Admin</h3>
+  <a mat-list-item *ngIf="isSuper" routerLink="/developers" routerLinkActive="active">
     <mat-icon>build</mat-icon>
     <span>Developers</span>
   </a>
-  <a mat-list-item *ngIf="isAdmin" routerLink="/projects" routerLinkActive="active">
+  <a mat-list-item *ngIf="isSuper" routerLink="/projects" routerLinkActive="active">
     <mat-icon>folder</mat-icon>
     <span>Projects</span>
   </a>
-  <a mat-list-item *ngIf="isAdmin" routerLink="/cameras">
+  <a mat-list-item *ngIf="isSuper" routerLink="/cameras">
     <mat-icon>videocam</mat-icon>
     <span>Cameras</span>
   </a>
-  <a mat-list-item *ngIf="isAdmin" routerLink="/notifications">
+  <a mat-list-item *ngIf="isSuper || isAdmin" routerLink="/notifications">
     <mat-icon>notifications</mat-icon>
     <span>Notifications</span>
   </a>
-  <a mat-list-item *ngIf="isAdmin" routerLink="/media" routerLinkActive="active">
+  <a mat-list-item *ngIf="isSuper || isAdmin" routerLink="/media" routerLinkActive="active">
     <mat-icon>collections</mat-icon>
     <span>Media Admin</span>
   </a>
-  <a mat-list-item *ngIf="isAdmin" routerLink="/login-history">
+  <a mat-list-item *ngIf="isSuper || isAdmin" routerLink="/login-history">
     <mat-icon>history</mat-icon>
     <span>Login History</span>
   </a>
-  <a mat-list-item *ngIf="isAdmin" routerLink="/users">
+  <a mat-list-item *ngIf="isSuper || isAdmin || isAddingUser" routerLink="/users">
     <mat-icon>lock</mat-icon>
-    <span>Permissions</span>
+    <span>Users & Permissions</span>
   </a>
 </mat-nav-list>
