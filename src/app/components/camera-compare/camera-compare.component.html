@@ -23,9 +23,27 @@
     </div>
 
 
-  <div class="slider-overlay">
+  <!-- <div class="slider-overlay">
     <input type="range" [(ngModel)]="sliderPosition" min="0" max="100" class="slider"  (input)="updateSlider()"/>
+  </div> -->
+  <div class="slider-overlay">
+    <div class="custom-slider">
+      <div class="slider-track"></div>
+      <div
+        class="slider-thumb"
+        [style.left.%]="sliderPosition"
+        tabindex="0"
+        (keydown)="onThumbKeydown($event)"
+        (mousedown)="onThumbDragStart($event)"
+      >
+        <div class="thumb-content">
+          <span class="material-icons">chevron_left</span>
+          <span class="material-icons">chevron_right</span>
+        </div>
+      </div>
+    </div>
   </div>
+
 </div>
 
 <div class="compare-layout">

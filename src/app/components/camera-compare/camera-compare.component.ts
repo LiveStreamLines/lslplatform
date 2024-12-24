@@ -176,6 +176,41 @@ formatDate(date: Date): string {
   return `${year}${month}${day}`;
 }
 
+onThumbKeydown(event: KeyboardEvent): void {
+  if (event.key === 'ArrowRight' && this.sliderPosition < 100) {
+    this.sliderPosition += 1; // Increment the slider position
+    this.updateSlider();
+  } else if (event.key === 'ArrowLeft' && this.sliderPosition > 0) {
+    this.sliderPosition -= 1; // Decrement the slider position
+    this.updateSlider();
+  }
+}
+
+onThumbDragStart(event: MouseEvent): void {
+  const trackElement = (event.target as HTMLElement).closest('.custom-slider')?.querySelector('.slider-track');
+
+  if (!trackElement) {
+    console.error('Slider track not found.');
+    return;
+  }
+
+  const track = trackElement.getBoundingClientRect();
+
+  const mouseMoveListener = (moveEvent: MouseEvent) => {
+    const dragPosition = ((moveEvent.clientX - track.left) / track.width) * 100;
+    this.sliderPosition = Math.min(Math.max(dragPosition, 0), 100); // Keep it between 0 and 100
+    this.updateSlider();
+  };
+
+  const mouseUpListener = () => {
+    window.removeEventListener('mousemove', mouseMoveListener);
+    window.removeEventListener('mouseup', mouseUpListener);
+  };
+
+  window.addEventListener('mousemove', mouseMoveListener);
+  window.addEventListener('mouseup', mouseUpListener);
+}
+
   // Method to update slider overlay based on sliderPosition
   updateSlider(): void {
     const leftImg = document.querySelector('.left-img') as HTMLElement;
