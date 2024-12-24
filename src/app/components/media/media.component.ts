@@ -35,6 +35,8 @@ export class MediaComponent {
   files_List: File[] = [];
   uploadProgress: number = 0;
   uploadSuccess: boolean = false; 
+  isUploading: boolean = false; // Track upload state
+
 
   constructor(
     private fb: FormBuilder,
@@ -43,11 +45,12 @@ export class MediaComponent {
     private projectService: ProjectService,
     private mediaService: MediaService
   ) {
+    const today = new Date(); // Get the current date
     this.mediaForm = this.fb.group({
       developer: ['', Validators.required],
       project: [{ value: '', disabled: true }, Validators.required],
       service: ['', Validators.required],
-      date: ['', Validators.required],
+      date: [today.toISOString().split('T')[0], Validators.required],
       files: [null, Validators.required]
     });
   }
@@ -66,10 +69,14 @@ export class MediaComponent {
       });
   }
 
-  fetchProjects(developerId: string): void {
+  fetchProjects(event: Event): void {
+    const target = event.target as HTMLSelectElement;
     this.mediaForm.get('project')?.reset();
     this.mediaForm.get('project')?.disable();
-    this.loadProjectsByDeveloper(developerId);
+    if (target) {
+      const developerId = target.value;
+      this.loadProjectsByDeveloper(developerId);
+    }
   }
 
 
@@ -94,6 +101,8 @@ export class MediaComponent {
       return;
     }
 
+    this.isUploading = true; // Mark upload as in progress
+
     const formData = new FormData();
     formData.append('developer', this.mediaForm.get('developer')?.value);
     formData.append('project', this.mediaForm.get('project')?.value);
@@ -114,9 +123,13 @@ export class MediaComponent {
         } else if (event.type === HttpEventType.Response) {
           this.uploadSuccess = true; // Show success message
           this.uploadProgress = 0; // Reset progress
+          this.isUploading = false; // Mark upload as completed
         }
       },
-      error: (err) => console.error('Upload error:', err),
+      error: (err) => {
+        console.error('Upload error:', err)
+        this.isUploading = false; // Reset upload state on error
+      },
     });
   }
 
