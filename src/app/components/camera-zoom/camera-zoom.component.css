@@ -50,28 +50,13 @@
   
   #zoom-scale-slider {
     flex-grow: 1;
-    -webkit-appearance: none;
     height: 6px;
-    background: #ddd;
+    background: #7a0a0a;
     outline: none;
     border-radius: 5px;
     cursor: pointer;
+    accent-color: darkred;
   }
   
-  #zoom-scale-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 15px;
-    height: 15px;
-    background: #007bff;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-  
-  #zoom-scale-slider::-moz-range-thumb {
-    width: 15px;
-    height: 15px;
-    background: #007bff;
-    border-radius: 50%;
-    cursor: pointer;
-  }
+
+ 

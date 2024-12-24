@@ -285,7 +285,7 @@ p {
 /* Style the custom calendar icon */
 .calendar-icon {
   position: absolute;
-  top: 38px;
+  top: 39px;
   right: -28px;
   transform: translateY(-50%);
   pointer-events: none;
@@ -293,5 +293,10 @@ p {
   font-size: 19px;
   background: #7f1515;
   padding: 6px;
+}
+
+.material-icons {
+  font-size: 20px;
+  padding: 1px;
 }
 

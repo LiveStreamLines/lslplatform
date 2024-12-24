@@ -71,7 +71,7 @@ export class CameraDetailComponent implements OnInit {
   path: string = ''; 
   loadingLargePicture: boolean = false;  // Add loading state for large picture
   selectedThumbnail: string = '';  // Add state for selected thumbnail
-  selectedDate: Date = new Date(); // This will be bound to ngModel
+  selectedDate: string = ''; // This will be bound to ngModel
   mode: string = 'single';  // Default view mode
   compareView: 'sideBySide' | 'slider' | 'magnify' = 'sideBySide';
   zoomView: 'lens' | 'pan' = 'lens';
@@ -146,6 +146,11 @@ export class CameraDetailComponent implements OnInit {
         // Set the last picture from the `large` folder as the initially displayed picture
         this.noonPhotoUrl = this.getLargePictureUrl(noonPictures[0]);
         const lastPhoto = this.date2Pictures[this.date2Pictures.length - 1];
+
+        const lastDate = lastPhoto.substring(0, 4) + '-' + lastPhoto.substring(4, 6) + '-' + lastPhoto.substring(6, 8);
+        // Set the selectedDate to the last date
+        this.selectedDate = lastDate;
+
         this.lastPictureUrl = this.getLargePictureUrl(lastPhoto);
         this.selectedPictureUrl = this.lastPictureUrl;
         this.selectedThumbnail = lastPhoto;  // Set the last photo as selected by default

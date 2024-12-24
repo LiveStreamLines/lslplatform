@@ -91,7 +91,6 @@ export class CameraViewComponent implements OnInit{
   }
 
 
-
   preloadImages() {
     this.images.forEach(image => {
       const img = new Image();
@@ -112,20 +111,51 @@ export class CameraViewComponent implements OnInit{
     }
   }
 
-  startSliderMovement(): void {
-    this.sliderInterval = setInterval(() => {
-      if (this.imageIndex < this.images.length - 1) {
-        this.imageIndex++;
-      } else {
-        this.imageIndex = 0;  // Loop back to the first image
-      }
-    }, 500);  // Move every 0.5 seconds
+  onTrackClick(event: MouseEvent): void {
+    const track = (event.target as HTMLElement).getBoundingClientRect();
+    const clickPosition = (event.clientX - track.left) / track.width;
+    this.imageIndex = Math.round(clickPosition * (this.images.length - 1));
+  }
+  
+  onThumbKeydown(event: KeyboardEvent): void {
+    if (event.key === 'ArrowRight' && this.imageIndex < this.images.length - 1) {
+      this.imageIndex++;
+    } else if (event.key === 'ArrowLeft' && this.imageIndex > 0) {
+      this.imageIndex--;
+    }
+  }
+  
+  onThumbDragStart(event: MouseEvent): void {
+    const trackElement = (event.target as HTMLElement).closest('.custom-slider')?.querySelector('.slider-track');
+    
+    if (!trackElement) {
+      console.error('Slider track not found.');
+      return;
+    }
+  
+    const track = trackElement.getBoundingClientRect();
+  
+    const mouseMoveListener = (moveEvent: MouseEvent) => {
+      const dragPosition = (moveEvent.clientX - track.left) / track.width;
+      const newIndex = Math.round(dragPosition * (this.images.length - 1));
+      this.imageIndex = Math.min(Math.max(newIndex, 0), this.images.length - 1);
+    };
+  
+    const mouseUpListener = () => {
+      window.removeEventListener('mousemove', mouseMoveListener);
+      window.removeEventListener('mouseup', mouseUpListener);
+    };
+  
+    window.addEventListener('mousemove', mouseMoveListener);
+    window.addEventListener('mouseup', mouseUpListener);
+  }
+  
+  
+  getThumbPosition(): number {
+    return (this.imageIndex / (this.images.length - 1)) * 100;
   }
 
-  onSliderMove(event: any) {
-    this.imageIndex = event.target.value; // Updates the image index to match the slider position
-  }
-
+  
   navigateToVideo(cameraId: string): void {
     this.loadingVideo = true; // Show spinner
     this.loadCameraVideo(cameraId).then((videoUrl) => {
@@ -158,5 +188,7 @@ export class CameraViewComponent implements OnInit{
       });
     });
   }
+
+
 
 }

@@ -20,37 +20,91 @@ mat-tab {
   margin-top: 20px;
 }
 
-mat-slider {
-  width: 60%;
-  margin-bottom: 10px;
-}
-
 .image-container {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 60%;
-  height: 60%; /* Or a specific height if you want to limit it */
-  overflow: hidden; /* Optional: hides overflow if image is too large */
+  height: 60%;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .image-container img {
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain; /* This ensures the image scales while maintaining aspect ratio */
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  object-fit: contain;
 }
 
-.navigate-button-container {
-  display: flex;
-  justify-content: center;
+.custom-slider {
+  position: absolute;
+  top: 80%;
+  width: 60%;
+  height: 40px;
   margin-top: 20px;
 }
 
+.slider-track {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgb(153, 6, 6);
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.slider-thumb {
+  position: absolute;
+  top: 50%;
+  width: 30px;
+  height: 30px;
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slider-thumb:active {
+  cursor: grabbing;
+}
+
+.thumb-content {
+  font-size: 14px; /* Adjust font size for the icons */
+  font-weight: bold;
+  color: #000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1px; /* Space between the icons */
+}
+
+.thumb-content .material-icons,
+.thumb-content i {
+  font-size: 16px; /* Icon size */
+  color: #000; /* Icon color */
+}
+
 .navigate-button-container button {
+  position: relative;
+  padding: 15px 60px;
   color: white;
-  background-color: rgb(100, 9, 9);
-  padding: 10px 20px;
-  font-size: 12px;
+    background: darkred;
+    margin: 20px;
+    border-radius: 13px;
+    border: 1px solid gray;
+}
+
+.movie{
+  position: absolute;
+    font-size: 30px;
+    right: 21px;
+    top: 6px;
 }
