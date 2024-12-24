@@ -73,6 +73,7 @@ export class LoginComponent implements OnInit {
         if (response.phoneRequired) {
           // If phone verification is required
           this.isPhoneRequired = true;
+          this.currentView = 'phoneVerification';
         } else {
           // Login successful
           this.router.navigate(['home']);
