@@ -26,7 +26,7 @@
   
 .add-new-button {
     font-weight: bold;
-    background-color: #ff1744;
+    background-color: #6e0505;
     color: white;   
     padding: 8px 16px;
     text-transform: uppercase;
@@ -35,12 +35,12 @@
   }
   
   .add-new-button:hover {
-    background-color: #d50000;
+    background-color: #ab0c0c;
   }
 
   /* Styles for circular "Open" button */
 .open-circle-button {
-    background-color: #ff1744; /* Red background */
+    background-color: #840606; /* Red background */
     color: white; /* Icon color */
     border-radius: 50%; /* Makes the button circular */
     width: 40px; /* Button size */

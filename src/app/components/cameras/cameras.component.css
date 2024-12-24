@@ -19,7 +19,7 @@
 
   .add-new-button {
     font-weight: bold;
-    background-color: #ff1744;
+    background-color: #8b0d0d;
     color: white;
     padding: 8px 16px;
     margin-left: 20px;
@@ -33,7 +33,7 @@
   }
   
   .open-circle-button {
-    background-color: #ff1744; /* Red background */
+    background-color: #a00b0b; /* Red background */
     color: white; /* Icon color */
     border-radius: 50%; /* Makes the button circular */
     width: 40px;
