@@ -7,7 +7,7 @@
     <mat-tab-group>
       <!-- Regular Login Tab -->
       <mat-tab label="Email Login">
-        <ng-container *ngIf="!isPhoneRequired; else phoneVerification">
+        <div *ngIf="currentView === 'login'">
           <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="login-form">
             <!-- Email Field -->
             <div class="form-group">
@@ -40,14 +40,19 @@
             <!-- Submit Button -->
             <button type="submit" [disabled]="loginForm.invalid || loading" class="btn-login">Login</button>
             <div *ngIf="loading" class="loading-spinner">Loading...</div>
+            <!-- Forgot Password Link -->
+            <div style="margin: 10px 0; font-size: 14px;">
+              <a style="color:rgb(205, 81, 81);" href="javascript:void(0);" (click)="toggleForgotPassword()" class="forgot-password-link">Forgot Password?</a>
+            </div>
             <!-- Error Message -->
             <div *ngIf="loginError" class="error-message">
               {{ loginError }}
             </div>
           </form>
-        </ng-container>
+        </div>
 
-        <ng-template #phoneVerification>
+        <div *ngIf="currentView === 'phoneVerification'">
+          <!-- Phone Verification Form -->
           <div class="verification-form">
             <ng-container *ngIf="!isPhoneSubmitted; else otpForm">
               <p style="font-size: 14px; margin: 15px 0">Please enter your phone number for login verification:</p>
@@ -91,7 +96,33 @@
               {{ loginError }}
             </div>
           </div>
-        </ng-template>
+        </div>
+
+        <div *ngIf="currentView === 'forgotPassword'">
+          <!-- Forgot Password Form -->
+          <div class="forgot-password-form" style="margin: 25px 0;">
+            <p style="font-size:12px">Enter your email address to receive a password reset link:</p>
+            <div class="form-group">
+              <label for="reset-email">Email</label>
+              <input 
+                type="email" 
+                id="reset-email" 
+                [(ngModel)]="resetPasswordEmail" 
+                name="resetPasswordEmail" 
+                required 
+                placeholder="Enter your email" 
+                class="form-control"
+              />
+            </div>
+            <button type="button" (click)="sendResetLink()" [disabled]="!resetPasswordEmail || loading" class="btn-login">Send Reset Link</button>
+            <div style="margin-top: 40px;display: flex;flex-direction: row;">
+              <button class="btn-back" type="button" (click)="backToLogin()">Back to Login</button>
+            </div>
+            <div *ngIf="loading" class="loading-spinner">Loading...</div>
+            <div *ngIf="loginError" class="error-message">{{ loginError }}</div>
+          </div>
+        </div>
+
       </mat-tab>
 
       <!-- Phone Number Login Tab -->

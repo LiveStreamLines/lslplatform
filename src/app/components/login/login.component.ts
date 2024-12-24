@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';  // Import FormsModule
 import { CommonModule } from '@angular/common';  // Import CommonModule for *ngIf
 import { MatTabsModule } from '@angular/material/tabs';
 import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/users.service';
 import { HeaderService } from '../../services/header.service';
 
 @Component({
@@ -24,13 +25,44 @@ export class LoginComponent implements OnInit {
   isPhoneSubmitted: boolean = false;
   userId: string | null = null;
   loading: boolean = false; // Flag to manage loading state
+  isForgotPassword = false; // Show the forgot password form
+  resetPasswordEmail: string = '';
+  currentView: 'login' | 'phoneVerification' | 'forgotPassword' = 'login'; // Current view state
 
 
-  constructor(private authService: AuthService, private router: Router, private headerService: HeaderService) {}
+
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    private router: Router, 
+    private headerService: HeaderService) {}
 
 
   ngOnInit(): void {
     this.headerService.showHeaderAndSidenav = false;  
+  }
+
+  // Switch to Forgot Password view
+  toggleForgotPassword(): void {
+    this.currentView = 'forgotPassword';
+    this.resetPasswordEmail = '';
+    this.loginError = null;
+  }
+
+   // Switch to Phone Verification view
+   togglePhoneVerification(): void {
+    this.currentView = 'phoneVerification';
+    this.phone = '';
+    this.otp = '';
+    this.loginError = null;
+  }
+
+ // Switch back to Login view
+  backToLogin(): void {
+    this.currentView = 'login';
+    this.email = '';
+    this.password = '';
+    this.loginError = null;
   }
 
   onLogin(): void {
@@ -51,6 +83,35 @@ export class LoginComponent implements OnInit {
         this.loading = false;
         this.loginError = err.error.msg;
         console.error('Login failed:', err);
+      },
+    });
+  }
+
+
+  sendResetLink(): void {
+    this.loading = true;
+    this.userService.getUserByEmail(this.resetPasswordEmail).subscribe({
+      next: (user) => {
+        console.log(user);
+        // User exists, proceed to send the reset link
+        this.userService.sendResetPasswordLink(user, this.resetPasswordEmail).subscribe({
+          next: () => {
+            this.loading = false;
+            alert('A password reset link has been sent to your email.');
+            this.backToLogin(); // Return to login view
+          },
+          error: (err) => {
+            this.loading = false;
+            this.loginError = 'Failed to send reset password link. Please try again.';
+            console.error('Error sending reset password link:', err);
+          },
+        });
+      },
+      error: (err) => {
+        // User not found
+        this.loading = false;
+        this.loginError = 'The user is not registered. Please contact your admin.';
+        console.error('User not found:', err);
       },
     });
   }

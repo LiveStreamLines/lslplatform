@@ -113,6 +113,18 @@ label {
   background: darkred;
 }
 
+.btn-back {
+  padding: 10px; 
+  background-color: black; 
+  border:1px solid gray; 
+  color:rgb(205, 81, 81)
+}
+
+.btn-back:hover {
+  background: darkred;
+  color: white;
+}
+
 /* Error message */
 .error-message {
   color: red;

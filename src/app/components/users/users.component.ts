@@ -40,6 +40,7 @@ export class UsersComponent implements OnInit{
   selectedDeveloperId: string | null = null;
   selectedProjectId: string | null = null;
   selectedCameraId: string | null = null;
+  searchTerm: string = ''; // To hold the search term
   isLoading : boolean = true;
 
  constructor(
@@ -145,6 +146,25 @@ export class UsersComponent implements OnInit{
     this.filteredUsers = this.selectedRole
       ? this.users.filter(user => user.role === this.selectedRole)
       : [...this.users];
+  }
+
+  onSearch(): void {
+    if (this.searchTerm.trim()) {
+      // Reset filters to "All" when a search is initiated
+      this.selectedDeveloperId = 'ALL';
+      this.selectedProjectId = 'ALL';
+      this.selectedCameraId = 'ALL';
+  
+      // Filter users based on the search term
+      this.filteredUsers = this.users.filter((user) =>
+        user.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        user.role.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    } else {
+      // If search term is empty, apply filters
+      this.filterUsersByAccess();
+    }
   }
 
   openAddUser(): void {

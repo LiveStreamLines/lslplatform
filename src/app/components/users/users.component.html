@@ -1,5 +1,10 @@
 <div class="user-container">
-    <!-- Role Filter -->
+    
+    <div style="margin: 50px 0">
+      <input class='search' matInput [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Search by name, email, or role">
+    </div>
+
+    <!-- Role Filter
     <mat-form-field appearance="outline">
       <mat-label>Filter by Role</mat-label>
       <mat-select [(ngModel)]="selectedRole" (selectionChange)="onRoleChange()">
@@ -8,7 +13,7 @@
         <mat-option value="Admin">Admin</mat-option>
         <mat-option value="User">User</mat-option>
       </mat-select>
-    </mat-form-field>
+    </mat-form-field> -->
 
     <!-- Developer Filter -->
     <mat-form-field appearance="outline">
@@ -41,7 +46,7 @@
     </mat-form-field>
 
   
-    <button class="add-new-button" mat-raised-button color="primary" (click)="openAddUser()">Add New User</button>
+    <button class="add-new-button" mat-raised-button style="color: white; background-color: brown;" (click)="openAddUser()">Add New User</button>
   
     <!-- Loading Spinner -->
     <div *ngIf="isLoading" class="spinner-container">

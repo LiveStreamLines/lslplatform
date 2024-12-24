@@ -10,6 +10,7 @@ import { UserService } from '../../../services/users.service';
 import { DeveloperService } from '../../../services/developer.service';
 import { ProjectService } from '../../../services/project.service';
 import { CameraService } from '../../../services/camera.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-user-form',
@@ -49,6 +50,7 @@ export class UserFormComponent implements OnInit {
     private developerService: DeveloperService,
     private projectService: ProjectService,
     private cameraService: CameraService,
+    private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router) {}
   
@@ -58,6 +60,11 @@ export class UserFormComponent implements OnInit {
     this.isEditing = !!this.userId; // If there's an ID, it's edit mode
   
     this.initializeForm();
+
+    const role = this.authService.getUserRole();
+    if (role === 'Super Admin') {
+      this.userForm.get('phone')?.enable(); // To enable the field
+    }
 
     // Load necessary data
     this.loadDevelopers();
@@ -89,7 +96,7 @@ export class UserFormComponent implements OnInit {
       {
         name: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
-        phone: [''],
+        phone: [{ value: '', disabled: true}],
         role: ['', Validators.required],
         accessibleDevelopers: [[]],
         accessibleProjects: [[]],
