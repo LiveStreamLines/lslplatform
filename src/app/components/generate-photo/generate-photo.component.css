@@ -102,7 +102,7 @@
 .form-field input,
 .form-field select {
   padding: 6px;
-  border: 1px solid #696666; 
+  border: 0; 
   border-radius: 4px;
   background-color: #292929; /* Dark gray */
   color: #ffffff; /* White */
@@ -137,7 +137,7 @@ button.submit:hover {
 
 .number-input-wrapper input[type="number"] {
   padding-left: 10px;
-  border: 1px solid #776c6c; /* White border */
+  border: 0; /* White border */
   border-radius: 4px;
   background-color: #292929; /* Dark gray background */
   color: #ffffff; /* White text */
