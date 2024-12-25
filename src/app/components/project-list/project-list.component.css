@@ -79,7 +79,12 @@
 }
 
 .project-card mat-card-actions button:hover {
-  background-color: #cc0000; /* Darker red on hover */
+  background: radial-gradient(
+    rgba(215, 212, 212, 0.9) 20%,
+    transparent 15%
+  );
+  background-size: 3px 3px;
+  background-color: #7e0707; /* Darker red on hover */
 }
 
 /* Add some responsive behavior */
