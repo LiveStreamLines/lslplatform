@@ -6,6 +6,7 @@
   
   .canvas-area {
     position: relative;
+    width: 100%;
   }
   
   canvas {
