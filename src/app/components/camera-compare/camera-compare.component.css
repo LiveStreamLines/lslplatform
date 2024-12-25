@@ -36,6 +36,19 @@
   width: 50%;
 }
 
+.thumbnail-strip::-webkit-scrollbar {
+  height: 8px;
+}
+
+.thumbnail-strip::-webkit-scrollbar-thumb {
+  background-color: #681111;  /* Customize the scrollbar color */
+  border-radius: 10px;
+}
+
+.thumbnail-strip::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
 .thumbnail-strip {
   display: flex;
   gap: 10px;

@@ -10,7 +10,7 @@
   
   canvas {
     border: 1px solid #ccc;
-    width: 910px; /* Fixed width */
+    width: 100%; /* Fixed width */
     height: 600px; /* Fixed height */
   }
   
