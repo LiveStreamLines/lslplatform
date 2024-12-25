@@ -56,7 +56,9 @@ export class VideoRequestComponent implements OnInit {
     this.isLoading = true;
     this.videoRequestService.getVideoRequests().subscribe({
       next: (data) => {
-        this.dataSource.data = data.map((request) => ({
+        this.dataSource.data = data
+        .sort((a, b) => new Date(b.RequestTime).getTime() - new Date(a.RequestTime).getTime()) // Sort by RequestTime descending
+        .map((request) => ({
           developerProject: `${request.developer} (${request.project})`,
           duration: `${this.formatDate(request.startDate)} to ${this.formatDate(request.endDate)}`,
           //duration: `${request.startDate} to ${request.endDate}`,

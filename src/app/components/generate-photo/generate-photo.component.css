@@ -76,6 +76,7 @@
 
 .form-field label {
   margin-right: 10px;
+  margin-top: 10px;
 }
 
 .date {
@@ -89,7 +90,7 @@
 /* Style the custom calendar icon */
 .calendar-icon {
   position: absolute;
-  top: 33px;
+  top: 41px;
   right: 1px;
   transform: translateY(-50%);
   pointer-events: none;
@@ -150,19 +151,14 @@ button.submit:hover {
 }
 
 .material-icons {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .arrows {
   position: absolute;
-  top: 0;
-  left: 63%; /* Align to the right edge */
+  top: 2px;
+  left: 22%; /* Align to the right edge */
   background-color: #3c3838;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 

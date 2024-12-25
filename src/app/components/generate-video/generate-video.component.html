@@ -162,8 +162,8 @@
                   (change)="onShowImageChange()"
                 />
                 <label for="showImage">Add Logo</label>
-                <div *ngIf="showImage">
-                  <label for="logoUpload">Upload Logo</label>
+                <div *ngIf="showImage" style="margin: 10px">
+                  <label style='margin-right: 10px;' for="logoUpload">Upload Logo</label>
                   <input type="file" id="logoUpload" (change)="onImageUpload($event)" />
                 </div>
               </div>
@@ -177,11 +177,11 @@
                   (change)="onShowWatermarkChange()"
                 />
                 <label for="showWatermark">Add Watermark</label>
-                <div *ngIf="showWatermark">
-                  <label for="watermarkUpload">Upload Watermark Image</label>
+                <div *ngIf="showWatermark" style="margin: 10px;">
+                  <label style="margin-right: 20px;" for="watermarkUpload">Upload Watermark Image</label>
                   <input type="file" id="watermarkUpload" (change)="onWatermarkImageUpload($event)" />
     
-                  <div class="slider">
+                  <div style='margin: 10px' class="slider">
                     <label for="watermarkSize">Size</label>
                     <input
                       type="range"
@@ -210,9 +210,39 @@
                   </div>
                 </div>
               </div>
-      
           </div>
         </div>
+
+        <!-- Group 5: Music Options -->
+        <div class="control-group group">
+          <div class="group-title">Music Options</div>
+          <div class="checkbox-group">
+            <div>
+              <input
+                type="checkbox"
+                id="addMusic"
+                [(ngModel)]="addMusic"
+                name="addMusic"
+              />
+              <label for="addMusic">Add Music</label>
+            </div>
+            <div *ngIf="addMusic" class="form-field music">
+              <label for="musicSelect">Select Music</label>
+              <select
+                id="musicSelect"
+                [(ngModel)]="selectedMusic"
+                name="selectedMusic"
+                required
+                style="width: 50%"
+              >
+                <option *ngFor="let music of musicFiles" [value]="music">
+                  {{ music }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+
       
       </form>
     </div>

@@ -147,15 +147,27 @@ export class GeneratePhotoComponent implements OnInit {
   
   increment(fieldName: string): void {
     const field = (this as any)[fieldName];
-    if (field !== undefined && field < 23) {
-      (this as any)[fieldName] = field + 1;
+    if (field !== undefined) {
+      if (fieldName === 'hour1' && field < 22) {
+        (this as any)[fieldName] = field + 1;
+        this.hour2 = Math.max(this.hour2, this.hour1 + 1); // Ensure hour2 is at least hour1 + 1
+      } else if (fieldName === 'hour2' && field < 23) {
+        (this as any)[fieldName] = field + 1;
+      }
     }
   }
   
   decrement(fieldName: string): void {
     const field = (this as any)[fieldName];
-    if (field !== undefined && field > 0) {
-      (this as any)[fieldName] = field - 1;
+    if (field !== undefined) {
+      if (fieldName === 'hour1' && field > 0) {
+        (this as any)[fieldName] = field - 1;
+        if (this.hour2 <= this.hour1) {
+          this.hour2 = this.hour1 + 1; // Adjust hour2 to maintain the constraint
+        }
+      } else if (fieldName === 'hour2' && field > this.hour1 + 1) {
+        (this as any)[fieldName] = field - 1;
+      }
     }
   }
 

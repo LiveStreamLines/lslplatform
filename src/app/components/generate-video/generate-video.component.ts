@@ -44,6 +44,14 @@ export class GenerateVideoComponent implements OnInit {
   imageFile: File | null = null;
   watermarkImageFile: File | null = null; // Store the uploaded watermark image
   addMusic: boolean = false; // Whether to include background music
+  musicFiles: string[] = ['01.mp3', '02.mp3', '03.mp3',
+    '04.mp3', '05.mp3', '06.mp3',
+    '07.mp3', '08.mp3', '09.mp3',
+    '10.mp3', '11.mp3', '12.mp3',
+    '13.mp3', '14.mp3', '15.mp3',
+    '16.mp3', '17.mp3', '18.mp3']; // Static music options
+  selectedMusic: string = ''; // Selected music file
+
 
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
   private image = new Image(); // To load and draw the image on the canvas
@@ -383,6 +391,9 @@ export class GenerateVideoComponent implements OnInit {
         formData.append('showedText', this.showText ? this.textOverlay : '');
         formData.append('resolution', this.resolution || '720');
         formData.append('music', this.addMusic ? 'true' : 'false');
+        if (this.addMusic && this.selectedMusic) {
+          formData.append('musicFile', this.selectedMusic);
+        }
         
         // Add visual effect parameters
         formData.append('contrast', this.contrast.toString());
