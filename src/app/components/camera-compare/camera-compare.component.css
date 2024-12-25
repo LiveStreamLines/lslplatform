@@ -167,7 +167,7 @@
 .calendar-icon {
   position: absolute;
   top: 38px;
-  right: 315px;
+  left: 30%;
   transform: translateY(-50%);
   pointer-events: none;
   color: #eeeeee;
