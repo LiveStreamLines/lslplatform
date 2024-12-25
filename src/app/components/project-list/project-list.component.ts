@@ -52,7 +52,6 @@ export class ProjectListComponent implements OnInit {
         // Fetch the projects for the selected developer    
         this.projectService.getProjectsByDeveloper(this.developerId).subscribe({
           next: (data: Project[]) => {
-            console.log(data);
             this.projects = data.map(project => ({
               ...project,
               logo: this.logopath + project.logo

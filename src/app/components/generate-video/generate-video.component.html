@@ -47,44 +47,45 @@
             <div class="form-field">
               <div class="number-input-wrapper">
               <label for="hour1">Start Hour (HH)</label>
-              <input
-                type="number"
-                id="hour1"
-                class ="hour"
-                min="0"
-                max="23"
-                [(ngModel)]="hour1"
-                name="hour1"
-                required
-                (keydown)="preventManualInput($event)"
-                (change)="onHour1Change(hour1)"
-                style="width:21%"
-              />
-              <div class="arrows">
-                <button type="button" class="arrow up" (click)="increment('hour1')">&#9650;</button>
-                <button type="button" class="arrow down" (click)="decrement('hour1')">&#9660;</button>
+              <div class="number" style="position: relative;">
+                <input
+                  type="number"
+                  id="hour1"
+                  class ="hour"
+                  min="0"
+                  max="23"
+                  [(ngModel)]="hour1"
+                  name="hour1"
+                  required
+                  (keydown)="preventManualInput($event)"
+                />
+                <div class="arrows">
+                  <button type="button" class="arrow up" (click)="decrement('hour1')">&#9650;</button>
+                  <button type="button" class="arrow down" (click)="increment('hour1')">&#9660;</button>
+                </div>
               </div>
               </div>
             </div>
             <div class="form-field">
               <div class="number-input-wrapper">
               <label for="hour2">End Hour (HH)</label>
-              <input
-                class="hour"
-                type="number"
-                id="hour2"
-                [min]="hour1 + 1"
-                max="23"
-                [(ngModel)]="hour2"
-                name="hour2"
-                (keydown)="preventManualInput($event)"
-                required
-                style="width:21%"
-              />
-              <div class="arrows">
-                <button type="button" class="arrow up" (click)="increment('hour2')">&#9650;</button>
-                <button type="button" class="arrow down" (click)="decrement('hour2')">&#9660;</button>
-              </div>
+              <div class="number" style="position: relative;">
+                <input
+                  class="hour"
+                  type="number"
+                  id="hour2"
+                  [min]="hour1 + 1"
+                  max="23"
+                  [(ngModel)]="hour2"
+                  name="hour2"
+                  (keydown)="preventManualInput($event)"
+                  required
+                />
+                <div class="arrows">
+                  <button type="button" class="arrow up" (click)="decrement('hour2')">&#9650;</button>
+                  <button type="button" class="arrow down" (click)="increment('hour2')">&#9660;</button>
+                </div>
+                </div>
               </div>
             </div>
           </div>

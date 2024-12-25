@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, ViewChild, OnChanges, SimpleChanges } fro
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-studio',
@@ -70,6 +71,12 @@ export class StudioComponent {
 
   currentTool: string = ''; // Stores the current tool (text, rectangle, etc.)
 
+
+  loadingCanvas: boolean = false; // Loading state
+
+
+  constructor(private authService: AuthService) {}
+
   ngOnInit() {
     const canvas = this.canvasRef.nativeElement;
     this.context = canvas.getContext('2d')!;
@@ -89,6 +96,7 @@ export class StudioComponent {
   }
 
   private loadImage(): void {
+    this.image.crossOrigin = 'anonymous'; // Set crossOrigin attribute
     this.image.src = this.imageSrc;
     this.image.onload = () => {
       const canvas = this.canvasRef.nativeElement;
@@ -861,16 +869,54 @@ export class StudioComponent {
   }
 
   downloadCanvas(): void {
-    const canvas = this.canvasRef.nativeElement;
-  
-    // Convert canvas to a data URL
-    const dataURL = canvas.toDataURL('image/png');
-  
-    // Create a temporary link element to trigger download
-    const link = document.createElement('a');
-    link.href = dataURL;
-    link.download = 'edited_image.png';
-    link.click();
+     const canvas = this.canvasRef.nativeElement;
+
+     // Use toBlob to get the canvas content as a Blob
+     canvas.toBlob((blob) => {
+      if (!blob) {
+          console.error('Failed to create Blob from canvas.');
+          return;
+      }
+
+      this.loadingCanvas = true;
+
+      // Create a FormData object
+      const formData = new FormData();
+      formData.append('image', blob, 'canvas_image.png'); // Append Blob to the FormData
+
+      const authh = this.authService.getAuthToken();  // Get the auth token from AuthService
+     
+      // Send the FormData to the backend
+      fetch('http://5.9.85.250:5000/api/studio/save', {
+          method: 'POST',
+          headers: {
+            'Authorization': authh ? `Bearer ${authh}` : '', // Add the auth token
+          },
+          body: formData,
+      })
+          .then((response) => response.json())
+          .then((data) => {
+              if (data.url) {
+                  // Provide the user with a download link
+                  const link = document.createElement('a');
+                  link.href = 'http://5.9.85.250:5000/' + data.url;
+                  link.download = 'canvas_image.png';
+                  link.textContent = 'Download Image';
+                  link.target = '_blank';
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link); // Clean up the link element
+              }
+          })
+          .catch((error) => {
+              console.error('Error saving image:', error);
+          })
+          .finally(() => {
+            // Set loading to false
+            this.loadingCanvas = false;
+          });
+  }, 'image/png');
+
   }
-  
+     
 }

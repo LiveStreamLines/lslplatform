@@ -45,6 +45,12 @@
     </div>
   
     <div class="canvas-area">
+        <!-- Loading Spinner -->
+        <div *ngIf="loadingCanvas" class="loading-overlay">
+          <div class="spinner"></div>
+          <p>Preparing your download link...</p>
+        </div>
+
         <canvas
             #canvas
             (click)="onCanvasClick($event)"

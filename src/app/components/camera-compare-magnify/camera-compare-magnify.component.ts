@@ -161,7 +161,7 @@ export class CameraCompareMagnifyComponent implements OnInit {
   }
 
   onImageError(side: 'left' | 'right'): void {
-    console.error(`Failed to load image on ${side} side.`);
+ //   console.error(`Failed to load image on ${side} side.`);
     if (side === 'left') {
       this.loadingLeft = false;
     } else {

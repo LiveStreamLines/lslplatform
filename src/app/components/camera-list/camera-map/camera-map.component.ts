@@ -53,7 +53,6 @@ export class CameraMapComponent {
     if (map) {
       this.map = map;
       this.map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
-      console.log('Map is ready:', map);
     } else {
       console.error('Map instance not found.');
     }
