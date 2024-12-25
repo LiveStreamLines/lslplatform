@@ -110,7 +110,7 @@
 /* Style for the date input */
 .native-date-picker {
   width: 30%;
-  padding: 8px 12px;
+  padding: 8px 8px;
   font-size: 14px;
   /* border: 1px solid #ccc; Light gray border */
   border-radius: 4px;
@@ -150,13 +150,19 @@
 .calendar-icon {
   position: absolute;
   top: 38px;
-  left: 30%;
+  left: 27%;
   transform: translateY(-50%);
   pointer-events: none;
   color: #eeeeee;
   font-size: 19px;
   background: #7f1515;
   padding: 6px;
+}
+
+
+.material-icons {
+  font-size: 14px;
+    padding: 4px;
 }
 
 
