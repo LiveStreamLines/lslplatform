@@ -38,7 +38,7 @@
   border: 1px solid #55525285; /* Red */
   border-radius: 8px;
   padding: 15px;
-  margin-bottom: 35px;
+  margin-bottom: 60px;
   background-color: #29292900; /* Dark gray */
 }
 
@@ -86,11 +86,10 @@
   width: 25%
 }
 
-
 /* Style the custom calendar icon */
 .calendar-icon {
   position: absolute;
-  top: 37px;
+  top: 33px;
   right: 1px;
   transform: translateY(-50%);
   pointer-events: none;
@@ -102,7 +101,7 @@
 
 .form-field input,
 .form-field select {
-  padding: 10px;
+  padding: 6px;
   border: 1px solid #696666; 
   border-radius: 4px;
   background-color: #292929; /* Dark gray */
@@ -116,14 +115,14 @@
 }
 
 button.submit {
-  margin-left: 37%;
   background-color: #5e0b0b;
   color: #ffffff;
   padding: 10px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  width: 25%;
+  width: 80%;
+  margin-left: 35px;
 }
 
 button.submit:hover {
@@ -150,37 +149,41 @@ button.submit:hover {
   border-color: #d32f2f; /* Red border on focus */
 }
 
+.material-icons {
+  font-size: 16px;
+}
+
 .arrows {
   position: absolute;
   top: 0;
-  right: 38px; /* Align to the right edge */
+  left: 63%; /* Align to the right edge */
   background-color: #3c3838;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 2px;
 }
+
 
 .arrow {
   background-color: #6f1414; /* Red background for arrows */
   color: #ffffff; /* White arrow color */
   border: none;
-  width: 30px;
-  height: 20px;
-  line-height: 16px;
+  width: 20px;
+  height: 12px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 12px;
+  font-size: 7px;
   border-radius: 2px;
 }
 
 .arrow:hover {
   background-color: #b71c1c; /* Darker red on hover */
 }
+
 
 /* Additional Styles for Responsiveness */
 @media (max-width: 768px) {
