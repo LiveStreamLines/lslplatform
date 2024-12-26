@@ -245,7 +245,7 @@ p {
 
 /* Style for the date input */
 .native-date-picker {
-  padding: 6px 12px;
+  padding: 6px 5px;
   font-size: 14px;
   /* border: 1px solid #ccc; Light gray border */
   border-radius: 4px;
