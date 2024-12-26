@@ -127,7 +127,7 @@
 /* Style for the date input */
 .native-date-picker {
   width: 30%;
-  padding: 8px 8px;
+  padding: 8px 6px;
   font-size: 14px;
   /* border: 1px solid #ccc; Light gray border */
   border-radius: 4px;
@@ -166,8 +166,8 @@
 /* Style the custom calendar icon */
 .calendar-icon {
   position: absolute;
-  top: 38px;
-  left: 27%;
+  top: 39px;
+  left: 26%;
   transform: translateY(-50%);
   pointer-events: none;
   color: #eeeeee;

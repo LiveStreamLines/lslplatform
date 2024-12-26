@@ -245,8 +245,7 @@ p {
 
 /* Style for the date input */
 .native-date-picker {
-  width: 100%;
-  padding: 8px 12px;
+  padding: 6px 12px;
   font-size: 14px;
   /* border: 1px solid #ccc; Light gray border */
   border-radius: 4px;
@@ -285,14 +284,14 @@ p {
 /* Style the custom calendar icon */
 .calendar-icon {
   position: absolute;
-  top: 39px;
-  right: -28px;
-  transform: translateY(-50%);
-  pointer-events: none;
-  color: #eeeeee;
-  font-size: 19px;
-  background: #7f1515;
-  padding: 6px;
+    top: 37px;
+    right: 0;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #eeeeee;
+    font-size: 19px;
+    background: #7f1515;
+    padding: 4px;
 }
 
 .material-icons {
