@@ -87,7 +87,7 @@
 .weather-label {
   position: absolute;
   top: 10px;
-  left: 85%;
+  right: 10px;
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
   padding: 5px 10px;
