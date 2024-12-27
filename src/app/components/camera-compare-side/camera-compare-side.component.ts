@@ -1,98 +1,31 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { CameraDetailService } from '../../services/camera-detail.service';
+import { Component, OnInit, Input, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';  // Import FormsModule for ngModel
 import { CommonModule } from '@angular/common'; // Import CommonModule for ngFor and ngIf
 import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
-import { CompareDatepickerComponent } from '../compare-datepicker/compare-datepicker.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-camera-compare-side',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatInputModule ,MatDatepickerModule, CompareDatepickerComponent],
+  imports: [CommonModule, FormsModule, MatInputModule ,MatDatepickerModule],
   templateUrl: './camera-compare-side.component.html',
   styleUrl: './camera-compare-side.component.css'
 })
 export class CameraCompareSideComponent implements OnInit {
-  @Input() projectId!: string; // Receiving projectId from parent
-  @Input() cameraName!: string; // Receiving cameraName from pare
-
-  projectTag!: string;
-  developerTag!: string;
-  date1Pictures: string[] = [];
-  date2Pictures: string[] = [];
-  selectedDate1Picture: string = '';
-  selectedDate2Picture: string = '';
-  sliderPosition: number = 50; // Starting split between images for visual comparison
-  selectedDate1:Date = new Date(); // This will be bound to ngModel
-  selectedDate2: Date = new Date(); // This will be bound to ngModel
-  selectedDate1Thumbnail!: string;
-  selectedDate2Thumbnail!: string;
-  path: string = '';
-
+  @Input() inselectedDate1Picture: string = '';
+  @Input() inselectedDate2Picture: string = '';
+  
   loadingLeft = false;
   loadingRight = false;
-  
+
+ 
   constructor(
-   private route: ActivatedRoute,
-   private cameraDetailService: CameraDetailService
-  ) {}
+    ) {}
 
   ngOnInit(): void {
-    this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;
-    this.projectTag = this.route.snapshot.paramMap.get('projectTag')!;
-
-    if (this.projectId && this.cameraName) {
-      this.loadComparisonPhotos();
-    }
   }
 
-  // Fetch both date1 and date2 pictures
-  loadComparisonPhotos(date1: string = '', date2: string = ''): void {
-//    this.cameraDetailService.getCameraDetails(this.projectId, this.cameraName, date1, date2)
-    this.cameraDetailService.getCameraDetails(this.developerTag, this.projectTag,this.cameraName,date1,date2)
-    .subscribe(data => {
-      this.date1Pictures = data.date1Photos.map(photo => photo.toString());
-      this.date2Pictures = data.date2Photos.map(photo => photo.toString());
-      this.path = data.path;
-      // Set default selected pictures
-      if (this.date1Pictures.length > 0) {
-        const lastPhotoDate1 = this.date1Pictures[this.date1Pictures.length - 1];
-        this.selectedDate1Picture = this.getLargePictureUrl(lastPhotoDate1);
-        this.selectedDate1Thumbnail = lastPhotoDate1;
-        this.selectedDate1 = this.parseDateFromTimestamp(lastPhotoDate1);
-      }
-      if (this.date2Pictures.length > 0) {
-        const lastPhotoDate2 = this.date2Pictures[this.date2Pictures.length - 1];
-        this.selectedDate2Picture = this.getLargePictureUrl(lastPhotoDate2);
-        this.selectedDate2Thumbnail = lastPhotoDate2;
-        this.selectedDate2 = this.parseDateFromTimestamp(lastPhotoDate2);
-      }
-    });
-  }
-  
-  // Parse date from a timestamp format like "yyyyMMddHHmmss"
-  parseDateFromTimestamp(timestamp: string): Date {
-    const year = parseInt(timestamp.substring(0, 4), 10);
-    const month = parseInt(timestamp.substring(4, 6), 10) - 1; // Month is zero-indexed
-    const day = parseInt(timestamp.substring(6, 8), 10);
-    return new Date(year, month, day);
-  }
-
-
-  onDate1PictureSelect(picture: string): void {
-    //this.loadingLeft = true;
-    this.selectedDate1Picture = this.getLargePictureUrl(picture);
-    this.selectedDate1Thumbnail = picture; // Highlight the selected thumbnail
-  }
-
-  onDate2PictureSelect(picture: string): void {
-    //this.loadingRight = true;
-    this.selectedDate2Picture = this.getLargePictureUrl(picture);
-    this.selectedDate2Thumbnail = picture; // Highlight the selected thumbnail
-  }
-
+ 
   onImageLoad(side: 'left' | 'right'): void {
     console.log(`Image on ${side} side loaded successfully`);
     if (side === 'left') {
@@ -111,45 +44,5 @@ export class CameraCompareSideComponent implements OnInit {
     }
   }
 
-
-  // Method to get large picture URL
-  getLargePictureUrl(picture: string): string {
-    //return `https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${this.cameraName}/large/${picture}.jpg`;
-    return `${this.path}/large/${picture}.jpg` ;
-  }
-
-  onDate1Change(newDate: string): void {
-    // const inputElement = event.target as HTMLInputElement;
-    const selectedDate = new Date(newDate); // Parse the date
-    const formattedDate = this.formatDate(selectedDate); // Format it for API call
-    const otherDate = this.formatDate(this.selectedDate2); // Format the other date
-    this.selectedDate1 = selectedDate; // Update bound Date object
-    this.loadComparisonPhotos(formattedDate, otherDate); // Load photos
-  }
-  
-  onDate2Change(newDate: string): void {
-    // const inputElement = event.target as HTMLInputElement;
-    const selectedDate = new Date(newDate);
-    const formattedDate = this.formatDate(selectedDate);
-    const otherDate = this.formatDate(this.selectedDate1);
-    this.selectedDate2 = selectedDate;
-    this.loadComparisonPhotos(otherDate, formattedDate);
-  }
-
-  // Ensure `selectedDate1` and `selectedDate2` are in `yyyy-MM-dd` format for input binding
-get date1InputValue(): string {
-  return this.selectedDate1.toISOString().split('T')[0]; // Format for HTML input
-}
-
-get date2InputValue(): string {
-  return this.selectedDate2.toISOString().split('T')[0];
-}
-
-formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  return `${year}${month}${day}`;
-}
 
 }

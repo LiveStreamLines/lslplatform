@@ -48,9 +48,6 @@
   height: 3.1rem;
 }
 
-.compare-toolbar button.active {
-  background-color: #7b1313;
-}
 
 /* Spinner for loading state */
 .spinner {

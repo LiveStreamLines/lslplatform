@@ -3,7 +3,7 @@
   
   <img 
       *ngIf="!loadingLeft"
-      [src]="selectedDate1Picture" 
+      [src]="inselectedDate1Picture" 
       class="compare-slider-img left-img large-picture" 
       (load)="onImageLoad('left')"
       (error)="onImageError('left')"
@@ -11,7 +11,7 @@
     />
       
   <img *ngIf="!loadingRight"
-        [src]="selectedDate2Picture"
+        [src]="inselectedDate2Picture"
         class="compare-slider-img right-img large-picture"
         (load)="onImageLoad('right')"
         (error)="onImageError('right')"
@@ -40,33 +40,4 @@
     </div>
   </div>
 
-</div>
-
-<div class="compare-layout">
-  <!-- Left-side for date1 thumbnails -->
-  <div class="date1-section">
-    <app-compare-datepicker
-    [dateInputValue]="date1InputValue"
-    [pictures]="date1Pictures"
-    [selectedThumbnail]="selectedDate1Thumbnail"
-    [path] = "path"
-    (dateChange)="onDate1Change($event)"
-    (pictureSelect)="onDate1PictureSelect($event)">
-    
-    >      
-    </app-compare-datepicker>
-  </div>
-
-  <!-- Right-side for date2 thumbnails -->
-  <div class="date2-section">
-     <app-compare-datepicker
-     [dateInputValue]="date2InputValue"
-     [pictures]="date2Pictures"
-     [selectedThumbnail]="selectedDate2Thumbnail"
-     [path] = "path"
-     (dateChange)="onDate2Change($event)"
-     (pictureSelect)="onDate2PictureSelect($event)">
-     >      
-     </app-compare-datepicker>
-  </div>
 </div>

@@ -32,67 +32,7 @@
     width: 49%;
   }
   
-  .thumbnail-strip {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-  }
-
-  
-
-  .thumbnail-strip::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  .thumbnail-strip::-webkit-scrollbar-thumb {
-    background-color: #681111;  /* Customize the scrollbar color */
-    border-radius: 10px;
-  }
-
-  .thumbnail-strip::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-  }
-  
-  .thumbnail {
-    position: relative;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: border-color 0.3s ease;
-  }
-  
-  .thumbnail.selected {
-    border-color: #007bff; /* Highlight selected thumbnail */
-  }
-  
-  /* Smaller size for thumbnails */
-  .thumbnail-img {
-    width: 90px; /* Reduced width */
-    height: 90px; /* Reduced height */
-    object-fit: cover;
-    border-radius: 5px;
-  }
-  
-  
-  /* Date overlay */
-  .thumbnail-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 2px;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    font-size: 8px;
-    text-align: center;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-  }
-  
-  /* Date selector styling */
-  .date-selector {
-    margin-bottom: 10px;
-  }
-  
+    
   
   .spinner-container {
     position: absolute;
@@ -122,45 +62,6 @@
   font-size: 14px;
   font-weight: bold;
   color: #fcfcfc; /* Dark gray for text */
-}
-
-/* Style for the date input */
-.native-date-picker {
-  width: 30%;
-  padding: 8px 6px;
-  font-size: 14px;
-  /* border: 1px solid #ccc; Light gray border */
-  border-radius: 4px;
-  background-color: #433a3a; /* Subtle background color */
-  color: #fffefe; /* Text color */
-  transition: all 0.3s ease; /* Smooth transitions for hover/focus */
-  border-bottom: 1px;
-}
-
-/* Input hover effect */
-.native-date-picker:hover {
-  border-color: #a80e0e; /* Highlight border on hover */
-}
-
-/* Input focus effect */
-.native-date-picker:focus {
-  border-color: #871010; /* Blue border for focus */
-  box-shadow: 0 0 5px rgba(255, 38, 0, 0.788); /* Glow effect */
-  outline: none; /* Remove default outline */
-}
-
-/* Style for invalid input (optional, if validation is needed) */
-.native-date-picker:invalid {
-  border-color: #ff4d4d; /* Red border for invalid input */
-  background-color: #ffe6e6; /* Light red background */
-}
-
-/* Style for disabled input (optional) */
-.native-date-picker:disabled {
-  background-color: #e9ecef; /* Gray background */
-  color: #6c757d; /* Light gray text */
-  border-color: #ddd; /* Light gray border */
-  cursor: not-allowed;
 }
 
 /* Style the custom calendar icon */

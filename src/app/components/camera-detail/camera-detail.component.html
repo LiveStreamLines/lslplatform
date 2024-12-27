@@ -22,19 +22,6 @@
   </button>  
 </mat-toolbar>
 
-<!-- Secondary toolbar for Compare mode -->
-<mat-toolbar *ngIf="mode === 'compare'" class="compare-toolbar">
-  <button mat-button [ngClass]="{ 'active': compareView === 'sideBySide' }" (click)="setCompareView('sideBySide')">
-    <mat-icon>view_compact</mat-icon> Side by Side
-  </button>
-  <button mat-button [ngClass]="{ 'active': compareView === 'slider' }" (click)="setCompareView('slider')">
-    <mat-icon>compare</mat-icon> Slider
-  </button>
-  <button mat-button [ngClass]="{ 'active': compareView === 'magnify' }" (click)="setCompareView('magnify')">
-    <mat-icon>zoom_in</mat-icon> Spot
-  </button>
-</mat-toolbar>
-
 <mat-toolbar *ngIf="mode === 'zoom'" class="compare-toolbar">
   <button mat-button [ngClass]="{ 'active': zoomView === 'lens' }" (click)="setZoomView('lens')">
     <mat-icon>view_compact</mat-icon> Magnify
@@ -45,25 +32,13 @@
 </mat-toolbar>
 
 <div class="home-layout">
-    <div *ngIf="compareView === 'sideBySide' && mode === 'compare'" class="compare-container">
-      <app-camera-compare-side
-          [projectId]="projectId"
-          [cameraName]="cameraName">
-      </app-camera-compare-side>
-    </div>
-      
-    <div *ngIf="compareView === 'slider' && mode === 'compare'" class="compare-container">
-      <app-camera-compare
-          [projectId]="projectId"
-          [cameraName]="cameraName">
-      </app-camera-compare>
-    </div>
-
-    <div *ngIf="compareView === 'magnify' && mode === 'compare'" class="compare-container">
-      <app-camera-compare-magnify
-          [projectId]="projectId"
-          [cameraName]="cameraName">
-      </app-camera-compare-magnify>
+  
+    <div *ngIf="mode ==='compare'">
+      <app-main-compare
+      [projectId]="projectId"
+      [cameraName]="cameraName"
+      >
+      </app-main-compare>
     </div>
 
     <div *ngIf="mode === 'generate-video'">
