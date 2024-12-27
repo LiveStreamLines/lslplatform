@@ -8,11 +8,12 @@ import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/
 import { MatFormField } from '@angular/material/input';
 import { MatLabel } from '@angular/material/input';
 import { CameraCompareService } from '../../services/camera-compare-service';
+import { CompareDatepickerComponent } from '../compare-datepicker/compare-datepicker.component';
 
 @Component({
   selector: 'app-camera-compare',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatInputModule ,MatDatepickerModule],
+  imports: [CommonModule, FormsModule, MatInputModule, MatDatepickerModule, CompareDatepickerComponent],
   templateUrl: './camera-compare.component.html',
   styleUrl: './camera-compare.component.css'
 })
@@ -87,16 +88,6 @@ export class CameraCompareComponent implements OnInit {
   }
 
 
-  formatTimestamp(timestamp: string): string {
-    const year = timestamp.substring(0, 4);
-    const month = timestamp.substring(4, 6);
-    const day = timestamp.substring(6, 8);
-    const hour = timestamp.substring(8, 10);
-    const minute = timestamp.substring(10, 12);
-    const second = timestamp.substring(12, 14);
-    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-  }
-
   onDate1PictureSelect(picture: string): void {
     //this.loadingLeft = true;
     this.selectedDate1Picture = this.getLargePictureUrl(picture);
@@ -134,26 +125,16 @@ export class CameraCompareComponent implements OnInit {
     return `${this.path}/large/${picture}.jpg` ;
   }
 
-  // Method to get thumbnail URL
-  getThumbPictureUrl(picture: string): string {
-    //return `https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${this.cameraName}/thumbs/${picture}.jpg`;
-    return `${this.path}/thumbs/${picture}.jpg` ;
-
-  }
-
-
-  onDate1Change(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const selectedDate = new Date(inputElement.value); // Parse the date
+  onDate1Change(newDate: string): void {
+    const selectedDate = new Date(newDate); // Parse the date
     const formattedDate = this.formatDate(selectedDate); // Format it for API call
     const otherDate = this.formatDate(this.selectedDate2); // Format the other date
     this.selectedDate1 = selectedDate; // Update bound Date object
     this.loadComparisonPhotos(formattedDate, otherDate); // Load photos
   }
   
-  onDate2Change(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const selectedDate = new Date(inputElement.value);
+  onDate2Change(newDate: string): void {
+    const selectedDate = new Date(newDate);
     const formattedDate = this.formatDate(selectedDate);
     const otherDate = this.formatDate(this.selectedDate1);
     this.selectedDate2 = selectedDate;
