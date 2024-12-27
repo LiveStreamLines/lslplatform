@@ -869,13 +869,15 @@ export class StudioComponent {
   }
 
   downloadCanvas(): void {
-     const canvas = this.canvasRef.nativeElement;
 
-     // Use toBlob to get the canvas content as a Blob
-     canvas.toBlob((blob) => {
+    const canvas = this.canvasRef.nativeElement;
+
+    // Use toBlob to get the canvas content as a Blob
+    canvas.toBlob((blob) => {
       if (!blob) {
-          console.error('Failed to create Blob from canvas.');
-          return;
+        console.error('Failed to create Blob from canvas.');
+        this.loadingCanvas = false; // Ensure loadingCanvas is set to false
+        return;
       }
 
       this.loadingCanvas = true;
@@ -884,39 +886,50 @@ export class StudioComponent {
       const formData = new FormData();
       formData.append('image', blob, 'canvas_image.png'); // Append Blob to the FormData
 
-      const authh = this.authService.getAuthToken();  // Get the auth token from AuthService
-     
+      const authh = this.authService.getAuthToken(); // Get the auth token from AuthService
+
       // Send the FormData to the backend
       fetch('http://5.9.85.250:5000/api/studio/save', {
-          method: 'POST',
-          headers: {
-            'Authorization': authh ? `Bearer ${authh}` : '', // Add the auth token
-          },
-          body: formData,
+        method: 'POST',
+        headers: {
+          'Authorization': authh ? `Bearer ${authh}` : '', // Add the auth token
+        },
+        body: formData,
       })
-          .then((response) => response.json())
-          .then((data) => {
-              if (data.url) {
-                  // Provide the user with a download link
-                  const link = document.createElement('a');
-                  link.href = 'http://5.9.85.250:5000/' + data.url;
-                  link.download = 'canvas_image.png';
-                  link.textContent = 'Download Image';
-                  link.target = '_blank';
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link); // Clean up the link element
-              }
-          })
-          .catch((error) => {
-              console.error('Error saving image:', error);
-          })
-          .finally(() => {
-            // Set loading to false
-            this.loadingCanvas = false;
-          });
-  }, 'image/png');
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.url) {
+          // Fetch the image to get it as a Blob
+          fetch('http://5.9.85.250:5000/' + data.url)
+            .then((response) => response.blob())
+            .then((imageBlob) => {
+              // Create a URL for the image Blob
+              const imageUrl = URL.createObjectURL(imageBlob);
 
+              // Create an anchor element and programmatically click it to download the image
+              const link = document.createElement('a');
+              link.href = imageUrl;
+              link.download = 'canvas_image.png';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link); // Clean up the link element
+
+              // Revoke the object URL to free up memory
+              URL.revokeObjectURL(imageUrl);
+              this.loadingCanvas = false;
+              console.log(this.loadingCanvas);
+            });
+        }
+      })
+      .catch((error) => {
+        console.error('Error saving image:', error);
+      })
+      .finally(() => {
+        // Set loading to false
+        this.loadingCanvas = false;
+      });
+    }, 'image/png');
   }
-     
+  
+  
 }

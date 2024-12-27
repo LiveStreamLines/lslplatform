@@ -231,6 +231,7 @@
               <select
                 id="musicSelect"
                 [(ngModel)]="selectedMusic"
+                (change)="onMusicSelectionChange()"
                 name="selectedMusic"
                 required
                 style="width: 50%"
@@ -239,6 +240,10 @@
                   {{ music }}
                 </option>
               </select>
+            </div>
+            <div *ngIf="addMusic && musicUrl" class="music-controls">
+              <button type="button" (click)="playMusic()">Play</button>
+              <button type="button" (click)="stopMusic()">Stop</button>
             </div>
           </div>
         </div>

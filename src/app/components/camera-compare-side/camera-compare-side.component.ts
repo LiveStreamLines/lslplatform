@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';  // Import FormsModule for ngModel
 import { CommonModule } from '@angular/common'; // Import CommonModule for ngFor and ngIf
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
+import { CompareDatepickerComponent } from '../compare-datepicker/compare-datepicker.component';
 
 @Component({
   selector: 'app-camera-compare-side',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatInputModule ,MatDatepickerModule],
+  imports: [CommonModule, FormsModule, MatInputModule ,MatDatepickerModule, CompareDatepickerComponent],
   templateUrl: './camera-compare-side.component.html',
   styleUrl: './camera-compare-side.component.css'
 })
@@ -137,18 +138,18 @@ export class CameraCompareSideComponent implements OnInit {
   }
 
 
-  onDate1Change(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const selectedDate = new Date(inputElement.value); // Parse the date
+  onDate1Change(newDate: string): void {
+    // const inputElement = event.target as HTMLInputElement;
+    const selectedDate = new Date(newDate); // Parse the date
     const formattedDate = this.formatDate(selectedDate); // Format it for API call
     const otherDate = this.formatDate(this.selectedDate2); // Format the other date
     this.selectedDate1 = selectedDate; // Update bound Date object
     this.loadComparisonPhotos(formattedDate, otherDate); // Load photos
   }
   
-  onDate2Change(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const selectedDate = new Date(inputElement.value);
+  onDate2Change(newDate: string): void {
+    // const inputElement = event.target as HTMLInputElement;
+    const selectedDate = new Date(newDate);
     const formattedDate = this.formatDate(selectedDate);
     const otherDate = this.formatDate(this.selectedDate1);
     this.selectedDate2 = selectedDate;

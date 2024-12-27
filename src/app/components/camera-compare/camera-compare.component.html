@@ -21,11 +21,7 @@
     <div *ngIf="loadingLeft || loadingRight" class="spinner-container">
       <p>Loading...</p>
     </div>
-
-
-  <!-- <div class="slider-overlay">
-    <input type="range" [(ngModel)]="sliderPosition" min="0" max="100" class="slider"  (input)="updateSlider()"/>
-  </div> -->
+ 
   <div class="slider-overlay">
     <div class="custom-slider">
       <div class="slider-track"></div>
@@ -49,12 +45,6 @@
 <div class="compare-layout">
   <!-- Left-side for date1 thumbnails -->
   <div class="date1-section">
-    <!-- <mat-form-field class="date-selector">
-      <mat-label>Date 1:</mat-label>
-      <input matInput [matDatepicker]="picker1" [(ngModel)]="selectedDate1" (dateChange)="onDate1Change($event)" />
-      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-      <mat-datepicker #picker1></mat-datepicker>
-    </mat-form-field> -->
     <div class="form-field">
       <label for="photoDate">Photo Date:</label>
       <input
@@ -84,14 +74,7 @@
 
   <!-- Right-side for date2 thumbnails -->
   <div class="date2-section">
-    <!-- <mat-form-field class="date-selector">
-      <mat-label>Date 2:</mat-label>
-      <input matInput [matDatepicker]="picker2" [(ngModel)]="selectedDate2" (dateChange)="onDate2Change($event)" />
-      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-      <mat-datepicker #picker2></mat-datepicker>
-    </mat-form-field> -->
-
-    <div class="form-field">
+      <div class="form-field">
       <label for="photoDate">Photo Date:</label>
       <input
         type="date"

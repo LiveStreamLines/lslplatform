@@ -51,7 +51,8 @@ export class GenerateVideoComponent implements OnInit {
     '13.mp3', '14.mp3', '15.mp3',
     '16.mp3', '17.mp3', '18.mp3']; // Static music options
   selectedMusic: string = ''; // Selected music file
-
+  musicUrl: string = ''; // Full URL of the selected music file
+  audioPlayer: HTMLAudioElement | null = null; // Audio player
 
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
   private image = new Image(); // To load and draw the image on the canvas
@@ -459,6 +460,32 @@ export class GenerateVideoComponent implements OnInit {
       } else if (fieldName === 'hour2' && field > this.hour1 + 1) {
         (this as any)[fieldName] = field - 1;
       }
+    }
+  }
+
+  onMusicSelectionChange(): void {
+    if (this.selectedMusic) {
+      this.musicUrl = `http://5.9.85.250:5000/media/music/${this.selectedMusic}`;
+    } else {
+      this.musicUrl = '';
+    }
+  }
+
+  playMusic(): void {
+    if (this.musicUrl) {
+      this.audioPlayer = null;
+      if (!this.audioPlayer) {
+        this.audioPlayer = new Audio(this.musicUrl);
+        this.audioPlayer.loop = false; // Adjust as needed
+      }
+      this.audioPlayer.play();
+    }
+  }
+
+  stopMusic(): void {
+    if (this.audioPlayer) {
+      this.audioPlayer.pause();
+      this.audioPlayer.currentTime = 0; // Reset playback to the beginning
     }
   }
 }
