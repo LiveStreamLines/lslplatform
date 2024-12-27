@@ -29,35 +29,6 @@
   </div>
   
   <div class="compare-layout">
-    <!-- Left-side for date1 thumbnails -->
-    <!-- <div class="date1-section">
-      <div class="form-field">
-        <label for="photoDate">Photo Date:</label>
-        <input
-          type="date"
-          id="photoDate1"
-          [value]="date1InputValue"
-          (change)="onDate1Change($event)"
-          class="native-date-picker"
-        />
-        <span class="calendar-icon">
-          <i class="material-icons">calendar_today</i>
-        </span>
-      </div>
-
-      <div class="thumbnail-strip">
-        <div *ngFor="let picture of date1Pictures" 
-            class="thumbnail" 
-            [class.selected]="picture === selectedDate1Thumbnail" 
-            (click)="onDate1PictureSelect(picture)">
-          <img [src]="getThumbPictureUrl(picture)" class="thumbnail-img" />
-          <div class="thumbnail-overlay">
-            <p>{{ formatTimestamp(picture) }}</p>
-          </div>
-        </div>
-      </div>
-    </div> -->
-    
     <div class="date1-section">
       <app-compare-datepicker
         [dateInputValue]="date1InputValue"
@@ -71,33 +42,6 @@
 
 
     <!-- Right-side for date2 thumbnails -->
-    <!-- <div class="date2-section">
-      <div class="form-field">
-        <label for="photoDate">Photo Date:</label>
-        <input
-          type="date"
-          id="photoDate2"
-          [value]="date2InputValue"
-          (change)="onDate2Change($event)"
-          class="native-date-picker"
-        />
-        <span class="calendar-icon">
-          <i class="material-icons">calendar_today</i>
-        </span>
-      </div>
-
-      <div class="thumbnail-strip">
-        <div *ngFor="let picture of date2Pictures" 
-              class="thumbnail" 
-              [class.selected]="picture === selectedDate2Thumbnail" 
-              (click)="onDate2PictureSelect(picture)">
-          <img [src]="getThumbPictureUrl(picture)" class="thumbnail-img" />
-          <div class="thumbnail-overlay">
-            <p>{{ formatTimestamp(picture) }}</p>
-          </div>
-        </div>
-      </div>
-    </div> -->
     <div class="date1-section">
       <app-compare-datepicker
         [dateInputValue]="date2InputValue"
