@@ -18,6 +18,9 @@
                 id="startDate"
                 [(ngModel)]="startDate"
                 name="startDate"
+                [min]="firstdate"
+                [max]="lastdate"
+                (change)="onStartDateChange()"
                 required
               />
               <span class="calendar-icon">
@@ -31,6 +34,8 @@
                 id="endDate"
                 [(ngModel)]="endDate"
                 name="endDate"
+                [min]="startDate"
+                [max]="lastdate"
                 required
               />
               <span class="calendar-icon">

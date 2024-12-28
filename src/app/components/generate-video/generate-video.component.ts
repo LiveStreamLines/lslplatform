@@ -12,6 +12,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AuthService } from '../../services/auth.service';
+import { CameraDetailService } from '../../services/camera-detail.service';
 
 @Component({
   selector: 'app-generate-video',
@@ -65,6 +66,10 @@ export class GenerateVideoComponent implements OnInit {
 
   startDate!: string;
   endDate!: string;
+  
+  firstdate!: string;
+  lastdate!: string;
+
   hour1: number = 8;
   hour2: number = 9;
   
@@ -98,12 +103,14 @@ export class GenerateVideoComponent implements OnInit {
   constructor(
     private videoService: VideoService, 
     private authService: AuthService,
+    private cameraDetailService: CameraDetailService,
     private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;
     this.projectTag = this.route.snapshot.paramMap.get('projectTag')!;
-    this.setDefaultDates();
+    this.cameraName = this.route.snapshot.paramMap.get('cameraName')!;
+    this.setDefaultDates(); 
 
     // Simulate fetching a preview image
     this.loadImage();
@@ -115,8 +122,47 @@ export class GenerateVideoComponent implements OnInit {
     const lastDayLastMonth = new Date(now.getFullYear(), now.getMonth(), 0); // Last day of last month
     this.startDate = this.formatDate(firstDayLastMonth);
     this.endDate = this.formatDate(lastDayLastMonth);
-    console.log(this.startDate, this.endDate);
 
+    this.cameraDetailService.getCameraDetails(this.developerTag,this.projectTag,this.cameraName)
+      .subscribe({
+        next:(cameraDetail) => {
+          this.firstdate = this.toDate(cameraDetail.firstPhoto);
+          this.lastdate = this.toDate(cameraDetail.lastPhoto);
+        },
+        error:(err) => {
+          console.log(err);
+        }
+      });
+  }
+
+  onStartDateChange(): void {
+    if (!this.startDate) return; // Ensure startDate is defined
+  
+   // Parse startDate as a Date object
+    const startDateObj = new Date(this.startDate);
+  
+    // Calculate endDate as one month after startDate
+    const nextMonthDate = new Date(startDateObj);
+    nextMonthDate.setMonth(startDateObj.getMonth() + 1);
+  
+    // Format nextMonthDate for comparison and input compatibility
+    const formattedNextMonthDate = this.formatDate(nextMonthDate);
+  
+    // Set endDate to nextMonthDate or lastdate, whichever is earlier
+    if (new Date(formattedNextMonthDate) > new Date(this.lastdate)) {
+      this.endDate = this.lastdate;
+    } else {
+      this.endDate = formattedNextMonthDate;
+    }
+  }
+
+  
+  private toDate(date:string): string {
+    const year = date.slice(0, 4);
+    const month = date.slice(4, 6);
+    const day = date.slice(6, 8);
+    
+    return `${year}-${month}-${day}`;
   }
 
    // Extract the date from the image URL
