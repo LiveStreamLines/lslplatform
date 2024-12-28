@@ -1,7 +1,6 @@
 
 /* Toolbar styling */
 .camera-detail-toolbar {
-  background-color: #54090959;
   color: white;
   display: flex;
   justify-content: space-around;
@@ -29,7 +28,7 @@
 }
 
 .camera-detail-toolbar button.active {
-  background-color: #302c2c;
+  background-color: #811a1a;
   color: white;
 }
 

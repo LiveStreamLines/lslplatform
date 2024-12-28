@@ -4,16 +4,12 @@ import { CameraDetailService } from '../../services/camera-detail.service';
 import { FormsModule } from '@angular/forms';  // Import FormsModule for ngModel
 import { CommonModule } from '@angular/common'; // Import CommonModule for ngFor and ngIf
 import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormField } from '@angular/material/input';
-import { MatLabel } from '@angular/material/input';
-import { CompareDatepickerComponent } from '../compare-datepicker/compare-datepicker.component';
 
 
 @Component({
   selector: 'app-camera-compare-magnify',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatInputModule, MatDatepickerModule, CompareDatepickerComponent],
+  imports: [CommonModule, FormsModule, MatInputModule],
   templateUrl: './camera-compare-magnify.component.html',
   styleUrl: './camera-compare-magnify.component.css'
 })

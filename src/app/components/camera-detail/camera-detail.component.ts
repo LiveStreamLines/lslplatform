@@ -14,9 +14,6 @@ import { ProjectService } from '../../services/project.service';
 import { CameraDetailService } from '../../services/camera-detail.service';
 import { WeatherService } from '../../services/weather.service';
 import { CameraDetail } from '../../models/camera-detail.model';
-import { CameraCompareComponent } from '../camera-compare/camera-compare.component';
-import { CameraCompareSideComponent } from '../camera-compare-side/camera-compare-side.component';
-import { CameraCompareMagnifyComponent } from '../camera-compare-magnify/camera-compare-magnify.component';
 import { MainCompareComponent } from '../main-compare/main-compare.component';
 import { GenerateVideoComponent } from '../generate-video/generate-video.component';
 import { GeneratePhotoComponent } from '../generate-photo/generate-photo.component';
@@ -42,9 +39,6 @@ import { BreadcrumbService } from '../../services/breadcrumb.service';
     FormsModule,
     CameraZoomComponent,
     MainCompareComponent,
-    CameraCompareComponent,
-    CameraCompareSideComponent,
-    CameraCompareMagnifyComponent,
     GenerateVideoComponent,
     GeneratePhotoComponent,
     ShareComponent,
