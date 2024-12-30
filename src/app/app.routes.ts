@@ -19,6 +19,7 @@ import { UsersComponent } from './components/users/users.component';
 import { UserFormComponent } from './components/users/user-form/user-form.component';
 import { ResetPasswordComponent } from './components/users/reset-password/reset-password.component';
 import { LiveviewComponent } from './components/liveview/liveview.component';
+import { ServiceDetailComponent } from './components/service-detail/service-detail.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -27,6 +28,10 @@ export const routes: Routes = [
   { path: 'home/:developerTag', component: ProjectListComponent,  canActivate: [AuthGuard] },  // Project list for a specific developer
   { path: 'home/:developerTag/:projectTag', component: ServicesComponent,  canActivate: [AuthGuard]},
   { path: 'home/:developerTag/:projectTag/timelapse', component: CameraListComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
+  { path: 'home/:developerTag/:projectTag/drone-shooting', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
+  { path: 'home/:developerTag/:projectTag/site-photography', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
+  { path: 'home/:developerTag/:projectTag/360-photography', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
+  { path: 'home/:developerTag/:projectTag/satellite-imagery', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
   { path: 'home/:developerTag/:projectTag/:cameraName', component: CameraDetailComponent,  canActivate: [AuthGuard] },  // Route for camera detail
   { path: 'compare', component: CameraCompareComponent,  canActivate: [AuthGuard] },
   { path: 'developers', component: DevelopersComponent,  canActivate: [AuthGuard] },
