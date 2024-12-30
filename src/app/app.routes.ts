@@ -18,6 +18,7 @@ import { ServicesComponent } from './components/services/services.component';
 import { UsersComponent } from './components/users/users.component';
 import { UserFormComponent } from './components/users/user-form/user-form.component';
 import { ResetPasswordComponent } from './components/users/reset-password/reset-password.component';
+import { LiveviewComponent } from './components/liveview/liveview.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -40,5 +41,6 @@ export const routes: Routes = [
   { path: 'gallery/video-request', component: VideoRequestComponent,  canActivate: [AuthGuard]},
   { path: 'gallery/photo-request', component: PhotoRequestComponent,  canActivate: [AuthGuard]},
   { path: 'media', component: MediaComponent,  canActivate: [AuthGuard]},
+  { path: 'liveview', component: LiveviewComponent, canActivate:[AuthGuard]},
   { path: '', redirectTo: '/login', pathMatch: 'full' }
 ];

@@ -1,0 +1,29 @@
+<div class="container">
+    <!-- Live View Section -->
+    <div class="iframe-container">
+      <iframe
+        src="http://5.9.85.250:8000/demo.html"
+        frameborder="0"
+        class="live-view-iframe"
+        allowfullscreen
+      ></iframe>
+    </div>
+  
+    <!-- PTZ Control Section -->
+    <div class="ptz-control">
+      <h4>PTZ Control</h4>
+      <div class="ptz-circle">
+        <!-- Up -->
+        <button class="ptz-btn ptz-up" (click)="moveUp()">▲</button>
+        <!-- Left -->
+        <button class="ptz-btn ptz-left" (click)="moveLeft()">◀</button>
+        <!-- Right -->
+        <button class="ptz-btn ptz-right" (click)="moveRight()">▶</button>
+        <!-- Down -->
+        <button class="ptz-btn ptz-down" (click)="moveDown()">▼</button>
+        <!-- Center/Reset -->
+        <button class="ptz-btn ptz-center" (click)="resetToStartPosition()">⟳</button>
+      </div>
+    </div>
+  </div>
+  
