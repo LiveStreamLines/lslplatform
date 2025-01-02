@@ -12,6 +12,9 @@ import { DeveloperService } from '../../services/developer.service';
 import { ProjectService } from '../../services/project.service';
 import { Developer } from '../../models/developer.model';
 import { Project } from '../../models/project.model';
+import { MatDialog } from '@angular/material/dialog';
+import { ServiceVideoDialogComponent } from '../service-video-dialog/service-video-dialog.component';
+
 
 @Component({
   selector: 'app-services',
@@ -44,6 +47,7 @@ export class ServicesComponent implements OnInit {
     private router: Router, 
     private developerService: DeveloperService,
     private projectService: ProjectService,
+    private dialog: MatDialog, // Inject MatDialog here
     private authService: AuthService) {
     // Retrieve the route parameters
     this.route.params.subscribe(params => {
@@ -92,9 +96,19 @@ export class ServicesComponent implements OnInit {
   navigateTo(serviceRoute: string) {
 
     // Navigate to the selected service, including developerTag and projectTag
-    this.router.navigate([
-      `home/${this.developerTag}/${this.projectTag}/${serviceRoute}`
-    ]);
+    // this.router.navigate([
+    //   `home/${this.developerTag}/${this.projectTag}/${serviceRoute}`
+    // ]);
+    if (serviceRoute === '/timelapse') {
+      this.router.navigate([`home/${this.developerTag}/${this.projectTag}/${serviceRoute}`]);
+    } else {
+      const videoUrl = "assets/background2.mp4";
+      this.dialog.open(ServiceVideoDialogComponent, {
+        data: { title: 'Service Video', videoUrl },
+        width: '80%',
+        height: '80%',
+      });
+    }
 
   }
 

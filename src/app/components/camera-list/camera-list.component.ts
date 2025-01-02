@@ -103,15 +103,20 @@ export class CameraListComponent implements OnInit {
               {
                   next: (cameraDetail) => {
                     this.loading = false;  // Stop loading once the data is fetched
-                    camera.firstPhoto =  cameraDetail.firstPhoto;
-                    camera.lastPhoto = cameraDetail.lastPhoto;     
-                    camera.path = cameraDetail.path;   
+                    if (!cameraDetail.error) {
+                      camera.firstPhoto =  cameraDetail.firstPhoto;
+                      camera.lastPhoto = cameraDetail.lastPhoto;     
+                      camera.path = cameraDetail.path;   
+                      camera.error = false;
+                    } else {
+                      camera.error = true;
+                    }
                   },
-                  error: (err) => {
-                    console.log ("This Camera has no pics");
+                  error: (err) => {                    
+                    console.log ("error");
                   }
               });
-          });
+            });
        },
          error: (err) => {
         console.error('Error fetching cameras:', err);
@@ -121,11 +126,10 @@ export class CameraListComponent implements OnInit {
   }  
 
   getPictureUrl(camera: string, photo: string): string {
-    //return`https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${camera}/large/${photo}.jpg`;  // Adjust path as needed
     if (camera && photo) {
-      return `${camera}/large/${photo}.jpg` ;
+      return `${camera}large/${photo}.jpg` ;
     } else {
-      return '';
+      return 'http://5.9.85.250:5000/logos/project/image.png';
     }
   }
 

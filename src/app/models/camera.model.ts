@@ -14,6 +14,7 @@ export interface Camera {
     "customVideo2": string,
     "isDeleted": boolean,
     "isActive": boolean,
+    "error": boolean,
     "createdDate": string
   }
   

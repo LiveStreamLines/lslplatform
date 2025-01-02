@@ -4,5 +4,6 @@ export interface CameraDetail {
     lastPhoto: string;
     date1Photos: string[];
     date2Photos: string[];
+    error: string;
   }
   

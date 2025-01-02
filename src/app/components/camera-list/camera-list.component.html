@@ -10,7 +10,9 @@
         </div>
 
         <div *ngIf="!loading && cameras.length > 0" class="cameras-container">
-          <mat-card class="cameras-card" *ngFor="let camera of cameras" (click)="viewCameraDetails(camera)">
+          <mat-card class="cameras-card" 
+          *ngFor="let camera of cameras"  [class.disabled]="camera.error"
+          (click)="!camera.error && viewCameraDetails(camera)">
             <img mat-card-image [src]="getPictureUrl(camera.path, camera.lastPhoto)" alt="Last Photo"/>          
             <mat-card-title>{{ camera.cameraDescription }}</mat-card-title>          
             <mat-card-content>
@@ -18,7 +20,7 @@
               <p><strong>Last Photo Date:</strong> {{ formatTimestamp(camera.lastPhoto) }}</p>
             </mat-card-content>
             <mat-card-actions>
-              <button mat-button>View Camera Details</button>
+              <button mat-button [disabled]="camera.error">View Camera Details</button>
             </mat-card-actions>
           </mat-card>
         </div>

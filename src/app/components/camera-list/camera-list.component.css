@@ -93,6 +93,15 @@
   background-color: #7e0707; /* Darker red on hover */
 }
 
+.cameras-card.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.cameras-card.disabled button {
+  cursor: not-allowed;
+}
+
 /* Add some responsive behavior */
 @media (max-width: 768px) {
   .cameras-container {
