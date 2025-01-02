@@ -35,6 +35,7 @@ export class ServicesComponent implements OnInit {
 
   services = [
     { name: 'Timelapse', image: 'assets/Eq-1.png', route: '/timelapse' },
+    { name: 'Live View', image: 'assets/Eq-6.png', route: '/liveview' },
     { name: 'Drone Shooting', image: 'assets/Eq-2.png', route: '/drone-shooting' },
     { name: 'Site Photography & Videography', image: 'assets/Eq-3.png', route: '/site-photography' },
     { name: '360 Photography & Videography', image: 'assets/Eq-4.png', route: '/360-photography' },
@@ -101,7 +102,10 @@ export class ServicesComponent implements OnInit {
     // ]);
     if (serviceRoute === '/timelapse') {
       this.router.navigate([`home/${this.developerTag}/${this.projectTag}/${serviceRoute}`]);
-    } else {
+    } else if (this.developerTag === 'lsl' && serviceRoute === '/liveview') {
+      this.router.navigate([`/liveview`]);  //sample live view
+    }
+     else {
       const videoUrl = "assets/background2.mp4";
       this.dialog.open(ServiceVideoDialogComponent, {
         data: { title: 'Service Video', videoUrl },
