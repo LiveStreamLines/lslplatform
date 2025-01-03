@@ -15,6 +15,7 @@ import { CameraMapComponent } from './camera-map/camera-map.component';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { Developer } from '../../models/developer.model';
 import { Project } from '../../models/project.model';
+import { environment } from '../../../environment/environments';
 
 
 
@@ -129,7 +130,7 @@ export class CameraListComponent implements OnInit {
     if (camera && photo) {
       return `${camera}large/${photo}.jpg` ;
     } else {
-      return 'http://5.9.85.250:5000/logos/project/image.png';
+      return environment.backend + '/logos/project/image.png';
     }
   }
 

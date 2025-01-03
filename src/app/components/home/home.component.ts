@@ -8,6 +8,7 @@
   import { Developer } from '../../models//developer.model';
   import { AuthService } from '../../services/auth.service';
   import { BreadcrumbService } from '../../services/breadcrumb.service';
+  import { environment } from '../../../environment/environments';
 
   @Component({
     selector: 'app-home',
@@ -24,7 +25,7 @@
     searchTerm: string = '';  // This will be used for filtering developers
     userRole: string | null = null;
     accessibleDevelopers: string[] = [];
-    logopath: string = 'http://5.9.85.250:5000/';
+    logopath: string =  environment.backend;
 
     constructor(
       private developerService: DeveloperService, 

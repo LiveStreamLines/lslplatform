@@ -9,8 +9,8 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = environment.apiUrl + '/users'; // Base URL for the user API
-  private Authurl = environment.apiUrl + '/auth'; // Base URL for the user API
+  private apiUrl = environment.backend + '/api/users'; // Base URL for the user API
+  private Authurl = environment.backend + '/api/auth'; // Base URL for the user API
 
 
   constructor(private http: HttpClient, private authService: AuthService) {}

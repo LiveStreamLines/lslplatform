@@ -26,7 +26,7 @@ interface AuthResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.backend + "/api";
   private authToken: string | null = null;
   private userRole: string | null = null;
   private username: string | null = null;

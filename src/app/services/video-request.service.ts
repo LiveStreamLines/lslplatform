@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class VideoRequestService {
-  private apiUrl = environment.apiUrl + '/video'; // Replace with your backend URL
+  private apiUrl = environment.backend + '/api/video'; // Replace with your backend URL
 
   constructor(private http: HttpClient) {}
 

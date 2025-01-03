@@ -11,8 +11,8 @@ import { AuthService } from './auth.service';  // To access the auth token
 })
 export class ProjectService {
   //private apiUrl = 'https://lslcloud.com/api/main/developer';  // Base URL for fetching projects
-  private apiUrl = environment.apiUrl + '/projects/dev';
-  private baseUrl = environment.apiUrl + '/projects';
+  private apiUrl = environment.backend + '/api/projects/dev';
+  private baseUrl = environment.backend + '/api/projects';
   private projects: Project[] = [];  // Store projects here
 
   constructor(private http: HttpClient, private authService: AuthService) {}

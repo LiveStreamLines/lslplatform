@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
 import { Project } from '../../models/project.model';
 import { Developer } from '../../models/developer.model';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
+import { environment } from '../../../environment/environments';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class ProjectListComponent implements OnInit {
   developerTag: string = '';
   developerName: string = '';
   loading: boolean = true;
-  logopath: string = 'http://5.9.85.250:5000/';
+  logopath: string = environment.backend;
   userRole: string | null = null;
   filteredProjects: Project[] = [];
   accessibleProjects: string[] = []; // List of accessible project IDs

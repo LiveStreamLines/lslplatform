@@ -168,13 +168,11 @@ export class CameraDetailComponent implements OnInit {
  
   // Get the full URL for the large picture
   getLargePictureUrl(picture: string): string {
-    //return `https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${this.cameraName}/large/${picture}.jpg`;
     return `${this.path}/large/${picture}.jpg` ;
   }
 
   // Get the full URL for the thumbnail picture
   getThumbPictureUrl(picture: string): string {
-    //return `https://lslcloud.com/photos/${this.developerTag}/${this.projectTag}/${this.cameraName}/thumbs/${picture}.jpg`;
     return `${this.path}/thumbs/${picture}.jpg` ;;
   }
 

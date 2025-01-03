@@ -12,7 +12,7 @@ import { AuthService } from './auth.service';  // To access the auth token
 export class CameraService {
   
   //private apiUrl = 'https://lslcloud.com/api/main/projects/cameras';  // API base URL for fetching cameras
-  private apiUrl =   environment.apiUrl + '/cameras/';
+  private apiUrl =   environment.backend + '/api/cameras/';
   private cameras: Camera[] = [];
   constructor(private http: HttpClient, private authService: AuthService) {}
 

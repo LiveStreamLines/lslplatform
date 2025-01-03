@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MediaService {
-  private apiUrl = environment.apiUrl + '/media'; 
+  private apiUrl = environment.backend + '/api/media'; 
 
   constructor(private http: HttpClient) {}
 

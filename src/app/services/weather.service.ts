@@ -11,7 +11,7 @@ export class WeatherService {
 
   // Method to fetch weather by time
   getWeatherByTime(time: string): Observable<any> {
-    const apiUrl = environment.apiUrl + `/weather?time=${time}`;
+    const apiUrl = environment.backend + `/api/weather?time=${time}`;
     return this.http.get<any>(apiUrl);
   }
 }
