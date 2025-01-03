@@ -8,6 +8,7 @@
   import { CameraCompareComponent } from '../camera-compare/camera-compare.component';
   import { CameraCompareMagnifyComponent } from '../camera-compare-magnify/camera-compare-magnify.component';
   import { CameraCompareSideComponent } from '../camera-compare-side/camera-compare-side.component';
+  import { environment } from '../../../environment/environments';
 
   @Component({
     selector: 'app-main-compare',
@@ -64,7 +65,8 @@
       .subscribe(data => {
         this.date1Pictures = data.date1Photos.map(photo => photo.toString());
         this.date2Pictures = data.date2Photos.map(photo => photo.toString());
-        this.path = data.path;
+        this.path = `${environment.backend}/media/upload/${this.developerTag}/${this.projectTag}/${this.cameraName}/`
+        ;
         
         // Preserve existing selection or set to the default value
           if (this.date1Pictures.length > 0) {

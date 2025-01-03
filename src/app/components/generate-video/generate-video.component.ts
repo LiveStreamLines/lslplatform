@@ -13,6 +13,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AuthService } from '../../services/auth.service';
 import { CameraDetailService } from '../../services/camera-detail.service';
+import { environment } from '../../../environment/environments';
 
 @Component({
   selector: 'app-generate-video',
@@ -511,7 +512,7 @@ export class GenerateVideoComponent implements OnInit {
 
   onMusicSelectionChange(): void {
     if (this.selectedMusic) {
-      this.musicUrl = `http://5.9.85.250:5000/media/music/${this.selectedMusic}`;
+      this.musicUrl = `${environment.backend}/media/music/${this.selectedMusic}`;
     } else {
       this.musicUrl = '';
     }
