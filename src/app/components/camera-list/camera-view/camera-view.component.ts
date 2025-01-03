@@ -12,6 +12,7 @@ import { CameraDetailService } from '../../../services/camera-detail.service';
 import { DeveloperService } from '../../../services/developer.service';
 import { ProjectService } from '../../../services/project.service';
 import { Project } from '../../../models/project.model';
+import { environment } from '../../../../environment/environments';
 
 @Component({
   selector: 'app-camera-view',
@@ -79,7 +80,9 @@ export class CameraViewComponent implements OnInit{
     //console.log(this.cameras);
     this.cameraDetailService.getCameraPreview(this.developerTag, this.projectTag, cameraId).subscribe({
       next: (response) => {
-        this.path = response.path;
+        //this.path = response.path;
+        this.path = `${environment.backend}/media/upload/${this.developerTag}/${this.projectTag}/${cameraId}/`
+        
         this.images = response.weeklyImages || []; // Update the list of images for the selected camera
         this.preloadImages();
         //this.startSliderMovement();
