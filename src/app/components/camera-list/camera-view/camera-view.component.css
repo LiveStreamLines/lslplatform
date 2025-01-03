@@ -84,12 +84,14 @@ mat-tab {
   justify-content: space-between;
   align-items: center;
   gap: 1px; /* Space between the icons */
+  user-select: none; /* Prevents text selection */
 }
 
 .thumb-content .material-icons,
 .thumb-content i {
   font-size: 16px; /* Icon size */
   color: #000; /* Icon color */
+  user-select: none; /* Prevents text selection */
 }
 
 .navigate-button-container button {
