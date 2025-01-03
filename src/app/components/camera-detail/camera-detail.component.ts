@@ -23,6 +23,7 @@ import { StudioComponent } from "../studio/studio.component";
 import { Project } from '../../models/project.model';
 import { Developer } from '../../models/developer.model';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
+import { environment } from '../../../environment/environments';
 
 
 @Component({
@@ -132,7 +133,8 @@ export class CameraDetailComponent implements OnInit {
     .subscribe({
       next: (data: CameraDetail) => {
         this.date2Pictures = data.date2Photos.map(photo => photo.toString());
-        this.path = data.path;
+        this.path =`${environment.backend}/media/upload/${this.developerTag}/${this.projectTag}/${this.cameraName}/`
+        ;
       
         const lastPhoto = this.date2Pictures[this.date2Pictures.length - 1];
 

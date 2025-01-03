@@ -107,7 +107,8 @@ export class CameraListComponent implements OnInit {
                     if (!cameraDetail.error) {
                       camera.firstPhoto =  cameraDetail.firstPhoto;
                       camera.lastPhoto = cameraDetail.lastPhoto;     
-                      camera.path = cameraDetail.path;   
+                      //camera.path = cameraDetail.path;   
+                      camera.path = `${environment.backend}/media/upload/${this.developerTag}/${this.projectTag}/${camera.camera}/`
                       camera.error = false;
                     } else {
                       camera.error = true;

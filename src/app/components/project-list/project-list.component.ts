@@ -55,7 +55,7 @@ export class ProjectListComponent implements OnInit {
           next: (data: Project[]) => {
             this.projects = data.map(project => ({
               ...project,
-              logo: project.logo ? this.logopath + project.logo : this.logopath + "logos/project/image.png"
+              logo: project.logo ? this.logopath + "/" + project.logo : this.logopath + "/logos/project/image.png"
             }));    
              // Filter projects based on role and accessible projects
              this.filteredProjects = this.userRole === 'Super Admin'

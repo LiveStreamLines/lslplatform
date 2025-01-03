@@ -42,7 +42,7 @@
           // If the logo is a relative path, prepend the base URL
           this.developers = data.map(dev => ({
             ...dev,
-            logo: this.logopath + dev.logo  // Prepend the base URL if needed
+            logo: this.logopath + "/" + dev.logo  // Prepend the base URL if needed
           }));
           // Filter developers based on role and accessible developers
           this.filteredDevelopers = this.userRole === 'Super Admin'
