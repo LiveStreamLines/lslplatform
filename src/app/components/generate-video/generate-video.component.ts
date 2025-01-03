@@ -55,6 +55,8 @@ export class GenerateVideoComponent implements OnInit {
   selectedMusic: string = ''; // Selected music file
   musicUrl: string = ''; // Full URL of the selected music file
   audioPlayer: HTMLAudioElement | null = null; // Audio player
+  isPlaying: boolean = false;
+
 
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
   private image = new Image(); // To load and draw the image on the canvas
@@ -414,6 +416,7 @@ export class GenerateVideoComponent implements OnInit {
 
  
   filterImages() {
+    this.stopMusic();
     const role = this.authService.getUserRole();
     console.log(this.authService.getCanGenerateVideoAndPics());
     const permission = this.authService.getCanGenerateVideoAndPics(); // Convert to boolean
@@ -512,6 +515,7 @@ export class GenerateVideoComponent implements OnInit {
 
   onMusicSelectionChange(): void {
     if (this.selectedMusic) {
+      this.stopMusic(); // Stop current music if any
       this.musicUrl = `${environment.backend}/media/music/${this.selectedMusic}`;
     } else {
       this.musicUrl = '';
@@ -520,19 +524,21 @@ export class GenerateVideoComponent implements OnInit {
 
   playMusic(): void {
     if (this.musicUrl) {
-      this.audioPlayer = null;
-      if (!this.audioPlayer) {
-        this.audioPlayer = new Audio(this.musicUrl);
-        this.audioPlayer.loop = false; // Adjust as needed
+      if (this.audioPlayer) {
+        this.stopMusic();
       }
+      this.audioPlayer = new Audio(this.musicUrl);
+      this.audioPlayer.loop = false;
       this.audioPlayer.play();
+      this.isPlaying = true;
     }
   }
 
   stopMusic(): void {
     if (this.audioPlayer) {
       this.audioPlayer.pause();
-      this.audioPlayer.currentTime = 0; // Reset playback to the beginning
+      this.audioPlayer.currentTime = 0;
+      this.isPlaying = false;
     }
   }
 }

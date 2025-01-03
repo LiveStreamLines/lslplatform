@@ -35,7 +35,7 @@ export class ServicesComponent implements OnInit {
 
   services = [
     { name: 'Timelapse', image: 'assets/Eq-1.png', route: '/timelapse' },
-    { name: 'Live View', image: 'assets/Eq-6.png', route: '/liveview' },
+    { name: 'Live Streaming', image: 'assets/Eq-6.png', route: '/liveview' },
     { name: 'Drone Shooting', image: 'assets/Eq-2.png', route: '/drone-shooting' },
     { name: 'Site Photography & Videography', image: 'assets/Eq-3.png', route: '/site-photography' },
     { name: '360 Photography & Videography', image: 'assets/Eq-4.png', route: '/360-photography' },
