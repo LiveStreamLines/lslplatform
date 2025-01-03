@@ -11,6 +11,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatIcon } from '@angular/material/icon';
 import { MatTableDataSource } from '@angular/material/table';
+import { environment } from '../../../../environment/environments';
 
 @Component({
   selector: 'app-photo-request',
@@ -41,7 +42,7 @@ export class PhotoRequestComponent implements OnInit {
   dataSource = new MatTableDataSource<any>();
   isLoading: boolean = false;
   errorMessage: string | null = null;
-  serverUrl: string = 'http://5.9.85.250:5000/media/upload';
+  serverUrl: string = environment.backend + '/media/upload';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
