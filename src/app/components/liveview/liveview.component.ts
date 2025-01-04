@@ -18,29 +18,29 @@ export class LiveviewComponent {
   constructor(private http: HttpClient) {}
 
   moveLeft(): void {
-    if (this.elevation > 0) {
-      this.elevation -= 10; // Decrease by 10 (adjust increment as needed)
+    if (this.azimuth > 0) {
+      this.azimuth -= 100; // Decrease by 10 (adjust increment as needed)
       this.updatePTZ();
     }
   }
 
   moveRight(): void {
-    if (this.elevation < 3600) {
-      this.elevation += 10; // Increase by 10
+    if (this.azimuth < 3600) {
+      this.azimuth += 100; // Increase by 10
       this.updatePTZ();
     }
   }
 
   moveUp(): void {
-    if (this.azimuth > 0) {
-      this.azimuth -= 10; // Move closer to 0
+    if (this.elevation > 0) {
+      this.elevation -= 10; // Move closer to 0
       this.updatePTZ();
     }
   }
 
   moveDown(): void {
-    if (this.azimuth < 180) {
-      this.azimuth += 10; // Move closer to 180
+    if (this.elevation < 180) {
+      this.elevation += 10; // Move closer to 180
       this.updatePTZ();
     }
   }
