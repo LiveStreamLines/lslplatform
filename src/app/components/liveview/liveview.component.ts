@@ -18,51 +18,47 @@ export class LiveviewComponent {
   constructor(private http: HttpClient) {}
 
   moveLeft(): void {
-    if (this.azimuth > 0) {
       this.azimuth -= 100; // Decrease by 10 (adjust increment as needed)
       this.updatePTZ();
-    }
   }
 
   moveRight(): void {
-    if (this.azimuth < 3600) {
       this.azimuth += 100; // Increase by 10
       this.updatePTZ();
-    }
   }
 
   moveUp(): void {
     if (this.elevation > 0) {
-      this.elevation -= 10; // Move closer to 0
+      this.elevation -= 30; // Move closer to 0
       this.updatePTZ();
     }
   }
 
   moveDown(): void {
     if (this.elevation < 180) {
-      this.elevation += 10; // Move closer to 180
+      this.elevation += 30; // Move closer to 180
       this.updatePTZ();
     }
   }
 
   zoomIn(): void {
-    if (this.zoom < 10) {
-      this.zoom += 1; // Increase zoom
+    if (this.zoom < 100) {
+      this.zoom += 10; // Increase zoom
       this.updatePTZ();
     }
   }
 
   zoomOut(): void {
     if (this.zoom > 0) {
-      this.zoom -= 1; // Decrease zoom
+      this.zoom -= 10; // Decrease zoom
       this.updatePTZ();
     }
   }
 
   resetToStartPosition(): void {
     this.elevation = 0;
-    this.azimuth = 90;
-    this.zoom = 1;
+    this.azimuth = 0;
+    this.zoom = 0;
     this.updatePTZ();
   }
 
@@ -82,7 +78,7 @@ export class LiveviewComponent {
     };
 
     this.http.post(`${this.apiUrl}`, payload).subscribe({
-      next: () => console.log('PTZ updated successfully'),
+      next: () => console.log(`PTZ updated successfully. Ele:${this.elevation}, Azi:${this.azimuth}, zoom:${this.zoom}`),
       error: (err) => console.error('Error updating PTZ:', err),
     });
   }
