@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./liveview.component.css'],
 })
 export class LiveviewComponent {
-  private apiUrl = 'http://localhost:3000/proxy';
+  private apiUrl = 'http://5.9.85.250:3000/proxy';
 
   elevation = 0; // Starts at 0, range [0, 3600]
   azimuth = 90; // Starts at 90, range [0, 180]
