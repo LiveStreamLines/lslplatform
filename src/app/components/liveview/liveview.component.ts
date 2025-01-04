@@ -9,40 +9,82 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./liveview.component.css'],
 })
 export class LiveviewComponent {
-  private apiUrl = 'http://localhost:3000/proxy'; // Proxy endpoint
+  private apiUrl = 'http://localhost:3000/proxy';
+
+  elevation = 0; // Starts at 0, range [0, 3600]
+  azimuth = 90; // Starts at 90, range [0, 180]
+  zoom = 1; // Starts at 1, range [0, 10]
 
   constructor(private http: HttpClient) {}
 
-  moveUp(): void {
-    // Add logic to move the camera up
-    this.controlPTZContinuous(0, 1, 0, 0, 50, 0); // Move up with tilt speed 50
-  }
-  
-  moveDown(): void {
-    // Add logic to move the camera down
-    this.controlPTZContinuous(0, -1, 0, 0, 50, 0); // Move down with tilt speed 50
-  }
-  
   moveLeft(): void {
-    // Add logic to move the camera left
-    this.controlPTZContinuous(-1, 0, 0, 50, 0, 0); // Move left with pan speed 50
+    if (this.elevation > 0) {
+      this.elevation -= 10; // Decrease by 10 (adjust increment as needed)
+      this.updatePTZ();
+    }
   }
-  
+
   moveRight(): void {
-    // Add logic to move the camera right
-    this.controlPTZContinuous(1, 0, 0, 50, 0, 0); // Move right with pan speed 50
+    if (this.elevation < 3600) {
+      this.elevation += 10; // Increase by 10
+      this.updatePTZ();
+    }
   }
-  
+
+  moveUp(): void {
+    if (this.azimuth > 0) {
+      this.azimuth -= 10; // Move closer to 0
+      this.updatePTZ();
+    }
+  }
+
+  moveDown(): void {
+    if (this.azimuth < 180) {
+      this.azimuth += 10; // Move closer to 180
+      this.updatePTZ();
+    }
+  }
+
+  zoomIn(): void {
+    if (this.zoom < 10) {
+      this.zoom += 1; // Increase zoom
+      this.updatePTZ();
+    }
+  }
+
+  zoomOut(): void {
+    if (this.zoom > 0) {
+      this.zoom -= 1; // Decrease zoom
+      this.updatePTZ();
+    }
+  }
+
   resetToStartPosition(): void {
-    this.controlPTZAbsolute(0, 450, 100); // Reset to the start position
+    this.elevation = 0;
+    this.azimuth = 90;
+    this.zoom = 1;
+    this.updatePTZ();
   }
 
-  controlPTZAbsolute(a:number, b:number, c:number): void {
+  updatePTZ(): void {
+    const payload = {
+      method: "PUT",
+      url: "/ISAPI/PTZCtrl/channels/1/absolute",
+      id: "bc07467acc1b4cd9bada264fab118e66",
+      contentType: "application/xml",
+      body: `<PTZData xmlns='http://www.isapi.org/ver20/XMLSchema' version='2.0'>
+                <AbsoluteHigh>
+                    <elevation>${this.elevation}</elevation>
+                    <azimuth>${this.azimuth}</azimuth>
+                    <absoluteZoom>${this.zoom}</absoluteZoom>
+                </AbsoluteHigh>
+             </PTZData>`,
+    };
 
-  }
-
-  controlPTZContinuous(a:number, b:number, c:number, d:number, e:number, f:number): void {
-
+    this.http.post(`${this.apiUrl}/proxypass`, payload).subscribe({
+      next: () => console.log('PTZ updated successfully'),
+      error: (err) => console.error('Error updating PTZ:', err),
+    });
   }
   
 }

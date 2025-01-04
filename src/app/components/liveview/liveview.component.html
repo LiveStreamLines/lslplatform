@@ -24,6 +24,57 @@
         <!-- Center/Reset -->
         <button class="ptz-btn ptz-center" (click)="resetToStartPosition()">⟳</button>
       </div>
+
+      <div class="ptz-control">
+        <h4>PTZ Control</h4>
+        <div class="ptz-circle">
+          <!-- Up -->
+          <button 
+            class="ptz-btn ptz-up" 
+            (click)="moveUp()" 
+            [disabled]="azimuth <= 0">▲</button>
+      
+          <!-- Left -->
+          <button 
+            class="ptz-btn ptz-left" 
+            (click)="moveLeft()" 
+            [disabled]="elevation <= 0">◀</button>
+      
+          <!-- Right -->
+          <button 
+            class="ptz-btn ptz-right" 
+            (click)="moveRight()" 
+            [disabled]="elevation >= 3600">▶</button>
+      
+          <!-- Down -->
+          <button 
+            class="ptz-btn ptz-down" 
+            (click)="moveDown()" 
+            [disabled]="azimuth >= 180">▼</button>
+      
+          <!-- Center/Reset -->
+          <button 
+            class="ptz-btn ptz-center" 
+            (click)="resetToStartPosition()">O</button>
+        </div>
+      
+        <!-- Zoom Controls -->
+        <div class="zoom-control">
+          <button 
+            class="ptz-btn zoom-in" 
+            (click)="zoomIn()" 
+            [disabled]="zoom >= 10">
+            <i class="material-icons">zoom_in</i>
+          </button>
+          <button 
+            class="ptz-btn zoom-out" 
+            (click)="zoomOut()" 
+            [disabled]="zoom <= 0">
+            <i class="material-icons">zoom_out</i>
+          </button>
+        </div>
+      </div>
+      
     </div>
   </div>
   

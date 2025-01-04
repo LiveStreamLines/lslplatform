@@ -1,4 +1,4 @@
 export const environment = {
-    backend: 'https://lsl-platform.com/backend',
+    backend: 'http://5.9.85.250:5000',
 };
   
