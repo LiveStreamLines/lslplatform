@@ -16,25 +16,25 @@
         <button 
           class="ptz-btn ptz-up" 
           (click)="moveUp()" 
-          [disabled]="azimuth <= 0">▲</button>
+        >▲</button>
     
         <!-- Left -->
         <button 
           class="ptz-btn ptz-left" 
           (click)="moveLeft()" 
-          [disabled]="elevation <= 0">◀</button>
+        >◀</button>
     
         <!-- Right -->
         <button 
           class="ptz-btn ptz-right" 
           (click)="moveRight()" 
-          [disabled]="elevation >= 3600">▶</button>
+        >▶</button>
     
         <!-- Down -->
         <button 
           class="ptz-btn ptz-down" 
           (click)="moveDown()" 
-          [disabled]="azimuth >= 180">▼</button>
+        >▼</button>
     
         <!-- Center/Reset -->
         <button 
@@ -45,15 +45,15 @@
       <!-- Zoom Controls -->
       <div class="zoom-control">
         <button 
-          class="ptz-btn zoom-in" 
+          class="zoom-in" 
           (click)="zoomIn()" 
-          [disabled]="zoom >= 10">
+        >
           <i class="material-icons">zoom_in</i>
         </button>
         <button 
-          class="ptz-btn zoom-out" 
+          class="zoom-out" 
           (click)="zoomOut()" 
-          [disabled]="zoom <= 0">
+        >
           <i class="material-icons">zoom_out</i>
         </button>
       </div>
