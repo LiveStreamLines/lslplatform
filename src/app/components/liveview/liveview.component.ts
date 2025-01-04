@@ -81,7 +81,7 @@ export class LiveviewComponent {
              </PTZData>`,
     };
 
-    this.http.post(`${this.apiUrl}/proxypass`, payload).subscribe({
+    this.http.post(`${this.apiUrl}`, payload).subscribe({
       next: () => console.log('PTZ updated successfully'),
       error: (err) => console.error('Error updating PTZ:', err),
     });
