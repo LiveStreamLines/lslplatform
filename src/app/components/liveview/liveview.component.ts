@@ -56,7 +56,7 @@ export class LiveviewComponent {
   }
 
   resetToStartPosition(): void {
-    this.elevation = 0;
+    this.elevation = 90;
     this.azimuth = 0;
     this.zoom = 0;
     this.updatePTZ();
