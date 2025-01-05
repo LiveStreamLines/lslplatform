@@ -39,8 +39,13 @@
       <div class="row">
       <mat-form-field appearance="outline" style="--mat-primary-color: #8B0000;">
         <mat-label>Accessible Developers</mat-label>
-        <mat-select formControlName="accessibleDevelopers" multiple>
-          <mat-option *ngFor="let dev of developers" [value]="dev._id">
+        <mat-select
+          formControlName="accessibleDevelopers"
+          multiple
+          (selectionChange)="onSelectionChange('accessibleDevelopers', $event)"
+        >
+          <mat-option [value]="'all'">All</mat-option>
+          <mat-option *ngFor="let dev of developers" [value]="dev._id" [disabled]="isAllDevSelected">
             {{ dev.developerName }}
           </mat-option>
         </mat-select>
@@ -50,8 +55,13 @@
       <div class="row">
       <mat-form-field appearance="outline">
         <mat-label>Accessible Projects</mat-label>
-        <mat-select formControlName="accessibleProjects" multiple>
-          <mat-option *ngFor="let proj of projects" [value]="proj._id">
+        <mat-select
+          formControlName="accessibleProjects"
+          multiple
+          (selectionChange)="onSelectionChange('accessibleProjects', $event)"
+        >
+          <mat-option [value]="'all'">All</mat-option>
+          <mat-option *ngFor="let proj of projects" [value]="proj._id" [disabled]="isAllProjSelected">
             {{ proj.projectName }}
           </mat-option>
         </mat-select>
@@ -61,22 +71,32 @@
       <div class="row">
       <mat-form-field appearance="outline">
         <mat-label>Accessible Services</mat-label>
-        <mat-select formControlName="accessibleServices" multiple>
-          <mat-option *ngFor="let service of services" [value]="service">
-            {{ service }}
-          </mat-option>
-        </mat-select>
+          <mat-select 
+              formControlName="accessibleServices" 
+              multiple
+              (selectionChange)="onSelectionChange('accessibleServices', $event)"
+          >
+            <mat-option [value]="'all'">All</mat-option>
+            <mat-option *ngFor="let service of services" [value]="service" [disabled]="isAllServiceSelected">
+              {{ service }}
+            </mat-option>
+          </mat-select>
       </mat-form-field>
       </div>
       
       <div class="row">
       <mat-form-field appearance="outline">
         <mat-label>Accessible Cameras</mat-label>
-        <mat-select formControlName="accessibleCameras" multiple>
-          <mat-option *ngFor="let cam of cameras" [value]="cam._id">
-            {{ cam.cameraDescription }}
-          </mat-option>
-        </mat-select>
+          <mat-select
+            formControlName="accessibleCameras"
+            multiple
+            (selectionChange)="onSelectionChange('accessibleCameras', $event)"
+          >
+            <mat-option [value]="'all'">All</mat-option>
+            <mat-option *ngFor="let cam of cameras" [value]="cam._id" [disabled]="isAllCameraSelected">
+              {{ cam.cameraDescription }}
+            </mat-option>
+          </mat-select>
       </mat-form-field>
       </div>
     </div>

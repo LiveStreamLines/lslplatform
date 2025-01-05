@@ -28,7 +28,10 @@ export class UserFormComponent implements OnInit {
   resetEmail: string = '';
   userId: string | null = null; // Store user ID when editing
   hidepermissions: boolean = false;
-  
+  isAllDevSelected: boolean = false;
+  isAllProjSelected: boolean = false;
+  isAllCameraSelected: boolean = false;
+  isAllServiceSelected: boolean = false;
 
   roles: string[] = ['Super Admin', 'Admin', 'User'];
   developers: any[] = []; // Replace with actual developer data
@@ -80,15 +83,15 @@ export class UserFormComponent implements OnInit {
       }
     });
 
-     // Watch for changes in the developer field
-     this.userForm.get('accessibleDevelopers')?.valueChanges.subscribe((developerIds: string[]) => {
-      this.loadProjectsByDevelopers(developerIds);
-    });
+    //  // Watch for changes in the developer field
+    //  this.userForm.get('accessibleDevelopers')?.valueChanges.subscribe((developerIds: string[]) => {
+    //   this.loadProjectsByDevelopers(developerIds);
+    // });
 
-    // Watch for changes in the project field
-    this.userForm.get('accessibleProjects')?.valueChanges.subscribe((projectIds: string[]) => {
-      this.loadCamerasByProjects(projectIds);
-    });
+    // // Watch for changes in the project field
+    // this.userForm.get('accessibleProjects')?.valueChanges.subscribe((projectIds: string[]) => {
+    //   this.loadCamerasByProjects(projectIds);
+    // });
   }
 
   initializeForm(): void {
@@ -118,7 +121,16 @@ export class UserFormComponent implements OnInit {
     });
   }
 
+
+
   loadProjectsByDevelopers(developerIds: string[]): void {
+    if (developerIds.includes('all')) {
+      // Automatically set "all" projects
+      this.userForm.get('accessibleProjects')?.setValue(['all']);
+      this.projects = []; // Disable project selection
+      return;
+    }
+
     this.projects = []; // Clear current projects
     if (developerIds && developerIds.length > 0) {
       developerIds.forEach((developerId) => {
@@ -136,7 +148,15 @@ export class UserFormComponent implements OnInit {
   }
 
   loadCamerasByProjects(projectIds: string[]): void {
+    if (projectIds.includes('all')) {
+      // Automatically set "all" cameras
+      this.userForm.get('accessibleCameras')?.setValue(['all']);
+      this.cameras = []; // Disable camera selection
+      return;
+    }
+
     this.cameras = []; // Clear current cameras
+    console.log(projectIds);
     if (projectIds && projectIds.length > 0) {
       projectIds.forEach((projectId) => {
         this.cameraService.getCamerasByProject(projectId).subscribe({
@@ -158,6 +178,73 @@ export class UserFormComponent implements OnInit {
         this.userForm.patchValue(user);
         this.resetEmail = user.email;
       });
+    }
+  }
+
+
+  onSelectionChange(field: string, event: any): void {
+    const selectedValues = event.value;
+
+    if (field === 'accessibleDevelopers') {
+      if (selectedValues.includes('all')) {
+        // When "All" is selected
+        this.isAllDevSelected = true;
+        this.userForm.get('accessibleDevelopers')?.setValue(['all']);
+
+        // Automatically set "all" for projects and cameras
+        this.userForm.get('accessibleProjects')?.setValue(['all']);
+        this.userForm.get('accessibleCameras')?.setValue(['all']);
+        this.projects = []; // Clear list to disable selection
+        this.cameras = [];
+      } else {
+        // When "All" is deselected
+        this.isAllDevSelected = false;
+        this.userForm.get('accessibleDevelopers')?.setValue(selectedValues);
+
+        // Reload projects and cameras based on the current developer selection
+        this.loadProjectsByDevelopers(selectedValues);
+        this.loadCamerasByProjects([]);
+      }
+    }
+
+    if (field === 'accessibleProjects') {
+      if (selectedValues.includes('all')) {
+        // When "All" is selected
+        this.isAllProjSelected = true;
+        this.userForm.get('accessibleProjects')?.setValue(['all']);
+        this.cameras = []; // Clear cameras since "all" projects are selected
+      } else {
+        // When "All" is deselected
+        this.isAllProjSelected = false;
+        this.userForm.get('accessibleProjects')?.setValue(selectedValues);
+
+        // Reload cameras based on the current project selection
+        this.loadCamerasByProjects(selectedValues);
+      }
+    }
+
+    if (field === 'accessibleCameras') {
+      if (selectedValues.includes('all')) {
+        // When "All" is selected
+        this.isAllCameraSelected = true;
+        this.userForm.get('accessibleCameras')?.setValue(['all']);
+      } else {
+        // When "All" is deselected
+        this.isAllCameraSelected = false;
+        this.userForm.get('accessibleCameras')?.setValue(selectedValues);
+      }
+    }
+
+    if (field === 'accessibleServices') {
+      if (selectedValues.includes('all')) {
+        // When "All" is selected
+        this.isAllServiceSelected = true;
+        this.userForm.get('accessibleServices')?.setValue(['all']);
+      } else {
+        // When "All" is deselected
+        this.isAllServiceSelected = false;
+        this.userForm.get('accessibleServices')?.setValue(selectedValues);
+      }
     }
   }
 
