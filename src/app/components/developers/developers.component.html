@@ -14,7 +14,7 @@
       <ng-container matColumnDef="logo">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let developer">
-          <img [src]="'http://5.9.85.250:5000/'+developer.logo" alt="Logo" class="developer-logo" />
+          <img [src]="link+'/'+developer.logo" alt="Logo" class="developer-logo" />
         </td>
       </ng-container>
   

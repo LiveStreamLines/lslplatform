@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DeveloperService } from '../../services/developer.service';
 import { Developer } from '../../models/developer.model';
 import { DeveloperFormComponent } from './developer-form/developer-form.component';
+import { environment } from '../../../environment/environments';
 
 @Component({
   selector: 'app-developers',
@@ -27,6 +28,7 @@ export class DevelopersComponent implements OnInit {
   displayedColumns: string[] = ['logo', 'name', 'status', 'createdDate', 'actions'];
   dataSource = new MatTableDataSource<Developer>();
   searchTerm: string = '';
+  link: string = environment.backend;
   @ViewChild(MatSort) sort!: MatSort;  // Sort for the table
 
 

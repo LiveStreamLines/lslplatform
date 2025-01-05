@@ -16,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select'; // Import for dropdo
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectFormComponent } from './project-form/project-form.component';
+import { environment } from '../../../environment/environments';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class ProjectsComponent implements OnInit {
   selectedDeveloperId: string = ''; // Holds the currently selected developer ID
   searchTerm: string = '';
   isLoading: boolean = false;  // Loading state
+  link:string = environment.backend;
 
 
   @ViewChild(MatSort) sort!: MatSort;
