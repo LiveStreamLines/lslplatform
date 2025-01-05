@@ -29,6 +29,12 @@ export class LoginComponent implements OnInit {
   resetPasswordEmail: string = '';
   currentView: 'login' | 'phoneVerification' | 'forgotPassword' = 'login'; // Current view state
 
+  // Country code selection
+  selectedCountryCode: string = '+971'; // Default to UAE
+  countries = [
+    { name: 'UAE', code: '+971', flag: 'assets/uae.png' },
+    { name: 'Saudi Arabia', code: '+966', flag: 'assets/saudi.png' },   
+  ];
 
 
   constructor(
@@ -120,7 +126,8 @@ export class LoginComponent implements OnInit {
   // Send OTP
   sendOtp(): void {
     this.loading = true;
-    this.authService.verifyPhone(this.phone).subscribe({
+    const fullPhoneNumber = this.selectedCountryCode + this.phone;
+    this.authService.verifyPhone(fullPhoneNumber).subscribe({
       next: () => {
         this.loading = false;
         this.isOtpSent = true;
@@ -138,7 +145,8 @@ export class LoginComponent implements OnInit {
   // Verify OTP
   verifyOtp(): void {
     this.loading = true;
-    this.authService.verifyOtp(this.phone, this.otp).subscribe({
+    const fullPhoneNumber = this.selectedCountryCode + this.phone;
+    this.authService.verifyOtp(fullPhoneNumber, this.otp).subscribe({
       next: () => {
         this.loading = false;
         this.router.navigate(['home']); // Redirect to dashboard on success
