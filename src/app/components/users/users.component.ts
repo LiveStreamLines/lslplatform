@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
+import { MatPaginator, PageEvent } from '@angular/material/paginator'; // Import MatPaginator
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +22,7 @@ import { User } from '../../models/user.model';
     CommonModule,
     FormsModule,
     MatTableModule,
+    MatPaginator,
     MatFormFieldModule,
     MatSelectModule,
     MatButtonModule,
@@ -33,6 +35,9 @@ import { User } from '../../models/user.model';
 export class UsersComponent implements OnInit{
   users : User[] = [];
   filteredUsers: User[] = [];
+  paginatedUsers: User[] = []; // Users to display on the current page
+  pageSize: number = 5; // Default number of rows per page
+  pageIndex: number = 0; // Current page index
   developers: any[] = [];
   projects: any[] = [];
   cameras: any[] = [];
@@ -64,6 +69,7 @@ export class UsersComponent implements OnInit{
         this.users = users;
         this.filteredUsers = [...this.users]; // Initialize filtered users
         this.isLoading = false; // Loading complete
+        this.updatePaginatedUsers();
       },
       error: (err) => {
         console.error('Error fetching users:', err);
@@ -128,18 +134,34 @@ export class UsersComponent implements OnInit{
     this.loadCameras();
   }
 
+  onPageChange(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePaginatedUsers();
+  }
+
+  updatePaginatedUsers(): void {
+    const start = this.pageIndex * this.pageSize;
+    const end = start + this.pageSize;
+    this.paginatedUsers = this.filteredUsers.slice(start, end);
+  }
+
+
   filterUsersByAccess(): void {
     this.filteredUsers = this.users.filter((user) => {
       const isAdmin = user.role === 'Super Admin';
       const matchesDeveloper =
         this.selectedDeveloperId === 'ALL' || user.accessibleDevelopers.includes(this.selectedDeveloperId!);
       const matchesProject =
-        this.selectedProjectId === 'ALL' || user.accessibleProjects.includes(this.selectedProjectId!);
+        this.selectedProjectId === 'ALL' 
+        || user.accessibleProjects.includes(this.selectedProjectId!)
+        || user.accessibleProjects.includes('all'); // Include users with "all"
       const matchesCamera =
         this.selectedCameraId === 'ALL' || user.accessibleCameras.includes(this.selectedCameraId!);
 
       return isAdmin || (matchesDeveloper && matchesProject && matchesCamera);
     });
+    this.updatePaginatedUsers(); // Update paginated users after filtering
   }
 
   onRoleChange(): void {
@@ -165,6 +187,8 @@ export class UsersComponent implements OnInit{
       // If search term is empty, apply filters
       this.filterUsersByAccess();
     }
+    this.pageIndex = 0; // Reset to the first page
+    this.updatePaginatedUsers();
   }
 
   openAddUser(): void {

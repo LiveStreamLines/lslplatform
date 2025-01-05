@@ -4,17 +4,6 @@
       <input class='search' matInput [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Search by name, email, or role">
     </div>
 
-    <!-- Role Filter
-    <mat-form-field appearance="outline">
-      <mat-label>Filter by Role</mat-label>
-      <mat-select [(ngModel)]="selectedRole" (selectionChange)="onRoleChange()">
-        <mat-option value="">All</mat-option>
-        <mat-option value="Super Admin">Super Admin</mat-option>
-        <mat-option value="Admin">Admin</mat-option>
-        <mat-option value="User">User</mat-option>
-      </mat-select>
-    </mat-form-field> -->
-
     <!-- Developer Filter -->
     <mat-form-field appearance="outline">
       <mat-label>Filter by Developer</mat-label>
@@ -54,7 +43,7 @@
     </div>
   
     <!-- User Table -->
-    <table mat-table [dataSource]="filteredUsers" class="mat-elevation-z8" *ngIf="!isLoading && filteredUsers.length">
+    <table mat-table [dataSource]="paginatedUsers" class="mat-elevation-z8" *ngIf="!isLoading && filteredUsers.length">
       <!-- Name Column -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Name </th>
@@ -89,5 +78,13 @@
       <tr mat-header-row *matHeaderRowDef="['name', 'email', 'role', 'actions']"></tr>
       <tr mat-row *matRowDef="let row; columns: ['name', 'email', 'role', 'actions'];"></tr>
     </table>
+
+    <mat-paginator 
+      [length]="filteredUsers.length"
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 20]"
+      (page)="onPageChange($event)">
+    </mat-paginator>
+
   </div>
   

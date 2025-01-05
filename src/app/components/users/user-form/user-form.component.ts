@@ -175,6 +175,8 @@ export class UserFormComponent implements OnInit {
   loadUserData(): void {
     if (this.userId) {
       this.userService.getUserById(this.userId).subscribe((user) => {
+        console.log(user);
+        this.loadProjectsByDevelopers(user.accessibleDevelopers);
         this.userForm.patchValue(user);
         this.resetEmail = user.email;
       });
