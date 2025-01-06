@@ -49,6 +49,6 @@ export const routes: Routes = [
   { path: 'media', component: MediaComponent,  canActivate: [AuthGuard]},
   { path: 'liveview', component: LiveviewComponent, canActivate:[AuthGuard]},
   { path: 'about', component: AboutUsComponent, canActivate:[AuthGuard]},
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/login', pathMatch: 'full' }
 ];
