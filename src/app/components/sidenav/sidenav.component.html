@@ -14,11 +14,7 @@
     <mat-icon>business</mat-icon>
     <span>Contacts</span>
   </a>
-  <!-- <a mat-list-item routerLink="/users">
-    <mat-icon>people</mat-icon>
-    <span>Users</span>
-  </a> -->
-
+ 
   <h3 *ngIf="isSuper || isAdmin">Admin</h3>
   <a mat-list-item *ngIf="isSuper" routerLink="/developers" routerLinkActive="active">
     <mat-icon>build</mat-icon>

@@ -125,3 +125,61 @@
 .back-button:hover {
   background-color: #d10b0b;
 }
+
+/* Tablet Screens */
+@media (max-width: 768px) {
+  .tile-container {
+    flex-direction: column; /* Stack tiles vertically */
+    align-items: stretch; /* Stretch tiles to fit the container */
+  }
+
+  .tile {
+    flex-direction: column; /* Stack content vertically within each tile */
+    align-items: flex-start;
+    width: 90%;
+    max-height: 300px;
+    padding: 15px;
+  }
+
+  .tile-image {
+    width: 100%; /* Full width */
+    margin-bottom: 10px; /* Add spacing below the image */
+  }
+
+  .tile-image img {
+    width: 70%; /* Fit the container */
+    transform: none; /* No overflow effect */
+    position: absolute;
+    right: 10px; /* Overflow to the right of the tile */
+    top: 0; /* Center the image vertically */
+  }
+
+  .tile-button {
+    width: 100%; /* Full width button for easier tapping */
+  }
+}
+
+
+/* Mobile Screens */
+@media (max-width: 480px) {
+  .tile {
+    padding: 10px;
+  }
+
+  .tile-title {
+    max-width: 60px;
+    font-size: 16px; /* Smaller font size */
+    line-height: normal;
+  }
+
+  .tile-button {
+    padding: 8px 16px; /* Adjust button padding */
+    font-size: 12px; /* Smaller font size */
+  }
+
+  .back-button {
+    font-size: 12px; /* Adjust font size */
+    padding: 8px 16px;
+  }
+}
+

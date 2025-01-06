@@ -177,6 +177,64 @@ label {
 
 .helper-text {
   font-size: 12px;
-  color: #ccc;
 }
 
+.helper-text {
+  color: #f0f0f0; /* Light color for better readability */
+}
+
+.error-message {
+  font-size: 1rem; /* Ensure error messages are readable */
+  margin-top: 15px;
+}
+
+
+@media (max-width: 768px) {
+  .login-page {
+    flex-direction: column; /* Stack video and login card */
+  }
+
+  .login-card {
+    margin: 30% 11%;
+    max-width: 90%; /* Full-width with padding for smaller screens */
+    padding: 20px;
+  }
+
+  .form-control {
+    width: 100%; /* Full width for inputs on small screens */
+  }
+
+  .btn-login {
+    width: 100%; /* Full width buttons */
+  }
+
+  .btn-back {
+    width: 100%;
+    text-align: center;
+  }
+
+  .logo {
+    max-width: 50%; /* Slightly larger logo on small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .helper-text {
+    font-size: 10px; /* Reduce helper text size for very small screens */
+  }
+
+  .form-control {
+    width: 90%;
+    padding: 8px;
+    font-size: 0.8rem; /* Adjust input padding and font size */
+  }
+
+  .btn-login, .btn-back {
+    padding: 10px;
+    font-size: 0.9rem; /* Adjust button padding and font size */
+  }
+
+  .mat-tab-group {
+    margin-top: 10px;
+  }
+}

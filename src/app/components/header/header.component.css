@@ -41,3 +41,44 @@ mat-toolbar {
   margin: 0 8px; /* Adds space before and after the separator */
   color: white;
 }
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  overflow: hidden; /* Prevents content overflow */
+  white-space: nowrap; /* Prevent wrapping to the next line */
+  text-overflow: ellipsis; /* Adds "..." for truncated content */
+}
+
+.breadcrumbs a, .breadcrumbs span {
+  max-width: 120px; /* Limit the width of breadcrumb items */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: inline-block; /* Ensures the text behaves as a block */
+  vertical-align: middle;
+}
+
+.breadcrumbs a:hover, .breadcrumbs span:hover {
+  text-decoration: underline; /* Optional hover effect */
+}
+
+.breadcrumbs .separator {
+  margin: 0 8px; /* Space around the separator */
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .breadcrumbs a, .breadcrumbs span {
+    max-width: 80px; /* Shorter truncation for tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .breadcrumbs a, .breadcrumbs span {
+    max-width: 50px; /* Even shorter truncation for phones */
+  }
+}
+
+

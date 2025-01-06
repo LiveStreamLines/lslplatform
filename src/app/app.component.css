@@ -5,6 +5,11 @@
   background-repeat: no-repeat;
 }
 
+.mat-sidenav-content {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
 
 .logo-container {
   text-align: center;
@@ -12,7 +17,7 @@
 }
 
 .logo {
-  max-width: 100px;
+  max-width: 80%; /* Adjust logo size for smaller screens */
   height: auto;
 }
 
@@ -32,8 +37,17 @@ mat-sidenav {
   background-color: rgba(0, 0, 0, 0);
 }
 
-mat-sidenav-content {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+/* Smaller screens: Reduce width */
+@media (max-width: 768px) {
+  mat-sidenav {
+    width: 200px; /* Reduce width for tablets */
+  }
 }
+
+@media (max-width: 480px) {
+  mat-sidenav {
+    width: 150px; /* Further reduce width for phones */
+  }
+}
+
+
