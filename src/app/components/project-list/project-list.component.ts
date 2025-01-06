@@ -58,7 +58,7 @@ export class ProjectListComponent implements OnInit {
               logo: project.logo ? this.logopath + "/" + project.logo : this.logopath + "/logos/project/image.png"
             }));    
              // Filter projects based on role and accessible projects
-             this.filteredProjects = this.userRole === 'Super Admin'
+             this.filteredProjects = this.userRole === 'Super Admin' || this.accessibleProjects[0] === 'all'
              ? this.projects // Admins see all projects
              : this.projects.filter((project) =>
                  this.accessibleProjects.includes(project._id)

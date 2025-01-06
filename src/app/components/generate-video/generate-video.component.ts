@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ElementRef} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';  // Import FormsModule for ngModel
 import { CommonModule } from '@angular/common'; // Import CommonModule for ngFor and ngIf
 import { VideoService } from '../../services/video.service';
@@ -107,6 +107,7 @@ export class GenerateVideoComponent implements OnInit {
     private videoService: VideoService, 
     private authService: AuthService,
     private cameraDetailService: CameraDetailService,
+    private router: Router, 
     private route: ActivatedRoute) {}
 
   ngOnInit(): void {
@@ -540,5 +541,9 @@ export class GenerateVideoComponent implements OnInit {
       this.audioPlayer.currentTime = 0;
       this.isPlaying = false;
     }
+  }
+
+  goGallery(): void {
+    this.router.navigate([`gallery/video-request`]);
   }
 }

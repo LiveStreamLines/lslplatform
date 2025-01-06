@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';  // Import FormsModule for ngModel
 import { CommonModule } from '@angular/common'; // Import CommonModule for ngFor and ngIf
 import { MatInputModule } from '@angular/material/input';
@@ -57,6 +57,7 @@ export class GeneratePhotoComponent implements OnInit {
     private authService: AuthService,
     private cameraDetailService: CameraDetailService,
     private route: ActivatedRoute,
+    private router: Router,
     private snackBar: MatSnackBar
   ) {}
 
@@ -215,6 +216,10 @@ export class GeneratePhotoComponent implements OnInit {
         (this as any)[fieldName] = field - 1;
       }
     }
+  }
+
+  goGallery(): void {
+    this.router.navigate([`gallery/photo-request`]);
   }
 
 }

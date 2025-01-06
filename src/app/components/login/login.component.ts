@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';  // Import FormsModule
 import { CommonModule } from '@angular/common';  // Import CommonModule for *ngIf
@@ -14,7 +14,7 @@ import { HeaderService } from '../../services/header.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
   email: string = '';
   password: string = '';
   phone: string = '';
@@ -28,6 +28,8 @@ export class LoginComponent implements OnInit {
   isForgotPassword = false; // Show the forgot password form
   resetPasswordEmail: string = '';
   currentView: 'login' | 'phoneVerification' | 'forgotPassword' = 'login'; // Current view state
+  
+  @ViewChild('backgroundVideo', { static: true }) videoElement!: ElementRef<HTMLVideoElement>;
 
   // Country code selection
   selectedCountryCode: string = '+971'; // Default to UAE
@@ -43,10 +45,19 @@ export class LoginComponent implements OnInit {
     private router: Router, 
     private headerService: HeaderService) {}
 
+    ngOnInit(): void {
+      this.headerService.showHeaderAndSidenav = false; 
+      
+    }
+  
+    ngAfterViewInit(): void {
+      if (this.videoElement && this.videoElement.nativeElement) {
+        this.videoElement.nativeElement.muted = true;
+        this.videoElement.nativeElement.play(); // Ensures the video starts playing muted
+      } 
+    } 
 
-  ngOnInit(): void {
-    this.headerService.showHeaderAndSidenav = false;  
-  }
+ 
 
   // Switch to Forgot Password view
   toggleForgotPassword(): void {
