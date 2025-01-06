@@ -20,6 +20,7 @@ import { UserFormComponent } from './components/users/user-form/user-form.compon
 import { ResetPasswordComponent } from './components/users/reset-password/reset-password.component';
 import { LiveviewComponent } from './components/liveview/liveview.component';
 import { ServiceDetailComponent } from './components/service-detail/service-detail.component';
+import { AboutUsComponent } from './components/about/about.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -47,5 +48,7 @@ export const routes: Routes = [
   { path: 'gallery/photo-request', component: PhotoRequestComponent,  canActivate: [AuthGuard]},
   { path: 'media', component: MediaComponent,  canActivate: [AuthGuard]},
   { path: 'liveview', component: LiveviewComponent, canActivate:[AuthGuard]},
-  { path: '', redirectTo: '/login', pathMatch: 'full' }
+  { path: 'about', component: AboutUsComponent, canActivate:[AuthGuard]},
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/login', pathMatch: 'full' }
 ];
