@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environment/environments';
 
 @Component({
   selector: 'app-studio',
@@ -889,7 +890,7 @@ export class StudioComponent {
       const authh = this.authService.getAuthToken(); // Get the auth token from AuthService
 
       // Send the FormData to the backend
-      fetch('http://5.9.85.250:5000/api/studio/save', {
+      fetch(environment.backend + '/api/studio/save', {
         method: 'POST',
         headers: {
           'Authorization': authh ? `Bearer ${authh}` : '', // Add the auth token
@@ -900,7 +901,7 @@ export class StudioComponent {
       .then((data) => {
         if (data.url) {
           // Fetch the image to get it as a Blob
-          fetch('http://5.9.85.250:5000/' + data.url)
+          fetch(environment.backend + data.url)
             .then((response) => response.blob())
             .then((imageBlob) => {
               // Create a URL for the image Blob
