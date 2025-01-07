@@ -12,6 +12,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatIcon } from '@angular/material/icon';
 import { MatTableDataSource } from '@angular/material/table';
 import { environment } from '../../../../environment/environments';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-video-request',
@@ -43,13 +44,22 @@ export class VideoRequestComponent implements OnInit {
   isLoading: boolean = false;
   errorMessage: string | null = null;
   serverUrl: string = environment.backend + "/media/upload";
-
+  userRole: string | null = null;
+  accessibleProjects: string[] = []; // List of accessible project IDs
+  accessibleDevelopers: string[] =[]; // List of accessible devloper IDs
+   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private videoRequestService: VideoRequestService) {}
+  constructor(
+    private videoRequestService: VideoRequestService,
+    private authService: AuthService  
+  ) {}
 
   ngOnInit(): void {
+    this.userRole = this.authService.getUserRole();
+    this.accessibleProjects = this.authService.getAccessibleProjects();  
+    this.accessibleDevelopers = this.authService.getAccessibleDevelopers();
     this.fetchVideoRequests();
   }
 
@@ -58,6 +68,10 @@ export class VideoRequestComponent implements OnInit {
     this.videoRequestService.getVideoRequests().subscribe({
       next: (data) => {
         this.dataSource.data = data
+        .filter(request => 
+          (this.accessibleDevelopers.includes(request.developerID) || this.accessibleDevelopers[0] === 'all' || this.userRole === 'Super Admin')  &&
+          (this.accessibleProjects.includes(request.projectID) || this.accessibleProjects[0] === 'all' || this.userRole === 'Super Admin')
+        )
         .sort((a, b) => new Date(b.RequestTime).getTime() - new Date(a.RequestTime).getTime()) // Sort by RequestTime descending
         .map((request) => ({
           developerProject: `${request.developer} (${request.project})`,

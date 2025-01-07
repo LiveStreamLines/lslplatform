@@ -32,6 +32,7 @@ export class SidenavComponent implements OnInit {
   ngOnInit(): void {
     this.userRole = this.authService.getUserRole() || '';
     this.permission = this.authService.getCanAddUser() || null;
+    console.log(this.userRole, this.permission);
 
     if (this.userRole === 'Super Admin') {
       this.isSuper = true;

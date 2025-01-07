@@ -42,15 +42,7 @@ export class DeveloperService {
   }
 
   getDeveloperIdByTag(developerTag: string): Observable<Developer[]> {
-    // if (this.developers.length > 0) {
-    //   // If developers are already loaded, return the ID
-    //   return of(this.findDeveloperIdByTag(developerTag));
-    // } else {
-    //   // Otherwise, fetch developers and then find the ID
-    //   return this.getAllDevelopers().pipe(
-    //     map(() => this.findDeveloperIdByTag(developerTag))
-    //   );
-    // }
+   
     const authh = this.authService.getAuthToken();  // Get auth token from AuthService
     // Set the custom header with the authh token
     const headers = new HttpHeaders({
