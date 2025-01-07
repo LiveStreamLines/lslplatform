@@ -12,7 +12,10 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ServiceVideoDialogComponent {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { title: string; videoUrl: string }) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { title: string; videoUrl: string }) {
+    console.log('Received data:', data);
+
+  }
 
 
 }

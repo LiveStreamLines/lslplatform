@@ -7,6 +7,8 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { AuthService } from '../../services/auth.service';  // Import the AuthService
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { RouterLink } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ServiceVideoDialogComponent } from '../service-video-dialog/service-video-dialog.component';
 
 
 @Component({
@@ -29,7 +31,8 @@ export class HeaderComponent {
 
   constructor(
     private authService: AuthService,
-    private breadcrumbService: BreadcrumbService
+    private breadcrumbService: BreadcrumbService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -37,6 +40,14 @@ export class HeaderComponent {
     this.breadcrumbService.breadcrumbs$.subscribe((breadcrumbs) => {
       this.breadcrumbs = breadcrumbs;
       //console.log(this.breadcrumbs);
+    });
+  }
+
+  openManual() {
+    this.dialog.open(ServiceVideoDialogComponent, {
+      data: { title: 'Manual', videoUrl: 'assets/videos/time-lapse.mp4' },
+      width: '80%',
+      height: '80%',
     });
   }
 
