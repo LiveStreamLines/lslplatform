@@ -34,12 +34,12 @@ export class ServicesComponent implements OnInit {
 
 
   services = [
-    { name: 'Time lapse', image: 'assets/Eq-1.png', route: '/timelapse' },
-    { name: 'Live Streaming', image: 'assets/Eq-6.png', route: '/liveview' },
-    { name: 'Drone Shooting', image: 'assets/Eq-2.png', route: '/drone-shooting' },
-    { name: 'Site Photography & Videography', image: 'assets/Eq-3.png', route: '/site-photography' },
-    { name: '360 Photography & Videography', image: 'assets/Eq-4.png', route: '/360-photography' },
-    { name: 'Satellite Imagery', image: 'assets/Eq-5.png', route: '/satellite-imagery' }
+    { name: 'Time lapse', image: 'assets/Eq-1.png', videourl:'', route: '/timelapse' },
+    { name: 'Live Streaming', image: 'assets/Eq-6.png', videourl:'assets/videos/live.mp4', route: '/liveview' },
+    { name: 'Drone Shooting', image: 'assets/Eq-2.png', videourl:'assets/videos/drone.mp4', route: '/drone-shooting' },
+    { name: 'Site Photography & Videography', image: 'assets/Eq-3.png', videourl:'assets/videos/site.mp4', route: '/site-photography' },
+    { name: '360 Photography & Videography', image: 'assets/Eq-4.png', videourl:'assets/videos/360.mp4', route: '/360-photography' },
+    { name: 'Satellite Imagery', image: 'assets/Eq-5.png', videourl:'assets/videos/sat.mp4', route: '/satellite-imagery' }
   ];
 
   constructor(
@@ -94,19 +94,15 @@ export class ServicesComponent implements OnInit {
   }
 
 
-  navigateTo(serviceRoute: string) {
-
-    // Navigate to the selected service, including developerTag and projectTag
-    // this.router.navigate([
-    //   `home/${this.developerTag}/${this.projectTag}/${serviceRoute}`
-    // ]);
+  navigateTo(serviceRoute: string, video: string) {
+    
     if (serviceRoute === '/timelapse') {
       this.router.navigate([`home/${this.developerTag}/${this.projectTag}/${serviceRoute}`]);
     } else if (this.developerTag === 'lsl' && serviceRoute === '/liveview') {
       this.router.navigate([`/liveview`]);  //sample live view
     }
      else {
-      const videoUrl = "assets/background2.mp4";
+      const videoUrl = video;
       this.dialog.open(ServiceVideoDialogComponent, {
         data: { title: 'Service Video', videoUrl },
         width: '80%',
