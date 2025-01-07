@@ -94,7 +94,7 @@ export class ServicesComponent implements OnInit {
   }
 
 
-  navigateTo(serviceRoute: string, video: string) {
+  navigateTo(serviceRoute: string, video: string, title: string) {
     
     if (serviceRoute === '/timelapse') {
       this.router.navigate([`home/${this.developerTag}/${this.projectTag}/${serviceRoute}`]);
@@ -104,7 +104,7 @@ export class ServicesComponent implements OnInit {
      else {
       const videoUrl = video;
       this.dialog.open(ServiceVideoDialogComponent, {
-        data: { title: 'Service Video', videoUrl },
+        data: { title: title, videoUrl },
         width: '80%',
         height: '80%',
       });
