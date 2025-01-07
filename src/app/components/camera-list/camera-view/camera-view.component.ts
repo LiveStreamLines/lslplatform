@@ -161,36 +161,36 @@ export class CameraViewComponent implements OnInit{
   
   navigateToVideo(cameraId: string): void {
     this.loadingVideo = true; // Show spinner
-    this.loadCameraVideo(cameraId).then((videoUrl) => {
-      this.loadingVideo = false; // Hide spinner
-      if (videoUrl) {
-        window.open(videoUrl, '_blank');
-      } else {
-        console.error('Video URL is not available');
-      }
-    }).catch((error) => {
-      this.loadingVideo = false; // Hide spinner
-      console.error('Error loading video:', error);
-    });
-  }
   
-  loadCameraVideo(cameraId: string): Promise<string> {
+    this.loadCameraVideo(cameraId)
+      .then(() => {
+        this.loadingVideo = false; // Hide spinner
+      })
+      .catch((error) => {
+        this.loadingVideo = false; // Hide spinner
+        console.error('Error loading video:', error);
+      });
+  }
+
+  loadCameraVideo(cameraId: string): Promise<void> {
     return new Promise((resolve, reject) => {
       this.cameraDetailService.getVideoPreview(this.developerTag, this.projectTag, cameraId).subscribe({
-        next: response => {
-          const videoUrl = response.videoPath; // Extract the video URL
+        next: () => {
+          const videoUrl = `${environment.backend}/media/upload/${this.developerTag}/${this.projectTag}/${cameraId}/weekly_video.mp4`;
           if (videoUrl) {
-            resolve(videoUrl);
+            window.open(videoUrl, '_blank'); // Open the video in a new tab
+            resolve(); // Indicate success
           } else {
             reject('Video URL not found in response');
           }
         },
-        error: err => {
+        error: (err) => {
           reject(err);
-        }
+        },
       });
     });
   }
+  
 
 
 
