@@ -110,3 +110,14 @@ mat-tab {
     right: 21px;
     top: 6px;
 }
+
+.mat-tab-header {
+  flex-wrap: wrap; /* Allow tabs to wrap into multiple rows */
+  justify-content: flex-start; /* Align wrapped tabs to the left */
+}
+
+.mat-tab-label {
+  flex: 1 1 auto; /* Allow tabs to adjust their size dynamically */
+  text-align: center; /* Center-align tab labels */
+  padding: 8px; /* Add padding for better spacing */
+}

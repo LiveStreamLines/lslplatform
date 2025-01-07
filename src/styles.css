@@ -32,6 +32,18 @@ html, body { height: 100%; }
     padding-bottom: 5px !important;
    }
 
+    
+  .mat-mdc-tab-list{
+    width: 800px !important;
+  }
+
+  
+
+  @media (max-width: 480px) {
+    .mat-mdc-tab-list{
+      width: 250px !important;
+    }
+  }
 
 
   :root {

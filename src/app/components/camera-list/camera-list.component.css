@@ -102,14 +102,6 @@
   cursor: not-allowed;
 }
 
-/* Add some responsive behavior */
-@media (max-width: 768px) {
-  .cameras-container {
-    grid-template-columns: 1fr; /* Full-width for smaller screens */
-  }
-}
-
-
 .back-button {
   background-color: #590606;
   color: white;
@@ -124,3 +116,32 @@
 .back-button:hover {
   background-color: #d10b0b;
 }
+
+/* For tablets */
+@media (max-width: 768px) {
+  .cameras-container {
+    grid-template-columns: 1fr 1fr; /* Two columns on medium screens */
+  }
+
+  .cameras-card img {
+    max-height: 120px; /* Reduce image height */
+  }
+}
+
+/* For mobile screens */
+@media (max-width: 480px) {
+  .cameras-container {
+    grid-template-columns: 1fr; /* Single column on small screens */
+  }
+
+
+  .cameras-card mat-card-title {
+    font-size: 1em; /* Reduce font size for titles */
+  }
+
+  .cameras-card mat-card-actions button {
+    font-size: 0.9em; /* Smaller button text */
+  }
+}
+
+
