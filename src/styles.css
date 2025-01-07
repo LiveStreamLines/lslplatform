@@ -149,6 +149,21 @@ html, body { height: 100%; }
    
   }
 
+  .fullscreen-dialog .mat-dialog-container {
+    width: 800px; /* Full viewport width */
+    height: 600px; /* Full viewport height */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    border-radius: 0; /* Remove rounded corners */
+    overflow: hidden; /* Ensure no overflow */
+    background: black; /* Optional: dark background for video */
+  }
+
+  .cdk-overlay-pane.mat-mdc-dialog-panel.fullscreen-dialog {
+    max-width: 800px !important;
+  }
+  
+
   .mat-calendar-body-selected {
     background-color: var(--mat-datepicker-calendar-date-selected-state-background-color, var(--mat-app-primary));
     color: var(--mat-datepicker-calendar-date-selected-state-text-color, var(--mat-app-on-primary));

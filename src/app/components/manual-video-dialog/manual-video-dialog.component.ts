@@ -1,17 +1,17 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-
 @Component({
-  selector: 'app-service-video-dialog',
+  selector: 'app-manual-video-dialog',
   standalone: true,
   imports: [MatDialogModule],
-  templateUrl: './service-video-dialog.component.html',
-  styleUrl: './service-video-dialog.component.css'
+  templateUrl: './manual-video-dialog.component.html',
+  styleUrl: './manual-video-dialog.component.css'
 })
-export class ServiceVideoDialogComponent {
+export class ManualVideoDialogComponent {
 
+  
   constructor(@Inject(MAT_DIALOG_DATA) public data: { title: string; videoUrl: string }) {
     console.log('Received data:', data);
   }
@@ -23,6 +23,5 @@ export class ServiceVideoDialogComponent {
       videoElement.load(); // Reloads the video
     }
   }
-
 
 }

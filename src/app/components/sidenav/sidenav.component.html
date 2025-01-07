@@ -14,6 +14,11 @@
     <mat-icon>business</mat-icon>
     <span>Contacts</span>
   </a>
+
+  <a mat-list-item (click)="openManual()">
+    <mat-icon>video_library</mat-icon>
+    <span>Manual</span>
+  </a>
  
   <h3 *ngIf="isSuper || isAdmin">Admin</h3>
   <a mat-list-item *ngIf="isSuper" routerLink="/developers" routerLinkActive="active">

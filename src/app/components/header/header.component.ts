@@ -8,8 +8,7 @@ import { AuthService } from '../../services/auth.service';  // Import the AuthSe
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { RouterLink } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { ServiceVideoDialogComponent } from '../service-video-dialog/service-video-dialog.component';
-
+import { ManualVideoDialogComponent } from '../manual-video-dialog/manual-video-dialog.component';
 
 @Component({
   selector: 'app-header',
@@ -44,12 +43,11 @@ export class HeaderComponent {
   }
 
   openManual() {
-    this.dialog.open(ServiceVideoDialogComponent, {
-      data: { title: 'Manual', videoUrl: 'assets/videos/time-lapse.mp4' },
-      width: '80%',
-      height: '80%',
-    });
-  }
+     this.dialog.open(ManualVideoDialogComponent, {
+       data: { title: 'Manual', videoUrl: 'assets/videos/manual.mp4' },
+       panelClass: 'fullscreen-dialog', // Add a custom class for fullscreen styling
+     });
+   }
 
  
   // Toggle the sidenav

@@ -5,7 +5,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';  // Import Angular
 import { MatListModule } from '@angular/material/list';  // Import Angular Material List
 import { MatIconModule } from '@angular/material/icon';  // Import MatIconModule
 import { AuthService } from '../../services/auth.service';
-
+import { ManualVideoDialogComponent } from '../manual-video-dialog/manual-video-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-sidenav',
@@ -27,7 +28,10 @@ export class SidenavComponent implements OnInit {
   isSuper: boolean = false;
   isAddingUser: boolean = false;
 
-  constructor(private authService:AuthService){}
+  constructor(
+    private authService:AuthService,
+    private dialog: MatDialog
+  ){}
 
   ngOnInit(): void {
     this.userRole = this.authService.getUserRole() || '';
@@ -45,7 +49,13 @@ export class SidenavComponent implements OnInit {
     if(this.permission) {
       this.isAddingUser = true;
     }
-
-
   }
+
+  openManual() {
+    this.dialog.open(ManualVideoDialogComponent, {
+      data: { title: 'Manual', videoUrl: 'assets/videos/manual.mp4' },
+      panelClass: 'fullscreen-dialog', // Add a custom class for fullscreen styling
+    });
+  }
+
 }
