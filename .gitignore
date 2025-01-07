@@ -37,6 +37,7 @@ yarn-error.log
 testem.log
 /typings
 src/environment/environments.ts
+src/assets/videos
 
 # System files
 .DS_Store
