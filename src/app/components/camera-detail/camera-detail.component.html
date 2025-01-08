@@ -5,13 +5,13 @@
   <button mat-button [ngClass]="{ 'active': mode === 'single' }" (click)="setMode('single')">
     <mat-icon>visibility</mat-icon> Single View
   </button>
-  <button mat-button [ngClass]="{ 'active': mode === 'studio' }" (click)="setMode('studio')">
+  <button mat-button *ngIf="!isSmallScreen" [ngClass]="{ 'active': mode === 'studio' }" (click)="setMode('studio')">
     <mat-icon>edit</mat-icon> Studio
   </button>
-  <button mat-button [ngClass]="{ 'active': mode === 'zoom' }" (click)="setMode('zoom')">
+  <button mat-button *ngIf="!isSmallScreen" [ngClass]="{ 'active': mode === 'zoom' }" (click)="setMode('zoom')">
     <mat-icon>zoom_in</mat-icon> Zoom
   </button>
-  <button mat-button [ngClass]="{ 'active': mode === 'compare' }" (click)="setMode('compare')">
+  <button mat-button *ngIf="!isSmallScreen" [ngClass]="{ 'active': mode === 'compare' }" (click)="setMode('compare')">
     <mat-icon>compare_arrows</mat-icon> Compare
   </button>
   <button mat-button [ngClass]="{ 'active': mode === 'generate-video' }" (click)="setMode('generate-video')">

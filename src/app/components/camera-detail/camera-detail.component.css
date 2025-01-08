@@ -296,3 +296,90 @@ p {
   padding: 4px;
 }
 
+/* Toolbar adjustments */
+.camera-detail-toolbar {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  justify-content: space-around;
+  gap: 10px;
+  background-color: #54090959;
+  color: white;
+  padding: 10px;
+}
+/* 
+/* Hide specific buttons on smaller screens */
+@media (max-width: 768px) {
+  .camera-detail-toolbar button:nth-child(2),
+  .camera-detail-toolbar button:nth-child(3),
+  .camera-detail-toolbar button:nth-child(4) {
+    display: none; /* Hide Studio, Zoom, and Compare */
+  }
+} */
+
+/* Make buttons more compact */
+.camera-detail-toolbar button {
+  font-size: 12px; /* Smaller font size */
+  padding: 6px 12px; /* Reduce padding */
+}
+
+/* Adjust thumbnail strip */
+.thumbnail-strip {
+  gap: 8px; /* Smaller gap between thumbnails */
+  padding: 8px;
+}
+
+.thumbnail-img {
+  width: 100px; /* Reduce thumbnail size */
+  height: 100px;
+}
+
+/* Adjust share button */
+.share-button {
+  font-size: 12px; /* Smaller font size */
+  padding: 4px 8px;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .single img,
+  .large-picture {
+    max-width: 100%; /* Ensure images fit within the screen */
+    height: auto;
+  }
+
+  .thumbnail-strip {
+    overflow-x: auto; /* Enable horizontal scrolling for thumbnails */
+  }
+
+  .thumbnail-img {
+    width: 80px; /* Further reduce thumbnail size */
+    height: 80px;
+  }
+
+  .date-time-toggle label {
+    font-size: 12px; /* Adjust toggle text size */
+  }
+}
+
+/* For extra small screens */
+@media (max-width: 480px) {
+  .camera-detail-toolbar {
+    flex-direction: column; /* Stack toolbar buttons */
+  }
+
+  .camera-detail-toolbar button {
+    width: 100%; /* Full-width buttons */
+    text-align: center; /* Center align text */
+  }
+
+  .thumbnail-img {
+    width: 60px; /* Smaller thumbnails */
+    height: 60px;
+  }
+
+  .date-time-toggle {
+    font-size: 10px; /* Reduce toggle text size further */
+  }
+}
+
+

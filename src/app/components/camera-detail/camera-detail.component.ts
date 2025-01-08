@@ -24,6 +24,8 @@ import { Project } from '../../models/project.model';
 import { Developer } from '../../models/developer.model';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { environment } from '../../../environment/environments';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+
 
 
 @Component({
@@ -81,6 +83,8 @@ export class CameraDetailComponent implements OnInit {
   currentPhotoUrl: string = '';
   photoUrl: string ='';
 
+  isSmallScreen: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -88,10 +92,17 @@ export class CameraDetailComponent implements OnInit {
     private projectService: ProjectService,
     private cameraDetailService: CameraDetailService,
     private weatherService: WeatherService,
-    private breadcrumbService: BreadcrumbService
+    private breadcrumbService: BreadcrumbService,
+    private breakpointObserver: BreakpointObserver
   ) {}
 
   ngOnInit(): void {
+
+    this.breakpointObserver.observe([Breakpoints.Handset, Breakpoints.Tablet])
+    .subscribe(result => {
+      this.isSmallScreen = result.matches; // True for small screens
+    });
+
     this.cameraName = this.route.snapshot.params['cameraName'];
     this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;
     this.projectTag = this.route.snapshot.paramMap.get('projectTag')!;
