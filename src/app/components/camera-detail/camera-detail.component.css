@@ -314,8 +314,7 @@ p {
   .camera-detail-toolbar button:nth-child(4) {
     display: none; /* Hide Studio, Zoom, and Compare */
   }
-} */
-
+} 
 /* Make buttons more compact */
 .camera-detail-toolbar button {
   font-size: 12px; /* Smaller font size */

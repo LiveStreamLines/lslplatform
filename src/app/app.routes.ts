@@ -21,6 +21,8 @@ import { ResetPasswordComponent } from './components/users/reset-password/reset-
 import { LiveviewComponent } from './components/liveview/liveview.component';
 import { ServiceDetailComponent } from './components/service-detail/service-detail.component';
 import { AboutUsComponent } from './components/about/about.component';
+import { CameraViewComponent } from './components/camera-list/camera-view/camera-view.component';
+import { CameraViewerComponent } from './components/camera-viewer/camera-viewer.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -49,6 +51,7 @@ export const routes: Routes = [
   { path: 'media', component: MediaComponent,  canActivate: [AuthGuard]},
   { path: 'liveview', component: LiveviewComponent, canActivate:[AuthGuard]},
   { path: 'about', component: AboutUsComponent, canActivate:[AuthGuard]},
+  { path: 'monitor', component: CameraViewerComponent, canActivate:[AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/login', pathMatch: 'full' }
 ];

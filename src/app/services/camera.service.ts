@@ -11,7 +11,6 @@ import { AuthService } from './auth.service';  // To access the auth token
 })
 export class CameraService {
   
-  //private apiUrl = 'https://lslcloud.com/api/main/projects/cameras';  // API base URL for fetching cameras
   private apiUrl =   environment.backend + '/api/cameras/';
   private cameras: Camera[] = [];
   constructor(private http: HttpClient, private authService: AuthService) {}
@@ -38,6 +37,14 @@ export class CameraService {
       'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
     });
     return this.http.get<Camera>(`${this.apiUrl}/${cameraId}`, { headers });
+  }
+
+  getLastPicture():  Observable<any[]>  {
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    return this.http.get<any[]>(`${this.apiUrl}pics/last`,{ headers });
   }
 
   addOrUpdateProject(formData: FormData, isEditMode: boolean, projectId?: string): Observable<any> {
