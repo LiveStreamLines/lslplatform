@@ -10,5 +10,6 @@ export interface User {
     accessibleCameras: string[]; // Array of camera IDs
     token?: string; // Optional if token is not always present
     createdDate: string;
+    manual?: boolean;
   }
   

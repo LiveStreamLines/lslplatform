@@ -40,7 +40,7 @@
     ngOnInit(): void {
 
        // Check local storage for user preference
-      const dontShowAgain = localStorage.getItem('dontShowManualDialog');
+      const dontShowAgain = this.authService.getManual();
       if (!dontShowAgain) {
         // Open the dialog if preference is not set
         this.dialog.open(ManualVideoDialogComponent, {
@@ -48,7 +48,6 @@
           panelClass: 'fullscreen-dialog', // Add a custom class for fullscreen styling
         });
       }
-
 
       this.userRole = this.authService.getUserRole();
       this.accessibleDevelopers = this.authService.getAccessibleDevelopers();

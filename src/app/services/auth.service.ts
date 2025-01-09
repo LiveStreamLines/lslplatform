@@ -20,6 +20,7 @@ interface AuthResponse {
   phoneRequired?: boolean; // Indicates if phone verification is needed
   message?: string; // Optional message
   userId?: string;
+  manual?: string;
 }
 
 @Injectable({
@@ -38,10 +39,12 @@ export class AuthService {
   private accessibleServices: string[] = [];
   private canAdduser: string | null = null;
   private canGenerateVideoAndPics: string | null = null;
-  userId: string | null = null;
+  private userId: string | null = null;
+  private manual: string | null = null;
 
   constructor(private http: HttpClient, private router: Router) {
     // Initialize from localStorage
+    this.userId = localStorage.getItem('userId');
     this.authToken = localStorage.getItem('authToken');
     this.userRole = localStorage.getItem('userRole');
     this.username = localStorage.getItem('username');
@@ -53,6 +56,7 @@ export class AuthService {
     this.accessibleServices = JSON.parse(localStorage.getItem('accessibleServices') || '[]');
     this.canAdduser = localStorage.getItem('canAdduser');
     this.canGenerateVideoAndPics = localStorage.getItem('canGenerateVideoAndPics');
+    this.manual = localStorage.getItem('manual');
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
@@ -89,6 +93,7 @@ export class AuthService {
   }
 
   private setUserData(response: AuthResponse): void {
+    this.userId = response.userId || null;
     this.username = response.username || null;
     this.useremail = response.email || null;
     this.phone = response.phone || null;
@@ -100,9 +105,11 @@ export class AuthService {
     this.accessibleServices = response.services || [];
     this.canAdduser = response.canAdduser || null;
     this.canGenerateVideoAndPics = response.canGenerateVideoAndPics || null;
+    this.manual = response.manual || null;
 
 
     // Save to localStorage
+    localStorage.setItem('userId', this.userId || '');
     localStorage.setItem('username', this.username || '');
     localStorage.setItem('useremail', this.useremail || '');
     localStorage.setItem('phone', this.phone || '');
@@ -114,6 +121,7 @@ export class AuthService {
     localStorage.setItem('accessibleServices', JSON.stringify(this.accessibleServices));
     localStorage.setItem('canAdduser', JSON.stringify(this.canAdduser));
     localStorage.setItem('canGenerateVideoAndPics', JSON.stringify(this.canGenerateVideoAndPics));
+    localStorage.setItem('manual', JSON.stringify(this.manual));
   }
   
 
@@ -130,11 +138,21 @@ export class AuthService {
     this.accessibleServices = [];
     this.canAdduser = null;
     this.canGenerateVideoAndPics = null;
+    this.userId = null;
+    this.manual = null;
 
     // Remove from localStorage
     localStorage.clear();
 
     this.router.navigate(['/login']);
+  }
+
+  getUserId(): string | null {
+    return this.userId;
+  }
+
+  getManual(): string | null {
+    return this.manual;
   }
 
   // Getter methods for auth data

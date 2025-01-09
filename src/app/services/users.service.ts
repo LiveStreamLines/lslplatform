@@ -55,7 +55,7 @@ export class UserService {
   }
 
   // Update an existing user
-  updateUser(id: string, user: User): Observable<User> {
+  updateUser(id: string, user: Partial<User>): Observable<User> {
     const authh = this.authService.getAuthToken();  // Get auth token from AuthService
     // Set the custom header with the authh token
     const headers = new HttpHeaders({
