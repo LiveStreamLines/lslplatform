@@ -24,6 +24,7 @@ export class ManualVideoDialogComponent {
   private authService: AuthService
 ) {
     console.log('Received data:', data);
+    this.dontShowAgain = this.authService.getManual() === "true" ? true : false;
   }
 
   ngOnInit() {
