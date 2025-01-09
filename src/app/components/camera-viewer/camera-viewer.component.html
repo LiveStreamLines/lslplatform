@@ -5,7 +5,7 @@
       <div class="camera-grid">
         <div *ngFor="let camera of project.value" class="camera-card">
           <img [src]="getImagePath(camera)" alt="Camera Image" class="camera-image" />
-          <div [ngClass]="{'updated': isUpdated(camera.lastPhotoTime), 'not-updated': !isUpdated(camera.lastPhoto)}" class="camera-info">
+          <div [ngClass]="{'updated': isUpdated(camera.lastPhotoTime), 'not-updated': !isUpdated(camera.lastPhotoTime)}" class="camera-info">
             <p>{{ camera.cameraName }} ({{ camera.serverFolder }})</p>
             <p>last photo on: {{formatdate(camera.lastPhoto)}}</p>
             <p>{{ formatTimeDifference(camera.lastPhotoTime) }}</p>

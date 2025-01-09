@@ -34,8 +34,6 @@ export class CameraViewerComponent implements OnInit {
     return cameras.reduce((acc: GroupedCameras, camera) => {
       const developer = camera.developer;
       const project = camera.project;
-      const cameraName = camera.cameraName;
-      const serverFolder = camera.serverFolder;
       // Group by developer and project
       acc[developer] = acc[developer] || {};
       acc[developer][project] = acc[developer][project] || [];
