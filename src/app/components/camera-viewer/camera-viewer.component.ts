@@ -57,9 +57,37 @@ export class CameraViewerComponent implements OnInit {
     return timeDifference < 60; // Less than 1 hour
   }
 
+  formatdate(lastPhoto: string): string {
+    const year = lastPhoto.substring(0, 4);
+    const month = lastPhoto.substring(4, 6);
+    const day = lastPhoto.substring(6, 8);
+    const hour = lastPhoto.substring(8,10);
+    const minute = lastPhoto.substring(10,12);
+    const seconds = lastPhoto.substring(12,14);
+    return `${year}-${month}-${day} ${hour}:${minute}:${seconds}`;  
+  }
+
   formatTimeDifference(lastPhoto: string): string {
-    const timeDifference = Math.round((new Date().getTime() - new Date(lastPhoto).getTime()) / (1000 * 60));
-    return timeDifference < 60 ? 'Updated' : `Not updated (${timeDifference} minutes ago)`;
+    const now = new Date().getTime();
+    const lastPhotoTime = new Date(lastPhoto).getTime();
+    const timeDifferenceInMinutes = Math.round((now - lastPhotoTime) / (1000 * 60));
+
+    if (timeDifferenceInMinutes < 60) {
+      return 'Updated';
+    }
+
+    const days = Math.floor(timeDifferenceInMinutes / (60 * 24));
+    const hours = Math.floor((timeDifferenceInMinutes % (60 * 24)) / 60);
+    const minutes = timeDifferenceInMinutes % 60;
+
+    const timeParts = [];
+    if (days > 0) timeParts.push(`${days} day${days > 1 ? 's' : ''}`);
+    if (hours > 0) timeParts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
+    if (minutes > 0) timeParts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
+
+    return `Not updated (${timeParts.join(' ')})`;
+
+  
   }
 
 
