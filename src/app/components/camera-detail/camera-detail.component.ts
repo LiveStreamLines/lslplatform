@@ -262,15 +262,25 @@ export class CameraDetailComponent implements OnInit {
 
   convertToWeather(timestamp: string): string {
       // Manually extract the parts of the timestamp (yyyymmddhhmmss)
-    const year = timestamp.substring(0, 4);  // "2024"
-    const month = timestamp.substring(4, 6);  // "11"
-    const day = timestamp.substring(6, 8);  // "12"
-    const hour = timestamp.substring(8, 10);  // "12"
-   
-    // Format it as "YYYY-MM-DDTHH:mm:ss.000Z"
-    const formattedTime = `${year}-${month}-${day}T${hour}:00:00.000Z`;
-    
-    return formattedTime;
+      const year = parseInt(timestamp.substring(0, 4), 10); // "2025" -> 2025
+      const month = parseInt(timestamp.substring(4, 6), 10); // "01" -> 1
+      const day = parseInt(timestamp.substring(6, 8), 10); // "12" -> 12
+      const hour = parseInt(timestamp.substring(8, 10), 10); // "12" -> 12
+
+      const date = new Date(year, month - 1, day, hour); // JS months are 0-indexed
+
+    // Adjust the hours
+      date.setHours(date.getHours() - 4);
+      // Extract updated components from the Date object
+      const updatedYear = date.getFullYear();
+      const updatedMonth = (date.getMonth() + 1).toString().padStart(2, "0"); // JS months are 0-indexed
+      const updatedDay = date.getDate().toString().padStart(2, "0");
+      const updatedHour = date.getHours().toString().padStart(2, "0");
+
+      // Format it as "YYYY-MM-DDTHH:mm:ss.000Z"
+      const formattedTime = `${updatedYear}-${updatedMonth}-${updatedDay}T${updatedHour}:00:00.000Z`;
+
+      return formattedTime;
   }
 
   getWeather(time: string): void {
@@ -285,7 +295,7 @@ export class CameraDetailComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error fetching weather data', error);
-        this.weatherString = 'No data';
+        this.weatherString = 'No Weather data';
       }
     });
   }

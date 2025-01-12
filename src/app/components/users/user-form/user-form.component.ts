@@ -66,11 +66,10 @@ export class UserFormComponent implements OnInit {
   
   ngOnInit(): void {
     this.isSuperAdmin = this.authService.getUserRole() === 'Super Admin';
-    this.accessibleDeveloper = this.authService.getAccessibleDevelopers()!;
+    this.accessibleDeveloper = this.authService.getAccessibleDevelopers();
     this.accessibleProject = this.authService.getAccessibleProjects();
     this.accessibleCamera = this.authService.getAccessibleCameras();
 
-    console.log(this.accessibleDeveloper, this.accessibleProject, this.accessibleCamera);
 
     this.userId = this.route.snapshot.paramMap.get('id'); // Get the user ID from the route
     this.isEditing = !!this.userId; // If there's an ID, it's edit mode
@@ -122,7 +121,9 @@ export class UserFormComponent implements OnInit {
       next: (developers) => {
         if (this.isSuperAdmin || (this.accessibleDeveloper[0] === 'all')) {
           this.developers = developers;
+          console.log("how is he here");
         } else {
+          console.log("he is here");
           this.developers = developers.filter(dev => this.accessibleDeveloper.includes(dev._id));
         }
       },
@@ -174,8 +175,15 @@ export class UserFormComponent implements OnInit {
       projectIds.forEach((projectId) => {
         this.cameraService.getCamerasByProject(projectId).subscribe({
           next: (cameras) => {
-            const accessibleCameras = this.authService.getAccessibleCameras();
-            this.cameras = [...this.cameras, ...cameras.filter(camera => accessibleCameras.includes(camera._id))]; // Merge new cameras with the existing list
+            //this.cameras = [...this.cameras, ...cameras.filter(camera => accessibleCameras.includes(camera._id))]; // Merge new cameras with the existing list
+            
+            if (this.accessibleCamera[0] !== 'all') {
+              this.cameras = [...this.cameras, 
+                ...cameras.filter(cameras => this.accessibleProject.includes(cameras._id))];    // Merge new projects with the existing list       
+              } else {
+                this.cameras = [...this.cameras, ...cameras];
+              }
+          
           },
           error: (error) => console.error('Error fetching cameras:', error),
         });
@@ -189,7 +197,6 @@ export class UserFormComponent implements OnInit {
   loadUserData(): void {
     if (this.userId) {
       this.userService.getUserById(this.userId).subscribe((user) => {
-        console.log(user);
         this.loadProjectsByDevelopers(user.accessibleDevelopers);
         this.userForm.patchValue(user);
         this.resetEmail = user.email;

@@ -78,7 +78,7 @@ export class UsersComponent implements OnInit{
     this.userService.getAllUsers().subscribe({
       next: (users) => {
         this.users = users;
-        this.filteredUsers = [...this.users]; // Initialize filtered users
+      //  this.filteredUsers = [...this.users]; // Initialize filtered users
         this.isLoading = false; // Loading complete
         this.updatePaginatedUsers();
       },
@@ -219,12 +219,12 @@ export class UsersComponent implements OnInit{
   onSearch(): void {
     if (this.searchTerm.trim()) {
       // Reset filters to "All" when a search is initiated
-      this.selectedDeveloperId = 'ALL';
-      this.selectedProjectId = 'ALL';
-      this.selectedCameraId = 'ALL';
+      // this.selectedDeveloperId = 'ALL';
+      // this.selectedProjectId = 'ALL';
+      // this.selectedCameraId = 'ALL';
   
       // Filter users based on the search term
-      this.filteredUsers = this.users.filter((user) =>
+      this.filteredUsers = this.filteredUsers.filter((user) =>
         user.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         user.role.toLowerCase().includes(this.searchTerm.toLowerCase())
