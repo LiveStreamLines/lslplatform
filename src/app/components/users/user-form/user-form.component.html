@@ -44,7 +44,7 @@
           multiple
           (selectionChange)="onSelectionChange('accessibleDevelopers', $event)"
         >
-          <mat-option [value]="'all'">All</mat-option>
+          <mat-option *ngIf="isSuperAdmin || accessibleDeveloper[0] = 'all'" [value]="'all'">All</mat-option>
           <mat-option *ngFor="let dev of developers" [value]="dev._id" [disabled]="isAllDevSelected">
             {{ dev.developerName }}
           </mat-option>

@@ -2,7 +2,7 @@
     <h2>{{ developer.key }}</h2>
     <div *ngFor="let project of developer.value | keyvalue" class="project-section">
       <h3>{{ project.key }}</h3>
-      <div class="camera-grid">
+      <div style="font-size: 12px" class="camera-grid">
         <div *ngFor="let camera of project.value" class="camera-card">
           <img [src]="getImagePath(camera)" alt="Camera Image" class="camera-image" />
           <div [ngClass]="{'updated': isUpdated(camera.lastPhotoTime), 'not-updated': !isUpdated(camera.lastPhotoTime)}" class="camera-info">

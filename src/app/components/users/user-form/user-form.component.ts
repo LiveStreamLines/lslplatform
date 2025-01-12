@@ -33,6 +33,12 @@ export class UserFormComponent implements OnInit {
   isAllCameraSelected: boolean = false;
   isAllServiceSelected: boolean = false;
 
+  userRole: string | null = null;
+  accessibleDeveloper: string[]=[];
+  accessibleProject: string[]=[];
+  accessibleCamera: string[]=[];
+  isSuperAdmin: boolean = false;
+
   roles: string[] = ['Super Admin', 'Admin', 'User'];
   developers: any[] = []; // Replace with actual developer data
   projects: any[] = []; // Replace with actual project data
@@ -59,6 +65,13 @@ export class UserFormComponent implements OnInit {
   
   
   ngOnInit(): void {
+    this.isSuperAdmin = this.authService.getUserRole() === 'Super Admin';
+    this.accessibleDeveloper = this.authService.getAccessibleDevelopers()!;
+    this.accessibleProject = this.authService.getAccessibleProjects();
+    this.accessibleCamera = this.authService.getAccessibleCameras();
+
+    console.log(this.accessibleDeveloper, this.accessibleProject, this.accessibleCamera);
+
     this.userId = this.route.snapshot.paramMap.get('id'); // Get the user ID from the route
     this.isEditing = !!this.userId; // If there's an ID, it's edit mode
   
@@ -81,17 +94,7 @@ export class UserFormComponent implements OnInit {
       } else {
         this.hidepermissions = false;
       }
-    });
-
-    //  // Watch for changes in the developer field
-    //  this.userForm.get('accessibleDevelopers')?.valueChanges.subscribe((developerIds: string[]) => {
-    //   this.loadProjectsByDevelopers(developerIds);
-    // });
-
-    // // Watch for changes in the project field
-    // this.userForm.get('accessibleProjects')?.valueChanges.subscribe((projectIds: string[]) => {
-    //   this.loadCamerasByProjects(projectIds);
-    // });
+    });   
   }
 
   initializeForm(): void {
@@ -116,7 +119,13 @@ export class UserFormComponent implements OnInit {
 
   loadDevelopers(): void {
     this.developerService.getAllDevelopers().subscribe({
-      next: (developers) => (this.developers = developers),
+      next: (developers) => {
+        if (this.isSuperAdmin || (this.accessibleDeveloper[0] === 'all')) {
+          this.developers = developers;
+        } else {
+          this.developers = developers.filter(dev => this.accessibleDeveloper.includes(dev._id));
+        }
+      },
       error: (error) => console.error('Error fetching developers:', error),
     });
   }
@@ -124,7 +133,7 @@ export class UserFormComponent implements OnInit {
 
 
   loadProjectsByDevelopers(developerIds: string[]): void {
-    if (developerIds.includes('all')) {
+    if (this.isSuperAdmin || developerIds.includes('all')) {
       // Automatically set "all" projects
       this.userForm.get('accessibleProjects')?.setValue(['all']);
       this.projects = []; // Disable project selection
@@ -136,7 +145,12 @@ export class UserFormComponent implements OnInit {
       developerIds.forEach((developerId) => {
         this.projectService.getProjectsByDeveloper(developerId).subscribe({
         next: (projects) => {
-          this.projects = [...this.projects, ...projects];    // Merge new projects with the existing list       
+          if (this.accessibleProject[0] !== 'all') {
+          this.projects = [...this.projects, 
+            ...projects.filter(project => this.accessibleProject.includes(project._id))];    // Merge new projects with the existing list       
+          } else {
+            this.projects = [...this.projects, ...projects];
+          }
         },
         error: (error) => console.error('Error fetching projects:', error),
        });
@@ -148,7 +162,7 @@ export class UserFormComponent implements OnInit {
   }
 
   loadCamerasByProjects(projectIds: string[]): void {
-    if (projectIds.includes('all')) {
+    if (this.isSuperAdmin || projectIds.includes('all')) {
       // Automatically set "all" cameras
       this.userForm.get('accessibleCameras')?.setValue(['all']);
       this.cameras = []; // Disable camera selection
@@ -156,12 +170,12 @@ export class UserFormComponent implements OnInit {
     }
 
     this.cameras = []; // Clear current cameras
-    console.log(projectIds);
     if (projectIds && projectIds.length > 0) {
       projectIds.forEach((projectId) => {
         this.cameraService.getCamerasByProject(projectId).subscribe({
           next: (cameras) => {
-            this.cameras = [...this.cameras, ...cameras]; // Merge new cameras with the existing list
+            const accessibleCameras = this.authService.getAccessibleCameras();
+            this.cameras = [...this.cameras, ...cameras.filter(camera => accessibleCameras.includes(camera._id))]; // Merge new cameras with the existing list
           },
           error: (error) => console.error('Error fetching cameras:', error),
         });
