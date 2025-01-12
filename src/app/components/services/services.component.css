@@ -76,7 +76,8 @@
 }
 
 .tile-image img {
-  width: 180%; /* Slightly larger than its container */
+  width: 250px;
+  max-width: 180%;
   height: auto;
   object-fit: contain;
   border-radius: 8px;
