@@ -10,6 +10,7 @@ import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/materia
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Developer } from '../../../models/developer.model';
 import { DeveloperService } from '../../../services/developer.service';
+import { environment } from '../../../../environment/environments';
 
 @Component({
   selector: 'app-developer-form',
@@ -61,7 +62,7 @@ export class DeveloperFormComponent implements OnInit {
       description: developer.description,
       isActive: developer.isActive,
     });
-    this.logoPreview = 'http://5.9.85.250:5000/' + developer.logo; // Show the existing logo if editing
+    this.logoPreview = environment.backend + '/' + developer.logo; // Show the existing logo if editing
   }
 
   onLogoChange(event: Event): void {

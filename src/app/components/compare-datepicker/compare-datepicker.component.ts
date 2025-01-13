@@ -40,4 +40,12 @@ export class CompareDatepickerComponent {
     const minute = picture.substring(10, 12);
     const second = picture.substring(12, 14);
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;  }
+
+    thumbformat(picture: string): string {
+      // Logic to format timestamp (implement as needed)
+      const hour = picture.substring(8, 10);
+      const minute = picture.substring(10, 12);
+      const second = picture.substring(12, 14);
+      return `${hour}:${minute}:${second}`;  }
 }
+

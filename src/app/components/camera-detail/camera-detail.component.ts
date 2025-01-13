@@ -178,6 +178,14 @@ export class CameraDetailComponent implements OnInit {
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
   }
 
+  thumbformat(timestamp: string): string {
+    const hour = timestamp.substring(8, 10);
+    const minute = timestamp.substring(10, 12);
+    const second = timestamp.substring(12, 14);
+    return `${hour}:${minute}:${second}`;
+  
+  }
+
  
   // Get the full URL for the large picture
   getLargePictureUrl(picture: string): string {

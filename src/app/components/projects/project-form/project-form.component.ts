@@ -13,6 +13,7 @@ import { Project } from '../../../models/project.model';
 import { ProjectService } from '../../../services/project.service';
 import { DeveloperService } from '../../../services/developer.service';
 import { Developer } from '../../../models/developer.model';
+import { environment } from '../../../../environment/environments';
 
 
 @Component({
@@ -86,7 +87,7 @@ export class ProjectFormComponent implements OnInit {
       index: project.index,
       isActive: project.isActive,
     });
-    this.logoPreview = 'http://5.9.85.250:5000/' + project.logo; // Show the existing logo if editing
+    this.logoPreview = environment.backend +'/' + project.logo; // Show the existing logo if editing
   }
 
   onLogoChange(event: Event): void {
