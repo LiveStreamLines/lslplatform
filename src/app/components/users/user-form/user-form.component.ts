@@ -79,6 +79,7 @@ export class UserFormComponent implements OnInit {
     const role = this.authService.getUserRole();
     if (role === 'Super Admin') {
       this.userForm.get('phone')?.enable(); // To enable the field
+      this.userForm.get('role')?.enable(); // Disable the control programmatically
     }
 
     // Load necessary data
@@ -102,7 +103,7 @@ export class UserFormComponent implements OnInit {
         name: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
         phone: [{ value: '', disabled: true}],
-        role: ['', Validators.required],
+        role: [{value: 'User', disabled: true}, Validators.required],
         accessibleDevelopers: [[]],
         accessibleProjects: [[]],
         accessibleCameras: [[]],

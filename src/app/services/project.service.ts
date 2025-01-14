@@ -73,6 +73,14 @@ export class ProjectService {
     }
   }
 
+  updateProjectStatus(projectId: string, data: any): Observable<any> {
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    return this.http.put(`${this.baseUrl}/${projectId}`, data, {headers});
+  }
+
 
   
   // Helper function to find the project ID by tag

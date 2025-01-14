@@ -47,6 +47,19 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Created Date </th>
         <td mat-cell *matCellDef="let project"> {{ project.createdDate | date }} </td>
       </ng-container>
+
+      <!-- Block/Unblock Column -->
+    <ng-container matColumnDef="blockUnblock">
+      <th mat-header-cell *matHeaderCellDef> Block/Unblock </th>
+      <td mat-cell *matCellDef="let project">
+        <button 
+          class="block-unblock-button" 
+          [class.blocked]="project.blocked" 
+          (click)="toggleBlockStatus(project)">
+          {{ project.blocked ? 'Unblock' : 'Block' }}
+      </button>
+      </td>
+    </ng-container>
   
       <!-- Actions Column -->
       <ng-container matColumnDef="actions">

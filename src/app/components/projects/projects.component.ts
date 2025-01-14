@@ -17,18 +17,19 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { ProjectFormComponent } from './project-form/project-form.component';
 import { environment } from '../../../environment/environments';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @Component({
   selector: 'app-developers',
   standalone: true,
   imports: [FormsModule, CommonModule, MatFormField, MatInputModule, 
-    MatLabel, MatSort, MatTableModule, MatIcon, MatSelectModule, MatProgressSpinnerModule],
+    MatLabel, MatSort, MatTableModule, MatIcon, MatSelectModule, MatProgressSpinnerModule, MatButtonModule],
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent implements OnInit {
-  displayedColumns: string[] = ['logo', 'name', 'status', 'createdDate', 'actions'];
+  displayedColumns: string[] = ['logo', 'name', 'status', 'createdDate', 'blockUnblock', 'actions'];
   dataSource = new MatTableDataSource<Project>();
   developers: Developer[] = []; // List of developers for dropdown
   selectedDeveloperId: string = ''; // Holds the currently selected developer ID
@@ -103,6 +104,25 @@ export class ProjectsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.fetchProjectsByDeveloper(this.selectedDeveloperId);  // Refresh list after editing a developer
+      }
+    });
+  }
+
+  toggleBlockStatus(project: any): void {
+    project.blocked = !project.blocked; // Toggle the blocked field
+    this.saveBlockStatus(project); // Save the updated status
+  }
+  
+  saveBlockStatus(project: any): void {
+    // Replace with your service call to save the project
+    this.projectService.updateProjectStatus(project._id, { blocked: project.blocked }).subscribe({
+      next: (response) => {
+        console.log(`Project ${project.projectName} updated:`, response);
+      },
+      error: (error) => {
+        console.error(`Error updating project ${project.projectName}:`, error);
+        // Optionally, revert the change in case of an error
+        project.blocked = !project.blocked;
       }
     });
   }
