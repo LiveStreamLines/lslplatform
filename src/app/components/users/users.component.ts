@@ -78,7 +78,7 @@ export class UsersComponent implements OnInit{
     this.userService.getAllUsers().subscribe({
       next: (users) => {
         this.users = users;
-      //  this.filteredUsers = [...this.users]; // Initialize filtered users
+        this.filteredUsers = [...this.users]; // Initialize filtered users
         this.isLoading = false; // Loading complete
         this.updatePaginatedUsers();
       },

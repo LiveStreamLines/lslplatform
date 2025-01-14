@@ -133,8 +133,8 @@ export class UserFormComponent implements OnInit {
 
 
 
-  loadProjectsByDevelopers(developerIds: string[]): void {
-    if (this.isSuperAdmin || developerIds.includes('all')) {
+  loadProjectsByDevelopers(developerIds: string[], other=""): void {
+    if ((this.isSuperAdmin || developerIds.includes('all')) && other !== "check") {
       // Automatically set "all" projects
       this.userForm.get('accessibleProjects')?.setValue(['all']);
       this.projects = []; // Disable project selection
@@ -197,7 +197,8 @@ export class UserFormComponent implements OnInit {
   loadUserData(): void {
     if (this.userId) {
       this.userService.getUserById(this.userId).subscribe((user) => {
-        this.loadProjectsByDevelopers(user.accessibleDevelopers);
+        console.log(user);
+        this.loadProjectsByDevelopers(user.accessibleDevelopers, "check");
         this.userForm.patchValue(user);
         this.resetEmail = user.email;
       });
