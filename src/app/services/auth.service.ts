@@ -169,7 +169,6 @@ export class AuthService {
   }
 
   getAccessibleDevelopers(): string[] {
-    console.log(this.accessibleDevelopers);
     return this.accessibleDevelopers;
   }
 

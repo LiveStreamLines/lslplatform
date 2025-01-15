@@ -122,9 +122,7 @@ export class UserFormComponent implements OnInit {
       next: (developers) => {
         if (this.isSuperAdmin || (this.accessibleDeveloper[0] === 'all')) {
           this.developers = developers;
-          console.log("how is he here");
         } else {
-          console.log("he is here");
           this.developers = developers.filter(dev => this.accessibleDeveloper.includes(dev._id));
         }
       },
@@ -134,11 +132,11 @@ export class UserFormComponent implements OnInit {
 
 
 
-  loadProjectsByDevelopers(developerIds: string[], other=""): void {
-    if ((this.isSuperAdmin || developerIds.includes('all')) && other !== "check") {
-      // Automatically set "all" projects
-      this.userForm.get('accessibleProjects')?.setValue(['all']);
-      this.projects = []; // Disable project selection
+  loadProjectsByDevelopers(developerIds: string[]): void {
+    if (developerIds.includes('all')) {
+      // Automatically set "all" Project
+      this.userForm.get('accessibleProject')?.setValue(['all']);
+      this.projects = []; // Disable camera selection
       return;
     }
 
@@ -146,13 +144,13 @@ export class UserFormComponent implements OnInit {
     if (developerIds && developerIds.length > 0) {
       developerIds.forEach((developerId) => {
         this.projectService.getProjectsByDeveloper(developerId).subscribe({
-        next: (projects) => {
-          if (this.accessibleProject[0] !== 'all') {
-          this.projects = [...this.projects, 
-            ...projects.filter(project => this.accessibleProject.includes(project._id))];    // Merge new projects with the existing list       
-          } else {
-            this.projects = [...this.projects, ...projects];
-          }
+        next: (projects) => {        
+            if (this.accessibleProject[0] !== 'all' && !this.isSuperAdmin) {
+            this.projects = [...this.projects, 
+              ...projects.filter(project => this.accessibleProject.includes(project._id))];    // Merge new projects with the existing list       
+            } else {
+              this.projects = [...this.projects, ...projects];
+            }
         },
         error: (error) => console.error('Error fetching projects:', error),
        });
@@ -199,7 +197,7 @@ export class UserFormComponent implements OnInit {
     if (this.userId) {
       this.userService.getUserById(this.userId).subscribe((user) => {
         console.log(user);
-        this.loadProjectsByDevelopers(user.accessibleDevelopers, "check");
+        this.loadProjectsByDevelopers(user.accessibleDevelopers);
         this.userForm.patchValue(user);
         this.resetEmail = user.email;
       });
