@@ -8,7 +8,7 @@
       <!-- Regular Login Tab -->
       <mat-tab label="Email Login">
         <div *ngIf="currentView === 'login'">
-          <p style="font-size:12px; margin-top: 10px;">if this the first time you login you will be asked to regsiter and confirm your phone number</p>
+          <p style="font-size:12px; margin-top: 10px;">If this the first time you login, you will be asked to register and confirm your phone number.</p>
           <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="login-form">
             <!-- Email Field -->
             <div class="form-group">

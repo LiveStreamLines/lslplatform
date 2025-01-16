@@ -181,6 +181,8 @@ label {
 
 .helper-text {
   color: #f0f0f0; /* Light color for better readability */
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .error-message {
