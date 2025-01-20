@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { environment } from '../../../environment/environments';
+
 
 @Component({
   selector: 'app-liveview',
@@ -9,13 +13,29 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./liveview.component.css'],
 })
 export class LiveviewComponent {
-  private apiUrl = 'http://5.9.85.250:3000/proxy';
+  private apiUrl = 'http://localhost:3000/proxy';
+  iframeSrc: SafeResourceUrl = "";
 
   elevation = 0; // Starts at 0, range [0, 3600]
   azimuth = 90; // Starts at 90, range [0, 180]
   zoom = 1; // Starts at 1, range [0, 10]
 
-  constructor(private http: HttpClient) {}
+  developerTag!: string;
+  projectTag!: string;
+
+  constructor(
+    private http: HttpClient,     
+    private route: ActivatedRoute, 
+    private sanitizer: DomSanitizer
+  ) {
+    this.route.params.subscribe(params => {
+      this.developerTag = params['developerTag'];
+      this.projectTag = params['projectTag'];
+    });
+
+    const safeurl =  `${environment.hik}/${this.projectTag}.html`;
+    this.iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(safeurl);
+  }
 
   moveLeft(): void {
       this.azimuth -= 100; // Decrease by 10 (adjust increment as needed)

@@ -32,6 +32,7 @@ export const routes: Routes = [
   { path: 'home/:developerTag', component: ProjectListComponent,  canActivate: [AuthGuard] },  // Project list for a specific developer
   { path: 'home/:developerTag/:projectTag', component: ServicesComponent,  canActivate: [AuthGuard]},
   { path: 'home/:developerTag/:projectTag/timelapse', component: CameraListComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
+  { path: 'home/:developerTag/:projectTag/liveview', component: LiveviewComponent, canActivate:[AuthGuard]},
   { path: 'home/:developerTag/:projectTag/drone-shooting', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
   { path: 'home/:developerTag/:projectTag/site-photography', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
   { path: 'home/:developerTag/:projectTag/360-photography', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
@@ -50,7 +51,6 @@ export const routes: Routes = [
   { path: 'gallery/video-request', component: VideoRequestComponent,  canActivate: [AuthGuard]},
   { path: 'gallery/photo-request', component: PhotoRequestComponent,  canActivate: [AuthGuard]},
   { path: 'media', component: MediaComponent,  canActivate: [AuthGuard]},
-  { path: 'liveview', component: LiveviewComponent, canActivate:[AuthGuard]},
   { path: 'about', component: AboutUsComponent, canActivate:[AuthGuard]},
   { path: 'monitor', component: CameraViewerComponent, canActivate:[AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },

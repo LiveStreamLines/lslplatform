@@ -32,6 +32,9 @@ export class ServicesComponent implements OnInit {
   accessibleServices: string[] = [];
   userRole: string | null = null;
 
+  allowedTags: string[] = ['prime', 'stg', 'gugg1', 'puredc', 'proj']; // Add all allowed tags here
+
+
 
   services = [
     { name: 'Time lapse', image: 'assets/Eq-1.png', videourl:'', route: '/timelapse' },
@@ -98,8 +101,8 @@ export class ServicesComponent implements OnInit {
     
     if (serviceRoute === '/timelapse') {
       this.router.navigate([`home/${this.developerTag}/${this.projectTag}/${serviceRoute}`]);
-    } else if (this.developerTag === 'lsl' && serviceRoute === '/liveview') {
-      this.router.navigate([`/liveview`]);  //sample live view
+    } else if (this.allowedTags.includes(this.projectTag) && serviceRoute === '/liveview') {
+      this.router.navigate([`home/${this.developerTag}/${this.projectTag}/${serviceRoute}`]);  
     }
      else {
       const videoUrl = video;
