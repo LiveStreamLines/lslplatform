@@ -23,6 +23,7 @@ import { ServiceDetailComponent } from './components/service-detail/service-deta
 import { AboutUsComponent } from './components/about/about.component';
 import { CameraViewComponent } from './components/camera-list/camera-view/camera-view.component';
 import { CameraViewerComponent } from './components/camera-viewer/camera-viewer.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -53,5 +54,5 @@ export const routes: Routes = [
   { path: 'about', component: AboutUsComponent, canActivate:[AuthGuard]},
   { path: 'monitor', component: CameraViewerComponent, canActivate:[AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: '**', redirectTo: '/login', pathMatch: 'full' }
+  { path: '**', component: NotFoundComponent }  // Use the NotFoundComponent for 404
 ];

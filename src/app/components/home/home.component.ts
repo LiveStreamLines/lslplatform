@@ -11,6 +11,7 @@
   import { environment } from '../../../environment/environments';
   import { MatDialog } from '@angular/material/dialog';
   import { ManualVideoDialogComponent } from '../manual-video-dialog/manual-video-dialog.component';
+  import { HeaderService } from '../../services/header.service';
 
   @Component({
     selector: 'app-home',
@@ -32,12 +33,16 @@
     constructor(
       private developerService: DeveloperService, 
       private breadcrumbService: BreadcrumbService,
+      private headerService: HeaderService,
       private authService: AuthService,
       private router: Router,
       private dialog: MatDialog
     ) {}
 
     ngOnInit(): void {
+
+      this.headerService.showHeaderAndSidenav = true;
+
 
        // Check local storage for user preference
       const dontShowAgain = this.authService.getManual();
