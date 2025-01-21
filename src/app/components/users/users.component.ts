@@ -219,9 +219,6 @@ export class UsersComponent implements OnInit{
   onSearch(): void {
     if (this.searchTerm.trim()) {
       // Reset filters to "All" when a search is initiated
-      // this.selectedDeveloperId = 'ALL';
-      // this.selectedProjectId = 'ALL';
-      // this.selectedCameraId = 'ALL';
       console.log(this.filteredUsers);
       // Filter users based on the search term
       this.filteredUsers = this.filteredUsers.filter((user) =>
