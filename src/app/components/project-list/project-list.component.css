@@ -87,6 +87,18 @@
   background-color: #7e0707; /* Darker red on hover */
 }
 
+
+.blocked-badge {
+  color: #d9534f;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.project-card.blocked {
+  background-color: #300505;
+  border: 1px solid #ff4d4d;
+}
+
 /* Add some responsive behavior */
 @media (max-width: 768px) {
   .projects-container {

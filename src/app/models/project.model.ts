@@ -1,12 +1,13 @@
 export interface Project {
-  "_id": string,
-  "projectName": string,
-  "projectTag": string,
-  "description": string,
-  "developer": string,
-  "index": string
-  "isActive": true,
-  "createdDate": string,
-  "logo": string,
-  }
+  _id: string,
+  projectName: string,
+  projectTag: string,
+  description: string,
+  developer: string,
+  index: string
+  isActive: true,
+  createdDate: string,
+  logo: string,
+  blocked?: string
+}
   
