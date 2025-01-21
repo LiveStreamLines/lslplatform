@@ -127,8 +127,5 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
-  // Open project record
-  openProject(projectId: string): void {
-    // Implement navigation or modal opening for project details here
-  }
+
 }

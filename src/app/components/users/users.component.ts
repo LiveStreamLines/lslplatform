@@ -222,7 +222,7 @@ export class UsersComponent implements OnInit{
       // this.selectedDeveloperId = 'ALL';
       // this.selectedProjectId = 'ALL';
       // this.selectedCameraId = 'ALL';
-  
+      console.log(this.filteredUsers);
       // Filter users based on the search term
       this.filteredUsers = this.filteredUsers.filter((user) =>
         user.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
