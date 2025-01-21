@@ -70,6 +70,7 @@ export class UsersComponent implements OnInit{
     this.accessibleCamera = this.authService.getAccessibleCameras();
     this.fetchUsers();
     this.loadDevelopers();
+    this.filterUsersByAccess();
   }
 
   // Fetch users from the service
@@ -218,8 +219,7 @@ export class UsersComponent implements OnInit{
 
   onSearch(): void {
     if (this.searchTerm.trim()) {
-      // Reset filters to "All" when a search is initiated
-      console.log(this.filteredUsers);
+      
       // Filter users based on the search term
       this.filteredUsers = this.filteredUsers.filter((user) =>
         user.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
