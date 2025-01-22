@@ -75,6 +75,7 @@ export class VideoRequestComponent implements OnInit {
         .sort((a, b) => new Date(b.RequestTime).getTime() - new Date(a.RequestTime).getTime()) // Sort by RequestTime descending
         .map((request) => ({
           developerProject: `${request.developer} (${request.project})`,
+          camera: request.camera,
           duration: `${this.formatDate(request.startDate)} to ${this.formatDate(request.endDate)}`,
           //duration: `${request.startDate} to ${request.endDate}`,
           hours: `${request.startHour} to ${request.endHour}`,

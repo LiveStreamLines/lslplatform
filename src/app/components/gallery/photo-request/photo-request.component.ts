@@ -75,6 +75,7 @@ export class PhotoRequestComponent implements OnInit {
         .sort((a, b) => new Date(b.RequestTime).getTime() - new Date(a.RequestTime).getTime()) // Sort by RequestTime desc
         .map((request) => ({
           developerProject: `${request.developer} (${request.project})`,
+          camera: request.camera,
           dates: `${this.formatDate(request.startDate)} to ${this.formatDate(request.endDate)}`,
           hours: `${request.startHour} to ${request.endHour}`,
           RequestTime: request.RequestTime,
