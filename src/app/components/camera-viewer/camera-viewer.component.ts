@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CameraService } from '../../services/camera.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environment/environments';
+import { AuthService } from '../../services/auth.service';
+
 
 type GroupedCameras = {
   [developer: string]: {
@@ -12,18 +15,35 @@ type GroupedCameras = {
 @Component({
   selector: 'app-camera-viewer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './camera-viewer.component.html',
   styleUrl: './camera-viewer.component.css'
 })
+
+
 export class CameraViewerComponent implements OnInit {
 
   cameras: any[] = [];
   groupedCameras: GroupedCameras = {};
+  accessibleDevelopers: string[] = []; // Example
+  accessibleProjects: string[] = []; // Example
 
-  constructor(private cameraService: CameraService) {}
+  isSuperAdmin = true; // Toggle this value for super admin
+  showNotWorkingOnly = false;
+
+
+  constructor(
+    private cameraService: CameraService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
+    
+    this.isSuperAdmin = this.authService.getUserRole() === 'Super Admin';
+    this.accessibleDevelopers = this.authService.getAccessibleDevelopers()!;
+    this.accessibleProjects = this.authService.getAccessibleProjects()!;
+    console.log (this.isSuperAdmin);
+
     this.cameraService.getLastPicture().subscribe((data) => {
       this.cameras = data;
       this.groupedCameras = this.groupByDeveloperAndProject(data);
@@ -31,11 +51,23 @@ export class CameraViewerComponent implements OnInit {
   }
 
   groupByDeveloperAndProject(cameras: any[]): any {
+    
+
     return cameras.reduce((acc: GroupedCameras, camera) => {
-      const developer = camera.developer;
-      const project = camera.project;
+      if (
+        !camera.developerId ||
+        !this.isSuperAdmin &&
+        ((!this.accessibleDevelopers.includes(camera.developerId)) ||
+        (!this.accessibleProjects.includes(camera.projectId) && !this.accessibleProjects.includes('all')))
+      ) {
+        return acc;
+      }
+
+
+      const developer = camera.developer + " (" + camera.developerTag + ")";
+      const project = camera.project + " (" + camera.projectTag + ")";
       // Group by developer and project
-      acc[developer] = acc[developer] || {};
+      acc[developer] = acc[developer] || {}
       acc[developer][project] = acc[developer][project] || [];
       acc[developer][project].push(camera);
       return acc;
@@ -43,8 +75,8 @@ export class CameraViewerComponent implements OnInit {
   }
 
   getImagePath(camera: any): string {
-    const developer = camera.developer;
-    const project = camera.project;
+    const developer = camera.developerTag;
+    const project = camera.projectTag;
     const cameraName = camera.cameraName;
     const lastPhoto = camera.lastPhoto;
     return `${environment.backend}/media/upload/${developer}/${project}/${cameraName}/large/${lastPhoto}`;

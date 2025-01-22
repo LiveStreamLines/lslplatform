@@ -37,4 +37,21 @@
   .camera-info.not-updated {
     background-color: red;
   }
-  
+
+  .developer-title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 50px;
+  }
+
+  .project-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .camera-grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+  }
