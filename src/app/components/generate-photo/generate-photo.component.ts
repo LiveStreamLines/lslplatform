@@ -52,6 +52,9 @@ export class GeneratePhotoComponent implements OnInit {
   filteredPicsCount!: number;
   isFilterComplete: boolean = false;
 
+  userId: string | null = null;
+  userName: string | null = null;
+
   constructor(
     private photoService: PhotoService,
     private authService: AuthService,
@@ -64,6 +67,9 @@ export class GeneratePhotoComponent implements OnInit {
   ngOnInit(): void {
     this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;
     this.projectTag = this.route.snapshot.paramMap.get('projectTag')!;
+
+    this.userId = this.authService.getUserId();
+    this.userName = this.authService.getUsername();
 
     this.setDefaultDates();
   }
@@ -160,6 +166,9 @@ export class GeneratePhotoComponent implements OnInit {
       formData.append('date2', this.formatDateForInput(this.endDate));
       formData.append('hour1', this.hour1.toString().padStart(2, '0'));
       formData.append('hour2', this.hour2.toString().padStart(2, '0'));
+      
+      formData.append('userId', this.userId!);
+      formData.append('userName', this.userName!);
 
       this.photoService.generatePhoto(formData).subscribe({
         next: (response) => {

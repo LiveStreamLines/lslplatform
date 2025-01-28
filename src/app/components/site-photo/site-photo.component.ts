@@ -52,7 +52,7 @@ export class SitePhotoComponent implements OnInit {
         .map((request) => ({
           developerProject: `${request.developer} (${request.project})`,
           date: request.date,
-          zipLink: `${this.serverUrl}/${request.developerTag}/${request.projectTag}/${request._id}.zip`
+          zipLink: `${this.serverUrl}/${request.developerTag}/${request.projectTag}/${request.files[0]}}.zip`
         }));
         this.isLoading = false;
       },

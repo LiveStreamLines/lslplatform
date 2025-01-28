@@ -62,7 +62,9 @@ export class GenerateVideoComponent implements OnInit {
   private image = new Image(); // To load and draw the image on the canvas
   private logoimage = new Image();
   extractedDate: string = ''; // Date extracted from the image URL
-
+  
+  userId: string | null = null;
+  userName: string | null  = null;
 
   projectTag!: string;
   developerTag!: string;
@@ -114,6 +116,9 @@ export class GenerateVideoComponent implements OnInit {
     this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;
     this.projectTag = this.route.snapshot.paramMap.get('projectTag')!;
     this.cameraName = this.route.snapshot.paramMap.get('cameraName')!;
+    this.userId = this.authService.getUserId();
+    this.userName = this.authService.getUsername();
+
     this.setDefaultDates(); 
 
     // Simulate fetching a preview image
@@ -459,6 +464,9 @@ export class GenerateVideoComponent implements OnInit {
       if (this.watermarkImageFile) {
         formData.append('showedWatermark', this.watermarkImageFile);
       }
+
+      formData.append('userId', this.userId!);
+      formData.append('userName', this.userName!);
 
       this.videoService.generateVideo(formData).subscribe({
         next: (response) => {
