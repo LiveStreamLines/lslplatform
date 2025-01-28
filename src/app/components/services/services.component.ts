@@ -33,7 +33,7 @@ export class ServicesComponent implements OnInit {
   userRole: string | null = null;
 
   allowedTags: string[] = ['prime', 'stg', 'gugg1', 'puredc', 'proj']; // Add all allowed tags here
-
+  allowedSite: string[] =['gugg1'];
 
 
   services = [
@@ -103,6 +103,8 @@ export class ServicesComponent implements OnInit {
       this.router.navigate([`home/${this.developerTag}/${this.projectTag}/${serviceRoute}`]);
     } else if (this.allowedTags.includes(this.projectTag) && serviceRoute === '/liveview') {
       this.router.navigate([`home/${this.developerTag}/${this.projectTag}/${serviceRoute}`]);  
+    } else if (this.allowedSite.includes(this.projectTag) && serviceRoute === "/site-photography") {
+      this.router.navigate([`home/${this.developerTag}/${this.projectTag}/${serviceRoute}`]);   
     }
      else {
       const videoUrl = video;

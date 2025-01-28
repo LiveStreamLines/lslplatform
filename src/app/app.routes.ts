@@ -24,6 +24,7 @@ import { AboutUsComponent } from './components/about/about.component';
 import { CameraViewComponent } from './components/camera-list/camera-view/camera-view.component';
 import { CameraViewerComponent } from './components/camera-viewer/camera-viewer.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { SitePhotoComponent } from './components/site-photo/site-photo.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -34,7 +35,7 @@ export const routes: Routes = [
   { path: 'home/:developerTag/:projectTag/timelapse', component: CameraListComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
   { path: 'home/:developerTag/:projectTag/liveview', component: LiveviewComponent, canActivate:[AuthGuard]},
   { path: 'home/:developerTag/:projectTag/drone-shooting', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
-  { path: 'home/:developerTag/:projectTag/site-photography', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
+  { path: 'home/:developerTag/:projectTag/site-photography', component: SitePhotoComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
   { path: 'home/:developerTag/:projectTag/360-photography', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
   { path: 'home/:developerTag/:projectTag/satellite-imagery', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
   { path: 'home/:developerTag/:projectTag/:cameraName', component: CameraDetailComponent,  canActivate: [AuthGuard] },  // Route for camera detail

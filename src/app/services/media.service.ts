@@ -18,5 +18,9 @@ export class MediaService {
       observe: 'events',
     });
   }
+
+  getmediaRequests(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/request`);
+  }
     
 }
