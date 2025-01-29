@@ -276,7 +276,14 @@ export class UserFormComponent implements OnInit {
       return;
     }
 
-    const userData = this.userForm.value;
+    let userData = this.userForm.value || {};
+    if(!userData.role) {
+      userData = {...userData, role:'User'};
+    }
+    const addingUserId = this.authService.getUserId();
+    const addingUserName = this.authService.getUsername();
+
+    userData = {...userData, addedUserId: `${addingUserId}`, addedUserName: `${addingUserName}`};
 
     if (this.isEditing) {
       this.userService
