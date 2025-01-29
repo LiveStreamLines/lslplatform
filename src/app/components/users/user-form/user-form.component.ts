@@ -44,12 +44,11 @@ export class UserFormComponent implements OnInit {
   projects: any[] = []; // Replace with actual project data
   cameras: any[] = []; // Replace with actual camera data
   services: string[] = [
-    'Timelapse',
+    'Time lapse',
+    'Live Streaming',
     'Drone Shooting',
-    'Site Photography',
-    'Site Videography',
-    '360 Photography',
-    '360 Videography',
+    'Site Photography & Videography',
+    '360 Photography & Videography',
     'Satellite Imagery'
   ];
 

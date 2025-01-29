@@ -45,8 +45,8 @@ export class SitePhotoComponent implements OnInit {
       next: (data) => {
         this.media = data
         .filter(request => 
-          (this.accessibleDevelopers.includes(request.developerId) || this.accessibleDevelopers[0] === 'all' || this.userRole === 'Super Admin')  &&
-          (this.accessibleProjects.includes(request.projectId) || this.accessibleProjects[0] === 'all' || this.userRole === 'Super Admin')
+          (this.accessibleDevelopers.includes(request.developerId) || this.accessibleDevelopers.includes('all') || this.userRole === 'Super Admin')  &&
+          (this.accessibleProjects.includes(request.projectId) || this.accessibleProjects.includes('all') || this.userRole === 'Super Admin')
         )
         .sort((a, b) => new Date(b.RequestTime).getTime() - new Date(a.RequestTime).getTime()) // Sort by RequestTime desc
         .map((request) => ({
