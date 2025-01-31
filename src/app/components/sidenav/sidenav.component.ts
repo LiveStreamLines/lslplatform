@@ -45,9 +45,11 @@ export class SidenavComponent implements OnInit {
       this.isAdmin = true;
     }
 
-    if(this.permission) {
+    if(this.permission === 'true') {
       this.isAddingUser = true;
     }
+
+    console.log(this.isSuper, this.isAdmin, this.isAddingUser, this.permission);
   }
 
   openManual() {
