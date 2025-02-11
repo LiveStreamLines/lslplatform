@@ -13,15 +13,24 @@ import { environment } from '../../../environment/environments';
   styleUrls: ['./liveview.component.css'],
 })
 export class LiveviewComponent {
-  private apiUrl = 'http://localhost:3000/proxy';
+  private apiUrl = environment.proxy;
   iframeSrc: SafeResourceUrl = "";
 
   elevation = 0; // Starts at 0, range [0, 3600]
-  azimuth = 90; // Starts at 90, range [0, 180]
-  zoom = 1; // Starts at 1, range [0, 10]
+  azimuth = 0; // Starts at 90, range [0, 180]
+  zoom = 0; // Starts at 1, range [0, 10]
 
   developerTag!: string;
   projectTag!: string;
+
+  id: string = "";
+
+  private projectTagMap: { [key: string]: string } = {
+    stg: "3d24d5d6a0614efaa8c6f389ef5231e6",
+    prime: "21d65e8a39414135a3a9b29b1a0471e2",
+    gugg1: "f2148e9d059b4ba29cc75885c36e424f",
+    puredc: "56f4ef2cd0b44e4eb83d8a0b3d5a10f6",
+  };
 
   constructor(
     private http: HttpClient,     
@@ -31,6 +40,9 @@ export class LiveviewComponent {
     this.route.params.subscribe(params => {
       this.developerTag = params['developerTag'];
       this.projectTag = params['projectTag'];
+
+      // Assign ID based on projectTag
+      this.id = this.projectTagMap[this.projectTag] || "";
     });
 
     const safeurl =  `${environment.hik}/${this.projectTag}.html`;
@@ -86,7 +98,7 @@ export class LiveviewComponent {
     const payload = {
       method: "PUT",
       url: "/ISAPI/PTZCtrl/channels/1/absolute",
-      id: "bc07467acc1b4cd9bada264fab118e66",
+      id: this.id,
       contentType: "application/xml",
       body: `<PTZData xmlns='http://www.isapi.org/ver20/XMLSchema' version='2.0'>
                 <AbsoluteHigh>
