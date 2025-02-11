@@ -98,7 +98,7 @@ export class LiveviewComponent {
     const payload = {
       method: "PUT",
       url: "/ISAPI/PTZCtrl/channels/1/absolute",
-      id: this.id,
+      id: `${this.id}`,
       contentType: "application/xml",
       body: `<PTZData xmlns='http://www.isapi.org/ver20/XMLSchema' version='2.0'>
                 <AbsoluteHigh>
