@@ -18,7 +18,7 @@ export class LiveviewComponent {
 
   elevation = 0; // Starts at 0, range [0, 3600]
   azimuth = 0; // Starts at 90, range [0, 180]
-  zoom = 0; // Starts at 1, range [0, 10]
+  zoom = 1; // Starts at 1, range [0, 10]
 
   developerTag!: string;
   projectTag!: string;
@@ -47,70 +47,83 @@ export class LiveviewComponent {
 
     const safeurl =  `${environment.hik}/${this.projectTag}.html`;
     this.iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(safeurl);
+    this.getCurrentPTZ();
   }
 
+  getCurrentPTZ(): void {
+    const payload = {
+      method: "GET",
+      url: "/ISAPI/PTZCtrl/channels/1/absoluteEx",
+      id: `${this.id}`,
+      contentType: "application/xml"
+    };
+
+    this.http.post(`${this.apiUrl}`, payload).subscribe({
+      next: (response: any) => {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(response.data, "text/xml");
+        this.elevation = parseFloat(xmlDoc.getElementsByTagName("elevation")[0]?.textContent || "0");
+        this.azimuth = parseFloat(xmlDoc.getElementsByTagName("azimuth")[0]?.textContent || "130.39");
+        this.zoom = parseFloat(xmlDoc.getElementsByTagName("absoluteZoom")[0]?.textContent || "1");
+        console.log(`Fetched PTZ: Ele:${this.elevation}, Azi:${this.azimuth}, Zoom:${this.zoom}`);
+      },
+      error: (err) => console.error("Error fetching PTZ:", err)
+    });
+  }
   moveLeft(): void {
-      this.azimuth -= 100; // Decrease by 10 (adjust increment as needed)
-      this.updatePTZ();
+    this.azimuth = Math.max(0, this.azimuth - 5); // Decrease within valid range
+    this.updatePTZ();
   }
 
   moveRight(): void {
-      this.azimuth += 100; // Increase by 10
-      this.updatePTZ();
+    this.azimuth = Math.min(360, this.azimuth + 5); // Increase within valid range
+    this.updatePTZ();
   }
 
-  moveUp(): void {
-    if (this.elevation > 0) {
-      this.elevation -= 30; // Move closer to 0
-      this.updatePTZ();
-    }
+ moveUp(): void {
+    this.elevation = Math.max(0, this.elevation - 5); // Move closer to 0 (up)
+    this.updatePTZ();
   }
 
   moveDown(): void {
-    if (this.elevation < 180) {
-      this.elevation += 30; // Move closer to 180
-      this.updatePTZ();
-    }
+    this.elevation = Math.min(90, this.elevation + 5); // Move closer to 90 (down)
+    this.updatePTZ();
   }
 
   zoomIn(): void {
-    if (this.zoom < 100) {
-      this.zoom += 10; // Increase zoom
-      this.updatePTZ();
-    }
+    this.zoom = Math.min(25, this.zoom + 1); // Zoom-in up to max
+    this.updatePTZ();
   }
 
   zoomOut(): void {
-    if (this.zoom > 0) {
-      this.zoom -= 10; // Decrease zoom
-      this.updatePTZ();
-    }
+    this.zoom = Math.max(1, this.zoom - 1); // Zoom-out down to min
+    this.updatePTZ();
   }
 
   resetToStartPosition(): void {
     this.elevation = 0;
     this.azimuth = 0;
-    this.zoom = 0;
+    this.zoom = 1;
     this.updatePTZ();
   }
 
   updatePTZ(): void {
     const payload = {
       method: "PUT",
-      url: "/ISAPI/PTZCtrl/channels/1/absolute",
+      url: "/ISAPI/PTZCtrl/channels/1/absoluteEx",
       id: `${this.id}`,
       contentType: "application/xml",
-      body: `<PTZData xmlns='http://www.isapi.org/ver20/XMLSchema' version='2.0'>
-                <AbsoluteHigh>
-                    <elevation>${this.elevation}</elevation>
-                    <azimuth>${this.azimuth}</azimuth>
-                    <absoluteZoom>${this.zoom}</absoluteZoom>
-                </AbsoluteHigh>
-             </PTZData>`,
+      body: `<PTZAbsoluteEx>
+                <elevation>${this.elevation.toFixed(2)}</elevation>
+                <azimuth>${this.azimuth.toFixed(2)}</azimuth>
+                <absoluteZoom>${this.zoom}</absoluteZoom> 
+                <horizontalSpeed>5</horizontalSpeed>
+                <verticalSpeed>5</verticalSpeed>
+             </PTZAbsoluteEx>`,
     };
 
     this.http.post(`${this.apiUrl}`, payload).subscribe({
-      next: () => console.log(`PTZ updated successfully. Ele:${this.elevation}, Azi:${this.azimuth}, zoom:${this.zoom}`),
+      next: () => console.log(`PTZ updated successfully. Project: ${this.projectTag} id: ${this.id} Url: ${this.apiUrl} Ele:${this.elevation}, Azi:${this.azimuth}, zoom:${this.zoom}`),
       error: (err) => console.error('Error updating PTZ:', err),
     });
   }
