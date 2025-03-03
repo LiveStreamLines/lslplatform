@@ -113,13 +113,7 @@ export class LiveviewComponent {
       url: "/ISAPI/PTZCtrl/channels/1/absoluteEx",
       id: `${this.id}`,
       contentType: "application/xml",
-      body: `<PTZAbsoluteEx>
-                <elevation>${this.elevation.toFixed(2)}</elevation>
-                <azimuth>${this.azimuth.toFixed(2)}</azimuth>
-                <absoluteZoom>${this.zoom}</absoluteZoom> 
-                <horizontalSpeed>5</horizontalSpeed>
-                <verticalSpeed>5</verticalSpeed>
-             </PTZAbsoluteEx>`,
+      body: `<PTZAbsoluteEx><elevation>${this.elevation.toFixed(2)}</elevation><azimuth>${this.azimuth.toFixed(2)}</azimuth><absoluteZoom>${this.zoom}</absoluteZoom><horizontalSpeed>5</horizontalSpeed><verticalSpeed>5</verticalSpeed></PTZAbsoluteEx>`,
     };
 
     this.http.post(`${this.apiUrl}`, payload).subscribe({
