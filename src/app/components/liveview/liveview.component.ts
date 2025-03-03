@@ -30,6 +30,7 @@ export class LiveviewComponent {
     prime: "21d65e8a39414135a3a9b29b1a0471e2",
     gugg1: "f2148e9d059b4ba29cc75885c36e424f",
     puredc: "56f4ef2cd0b44e4eb83d8a0b3d5a10f6",
+    proj: "bc07467acc1b4cd9bada264fab118e66",
   };
 
   constructor(
