@@ -45,7 +45,9 @@ export class LiveviewComponent {
       this.id = this.projectTagMap[this.projectTag] || "";
     });
 
-    const safeurl =  `${environment.hik}/${this.projectTag}.html`;
+    const timestamp = new Date().getTime(); // Generate a unique timestamp
+    const safeurl = `${environment.hik}/${this.projectTag}.html?t=${timestamp}`;
+//    const safeurl =  `${environment.hik}/${this.projectTag}.html`;
     this.iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(safeurl);
     this.getCurrentPTZ();
   }
