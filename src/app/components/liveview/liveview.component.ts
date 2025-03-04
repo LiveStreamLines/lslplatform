@@ -74,12 +74,12 @@ export class LiveviewComponent {
     });
   }
   moveLeft(): void {
-    this.azimuth = Math.max(0, this.azimuth - 5); // Decrease within valid range
+    this.azimuth = (this.azimuth - 5 + 360) % 360; // Wrap to 355 when reaching 0
     this.updatePTZ();
   }
-
+  
   moveRight(): void {
-    this.azimuth = Math.min(360, this.azimuth + 5); // Increase within valid range
+    this.azimuth = (this.azimuth + 5) % 360; // Wrap to 0 when reaching 355
     this.updatePTZ();
   }
 
