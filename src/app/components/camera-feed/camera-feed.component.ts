@@ -71,7 +71,6 @@ export class CameraFeedComponent implements OnInit {
         // Check if tokens are expired before proceeding
         if (this.isTokenExpired(this.accessTokenExpiry) || this.isTokenExpired(this.streamTokenExpiry)) {
           console.log("Tokens expired, fetching new ones...");
-          this.getAccessToken(); // Fetch new access and stream tokens
         } else {
           console.log("Tokens are valid, proceeding with Live View.");
           this.loadScript().then(() => this.initializeLiveView());
@@ -83,57 +82,6 @@ export class CameraFeedComponent implements OnInit {
   private isTokenExpired(expiryTime: number): boolean {
     const currentTime = Date.now();
     return currentTime >= expiryTime;
-  }
-
-
-  private getAccessToken(): void {
-    const tokenUrl = "https://isgp.hikcentralconnect.com/api/hccgw/platform/v1/token/get";
-    const body = {
-      appKey: this.appKey,
-      secretKey: this.appSecret,
-    };
-
-    this.http.post(tokenUrl, body).subscribe({
-      next: (response: any) => {
-        if (response.errorCode === "0") {
-          this.accessToken = response.data.accessToken;
-          this.accessTokenExpiry = response.data.expireTime;
-          console.log("Access Token Fetched:", this.accessToken);
-          this.getStreamToken();
-        } else {
-          console.error("Error fetching access token:", response);
-        }
-      },
-      error: (err) => console.error("Failed to fetch access token:", err)
-    });
-  }
-
-  /**
-   * Get the stream token using the access token
-   */
-  private getStreamToken(): void {
-    const streamTokenUrl = "https://isgp.hikcentralconnect.com/api/hccgw/platform/v1/streamtoken/get";
-    
-    const headers = new HttpHeaders({
-      Token: this.accessToken
-    });
-
-    this.http.get(streamTokenUrl, { headers }).subscribe({
-      next: (response: any) => {
-        if (response.errorCode === "0") {
-          this.streamToken = response.data.appToken;
-          this.streamTokenExpiry = response.data.expireTime;
-          console.log("Stream Token Fetched:", this.streamToken);
-          this.tokenService.saveTokens(this.accessToken,this.accessTokenExpiry, this.streamToken, this.streamTokenExpiry);
-          this.loadScript().then(() => {
-            this.initializeLiveView();
-          });
-        } else {
-          console.error("Error fetching stream token:", response);
-        }
-      },
-      error: (err) => console.error("Failed to fetch stream token:", err)
-    });
   }
 
 
@@ -205,7 +153,7 @@ export class CameraFeedComponent implements OnInit {
       playURL: finalUrl,
       ezuikit: true,
       env: { domain: this.domain },
-      accessToken: this.accessToken,
+      accessToken: this.streamToken,
       mode: "media"
     }, 0).then(
       () => {
