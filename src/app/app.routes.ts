@@ -25,6 +25,7 @@ import { CameraViewComponent } from './components/camera-list/camera-view/camera
 import { CameraViewerComponent } from './components/camera-viewer/camera-viewer.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { SitePhotoComponent } from './components/site-photo/site-photo.component';
+import { CameraFeedComponent } from './components/camera-feed/camera-feed.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -54,6 +55,7 @@ export const routes: Routes = [
   { path: 'media', component: MediaComponent,  canActivate: [AuthGuard]},
   { path: 'about', component: AboutUsComponent, canActivate:[AuthGuard]},
   { path: 'monitor', component: CameraViewerComponent, canActivate:[AuthGuard]},
+  { path: 'camera-feed', component: CameraFeedComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }  // Use the NotFoundComponent for 404
 ];

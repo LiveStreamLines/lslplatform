@@ -3,18 +3,17 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '../../../environment/environments';
-
+import { CameraFeedComponent } from '../camera-feed/camera-feed.component';
 
 @Component({
   selector: 'app-liveview',
   standalone: true,
-  imports: [],
+  imports: [CameraFeedComponent],
   templateUrl: './liveview.component.html',
   styleUrls: ['./liveview.component.css'],
 })
 export class LiveviewComponent {
   private apiUrl = environment.proxy;
-  iframeSrc: SafeResourceUrl = "";
 
   elevation = 0; // Starts at 0, range [0, 3600]
   azimuth = 0; // Starts at 90, range [0, 180]
@@ -46,10 +45,6 @@ export class LiveviewComponent {
       this.id = this.projectTagMap[this.projectTag] || "";
     });
 
-    const timestamp = new Date().getTime(); // Generate a unique timestamp
-    const safeurl = `${environment.hik}/${this.projectTag}.html?t=${timestamp}`;
-//    const safeurl =  `${environment.hik}/${this.projectTag}.html`;
-    this.iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(safeurl);
     this.getCurrentPTZ();
   }
 
