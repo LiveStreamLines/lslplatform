@@ -7,10 +7,10 @@
   
   /* Live View Section */
   .iframe-container {
+    margin-left: 5%;
     flex: 7; /* Takes 70% of the width */
     display: flex;
     justify-content: center;
-    align-items: center;
   }
   
   .live-view-iframe {

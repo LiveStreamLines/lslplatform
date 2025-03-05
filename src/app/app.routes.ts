@@ -55,7 +55,6 @@ export const routes: Routes = [
   { path: 'media', component: MediaComponent,  canActivate: [AuthGuard]},
   { path: 'about', component: AboutUsComponent, canActivate:[AuthGuard]},
   { path: 'monitor', component: CameraViewerComponent, canActivate:[AuthGuard]},
-  { path: 'camera-feed', component: CameraFeedComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }  // Use the NotFoundComponent for 404
 ];
