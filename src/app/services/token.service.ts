@@ -39,10 +39,10 @@ export class TokenService {
     return this.http.get<any>(`${this.apiUrl}/all`).pipe(
       tap(response => console.log("All Tokens Fetched:", response)),
       map(response => ({
-        accessToken: response.accessToken,
-        accessTokenExpiry: response.accessTokenExpiry,
-        streamToken: response.streamToken,
-        streamTokenExpiry: response.streamTokenExpiry
+        accessToken: response[0].accessToken,
+        accessTokenExpiry: response[0].accessTokenExpiry,
+        streamToken: response[0].streamToken,
+        streamTokenExpiry: response[0].streamTokenExpiry
       }))
     );
   }
