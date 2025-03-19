@@ -42,7 +42,9 @@ export class CameraFormComponent implements OnInit {
       cindex: [0, Validators.required],
       lat: ['', Validators.required],
       lng: ['', Validators.required],
-      isActive: [true]
+      isActive: [true],
+      country: ['', Validators.required],  // Added country field
+      server: ['', Validators.required]    // Added server field
     });
   }
 
