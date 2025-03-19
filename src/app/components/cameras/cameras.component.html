@@ -44,7 +44,7 @@
         <th mat-header-cell *matHeaderCellDef> Created Date </th>
         <td mat-cell *matCellDef="let camera"> {{ camera.createdDate | date }} </td>
       </ng-container>
-  
+
       <!-- Actions Column -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Actions </th>
@@ -55,7 +55,17 @@
         </td>
       </ng-container>
   
-      <tr mat-header-row *matHeaderRowDef="['name', 'serverFolder', 'createdDate', 'actions']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['name', 'serverFolder', 'createdDate', 'actions'];"></tr>
+      <!-- Download Column -->
+      <ng-container matColumnDef="download">
+        <th mat-header-cell *matHeaderCellDef> Download </th>
+        <td mat-cell *matCellDef="let camera">
+          <button mat-raised-button color="accent" (click)="downloadConfig(camera)">
+            Download
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['name', 'serverFolder', 'createdDate', 'actions', 'download']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['name', 'serverFolder', 'createdDate', 'actions', 'download'];"></tr>
     </table>
   </div>  

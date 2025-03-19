@@ -105,4 +105,26 @@ export class CameraComponent implements OnInit {
   openAddCamera(){
     this.router.navigate(['/camera-form',{ developerId: this.selectedDeveloperId, projectId: this.selectedProjectId }]);
   }
+
+
+  downloadConfig(camera: Camera): void {
+    const configData = [
+      {
+        cameraName: camera.camera,
+        serverFolder: camera.cameraDescription
+      }
+    ];
+
+    const blob = new Blob([JSON.stringify(configData, null, 2)], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'configure.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    window.URL.revokeObjectURL(url);
+  }
 }
