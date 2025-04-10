@@ -108,10 +108,17 @@ export class CameraComponent implements OnInit {
 
 
   downloadConfig(camera: Camera): void {
+    const developer = this.developers.find(dev => dev._id === camera.developer);
+    const project = this.projects.find(proj=> proj._id === camera.project);
+
     const configData = [
       {
-        cameraName: camera.camera,
-        serverFolder: camera.cameraDescription
+        user: "lslcloud",
+        server: "95.217.120.36",
+        port: 2222,
+        developer: developer?.developerTag,
+        prject: project?.projectTag,
+        cameraName: camera.camera
       }
     ];
 
