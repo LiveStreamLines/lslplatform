@@ -117,8 +117,8 @@ export class CameraComponent implements OnInit {
         server: "95.217.120.36",
         port: 2222,
         developer: developer?.developerTag,
-        prject: project?.projectTag,
-        cameraName: camera.camera
+        project: project?.projectTag,
+        camera: camera.camera
       }
     ];
 

@@ -51,6 +51,15 @@ export class UserFormComponent implements OnInit {
     '360 Photography & Videography',
     'Satellite Imagery'
   ];
+  memoryRoles = [
+    { value: 'tech', viewValue: 'Memory Technician' },
+    { value: 'memory-admin', viewValue: 'Memory Administrator' }
+  ];
+  
+  inventoryRoles = [
+    { value: 'tech', viewValue: 'Inventory Technician' },
+    { value: 'inventory-admin', viewValue: 'Inventory Administrator' }
+  ];
 
   constructor(
     private fb: FormBuilder, 
@@ -90,8 +99,17 @@ export class UserFormComponent implements OnInit {
         this.hidepermissions = true;
         this.clearAccessibles();
         this.clearPermissions();
+        this.userForm.get('memoryRole')?.disable();
+        this.userForm.get('inventoryRole')?.disable();
+      } else if (role === 'Admin') {
+        console.log('role is admin');
+        this.userForm.get('memoryRole')?.enable();
+        this.userForm.get('inventoryRole')?.enable();
+        this.hidepermissions = false;
       } else {
         this.hidepermissions = false;
+        this.userForm.get('memoryRole')?.disable();
+        this.userForm.get('inventoryRole')?.disable();
       }
     });   
   }
@@ -109,11 +127,18 @@ export class UserFormComponent implements OnInit {
         accessibleServices: [[]],
         canAddUser: [true],        // Permission to add user
         canGenerateVideoAndPics: [true],    // Permission to upload video
+        memoryRole: ['tech'],
+        inventoryRole: ['tech']
       }
     );
     if (this.isEditing) {
       this.loadUserData();
     }
+  }
+
+  // Add this method to show/hide additional roles
+  showAdminRoles(): boolean {
+    return this.userForm.get('role')?.value === 'Admin';
   }
 
   loadDevelopers(): void {

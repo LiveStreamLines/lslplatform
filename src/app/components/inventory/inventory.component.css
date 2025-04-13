@@ -1,0 +1,82 @@
+.inventory-container {
+    padding: 20px;
+  }
+  
+  .add-device-form {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+  
+  .inventory-table {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .available {
+    color: green;
+  }
+  
+  .assigned {
+    color: blue;
+  }
+  
+  .retired {
+    color: gray;
+  }
+  
+  .maintenance {
+    color: orange;
+  }
+  
+  .expiring {
+    color: orange;
+  }
+  
+  .expired {
+    color: red;
+    font-weight: bold;
+  }
+  
+  .assignment-date {
+    font-size: 0.8em;
+    color: #666;
+  }
+  
+  .mat-column-actions {
+    width: 150px;
+    text-align: center;
+  }
+
+  /* Reuse most styles from memories.component.css */
+/* Add these inventory-specific styles */
+
+/* Status Chip Colors */
+.mat-chip.available {
+  background-color: #2e7d32 !important;
+  color: white !important;
+}
+
+.mat-chip.assigned {
+  background-color: #1565c0 !important;
+  color: white !important;
+}
+
+.mat-chip.retired {
+  background-color: #c62828 !important;
+  color: white !important;
+}
+
+/* Expired Label */
+.expired {
+  color: #f44336;
+  font-weight: bold;
+  font-size: 0.8em;
+}
+
+/* Assignment Date */
+.assignment-date {
+  font-size: 0.8em;
+  color: rgba(255, 255, 255, 0.7);
+}

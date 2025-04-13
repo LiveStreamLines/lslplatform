@@ -26,6 +26,9 @@ import { CameraViewerComponent } from './components/camera-viewer/camera-viewer.
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { SitePhotoComponent } from './components/site-photo/site-photo.component';
 import { CameraFeedComponent } from './components/camera-feed/camera-feed.component';
+import { MemoriesComponent } from './components/memories/memories.component';
+import { MemoryFormComponent } from './components/memories/memory-form/memory-form.component';
+import { InventoryComponent } from './components/inventory/inventory.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -55,6 +58,10 @@ export const routes: Routes = [
   { path: 'media', component: MediaComponent,  canActivate: [AuthGuard]},
   { path: 'about', component: AboutUsComponent, canActivate:[AuthGuard]},
   { path: 'monitor', component: CameraViewerComponent, canActivate:[AuthGuard]},
+  { path: 'memories', component: MemoriesComponent, canActivate:[AuthGuard]},  
+  { path: 'memory-form', component: MemoryFormComponent, canActivate:[AuthGuard]},  
+  { path: 'memory-form/:id', component: MemoryFormComponent, canActivate:[AuthGuard]},  
+  { path: 'inventory', component: InventoryComponent, canActivate:[AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }  // Use the NotFoundComponent for 404
 ];
