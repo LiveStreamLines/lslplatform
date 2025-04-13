@@ -1,9 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DeveloperService } from '../../services/developer.service';
-import { ProjectService } from '../../services/project.service';
-import { CameraService } from '../../services/camera.service';
+import { DeveloperService } from '../../../services/developer.service';
+import { ProjectService } from '../../../services/project.service';
+import { CameraService } from '../../../services/camera.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -12,9 +12,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
-import { Developer } from '../../models/developer.model';
-import { Project } from '../../models/project.model';
-import { Camera } from '../../models/camera.model';
+import { Developer } from '../../../models/developer.model';
+import { Project } from '../../../models/project.model';
+import { Camera } from '../../../models/camera.model';
 
 @Component({
   selector: 'app-assign-dialog',

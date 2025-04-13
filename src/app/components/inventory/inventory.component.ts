@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,15 +14,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { InventoryService } from '../../services/inventory.service';
-import { AssignDialogComponent } from '../assign-dialog/assign-dialog.component';
-import { UnassignDialogComponent } from '../unassign-dialog/unassign-dialog.component';
+
 import { InventoryItem } from '../../models/inventory.model';
 import { Assignment } from '../../models/inventory.model';
 import { Developer } from '../../models/developer.model';
 import { Project } from '../../models/project.model';
 import { Camera } from '../../models/camera.model';
+
 import { AddDeviceDialogComponent } from './add-device-dialog/add-device-dialog.component';
+import { AssignDialogComponent } from './assign-dialog/assign-dialog.component';
+import { UnassignDialogComponent } from './unassign-dialog/unassign-dialog.component';
+
+import { InventoryService } from '../../services/inventory.service';
 import { DeveloperService } from '../../services/developer.service';
 import { ProjectService } from '../../services/project.service';
 import { CameraService } from '../../services/camera.service';
