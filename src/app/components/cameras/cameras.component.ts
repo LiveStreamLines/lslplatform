@@ -115,7 +115,7 @@ export class CameraComponent implements OnInit {
       {
         server: "tempcloud",
         folder: "/home/lsl/media/lslcloud1",
-        country: "",
+        country: camera.country,
         developer: developer?.developerTag,
         project: project?.projectTag,
         camera: camera.camera

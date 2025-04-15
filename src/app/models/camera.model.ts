@@ -15,6 +15,8 @@ export interface Camera {
     "isDeleted": boolean,
     "isActive": boolean,
     "error": boolean,
+    "country": string,
+    "serverFolder": string,
     "createdDate": string
   }
   
