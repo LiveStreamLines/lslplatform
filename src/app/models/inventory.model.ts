@@ -21,9 +21,9 @@ export interface Device {
   }
   
   export interface Assignment {
-    developer: DeveloperReference;
-    project: ProjectReference;
-    camera?: CameraReference;
+    developer: string;
+    project: string;
+    camera: string;
     assignedDate: Date;
     notes?: string;
   }
@@ -34,7 +34,7 @@ export interface Device {
   }
   
   export interface InventoryItem {
-    _id?: string;
+    _id: string;
     device: Device;
     currentAssignment?: Assignment;
     assignmentHistory: HistoricalAssignment[];

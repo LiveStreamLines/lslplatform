@@ -38,7 +38,17 @@
     <mat-icon>videocam</mat-icon>
     <span>Cameras</span>
   </a>
-  <a mat-list-item *ngIf="isSuper || isAdmin" routerLink="/notifications">
+  <a mat-list-item routerLink="/inventory">
+    <mat-icon>inventory</mat-icon>
+    <span>Inventory</span>
+  </a>
+
+  <a mat-list-item routerLink="/memories">
+    <mat-icon>collections_bookmark</mat-icon>
+    <span>Memories</span>
+  </a>
+
+  <a mat-list-item *ngIf="isSuper || isAdmin" routerLink="/">
     <mat-icon>notifications</mat-icon>
     <span>Notifications</span>
   </a>

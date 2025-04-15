@@ -13,7 +13,40 @@ export class CameraService {
   
   private apiUrl =   environment.backend + '/api/cameras/';
   private cameras: Camera[] = [];
+  private camerasLoaded = false;
+
   constructor(private http: HttpClient, private authService: AuthService) {}
+
+
+   getAllCameras(): Observable<Camera[]> {
+      const authh = this.authService.getAuthToken();  // Get auth token from AuthService
+      // Set the custom header with the authh token
+      const headers = new HttpHeaders({
+        'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+      });
+      return this.http.get<Camera[]>(this.apiUrl, { headers }).pipe(
+          tap((data)=> {
+            this.cameras = data;
+            this.camerasLoaded = true;
+          })
+        );
+      //}
+    }
+
+    getCameraById2(cameraId?: string): Observable<Camera | null> {
+        // If we already have projects loaded
+        if (this.camerasLoaded) {
+          const camera = this.cameras.find(d => d._id === cameraId) || null;
+          return of(camera);
+        }
+        
+        // If projects array is empty, load them first
+        return this.getAllCameras().pipe(
+          map(() => {
+            return this.cameras.find(d => d._id === cameraId) || null;
+          })
+        );
+      }
 
   // Fetch cameras by project ID
   getCamerasByProject(projectId: string): Observable<Camera[]> {

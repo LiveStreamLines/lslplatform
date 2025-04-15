@@ -14,7 +14,7 @@ export class DeveloperService {
   //private apiUrl = 'https://lslcloud.com/api/main/developers';  // API URL for fetching developers
   private apiUrl = environment.backend + '/api/developers'; 
   private baseUrl = environment.backend + '/api/developers'; 
-
+  private developerLoaded = false;
  // private baseUrl = 'https://liveview.lslcloud.com/api/admin';
 
   //private apiUrl = 'http://192.168.8.73:5000/api/main/developers';  // API URL for fetching developers
@@ -29,16 +29,26 @@ export class DeveloperService {
     const headers = new HttpHeaders({
       'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
     });
-    // if (this.developers.length > 0) {
-    //   // Return the developers if already loaded
-    //   return of(this.developers);
-    // } else {
       return this.http.get<Developer[]>(this.apiUrl, { headers }).pipe(
         tap((data)=> {
+          this.developerLoaded = true;
           this.developers = data;
         })
       );
     //}
+  }
+
+  getDeveloperById2(developerId: string): Observable<Developer | null> {
+    if (this.developerLoaded) {
+      const developer = this.developers.find(d => d._id === developerId) || null;
+      return of(developer);
+    } 
+
+    return this.getAllDevelopers().pipe(
+      map(()=>{
+        return this.developers.find(d => d._id === developerId) || null
+      })
+    );
   }
 
   getDeveloperIdByTag(developerTag: string): Observable<Developer[]> {

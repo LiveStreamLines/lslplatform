@@ -14,8 +14,26 @@ export class ProjectService {
   private apiUrl = environment.backend + '/api/projects/dev';
   private baseUrl = environment.backend + '/api/projects';
   private projects: Project[] = [];  // Store projects here
+  private projectsLoaded = false;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
+
+
+  getAllProjects(): Observable<Project[]> {
+    const authh = this.authService.getAuthToken();  // Get auth token from AuthService
+    // Set the custom header with the authh token
+    const headers = new HttpHeaders({
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    return this.http.get<Project[]>(this.baseUrl, { headers }).pipe(
+        tap((data)=> {
+          this.projects = data;
+          this.projectsLoaded = true;
+        })
+      );
+    //}
+  }
+  
   // Fetch projects by developer ID
   getProjectsByDeveloper(developerId: string): Observable<Project[]> {
     const authh = this.authService.getAuthToken();  // Get the auth token from AuthService
@@ -23,11 +41,22 @@ export class ProjectService {
     const headers = new HttpHeaders({
       'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
     });
-      return this.http.get<Project[]>(`${this.apiUrl}/${developerId}`, { headers }).pipe(
-        tap((data) => {
-          this.projects = data;  // Store the list of project
-        })
-      );
+      return this.http.get<Project[]>(`${this.apiUrl}/${developerId}`, { headers });
+  }
+
+  getProjectById2(projectId?: string): Observable<Project | null> {
+    // If we already have projects loaded
+    if (this.projectsLoaded) {
+      const project = this.projects.find(d => d._id === projectId) || null;
+      return of(project);
+    }
+    
+    // If projects array is empty, load them first
+    return this.getAllProjects().pipe(
+      map(() => {
+        return this.projects.find(d => d._id === projectId) || null;
+      })
+    );
   }
 
    // Method to get developer details for editing

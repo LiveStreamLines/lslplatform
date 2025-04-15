@@ -2,10 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Memory } from '../models/memory.model';
+import { environment } from '../../environment/environments';
 
 @Injectable({ providedIn: 'root' })
 export class MemoryService {
-  private apiUrl = 'http://localhost:5000/api/memories'; // Use environment.ts for production
+//  private apiUrl = 'http://localhost:5000/api/memories'; // Use environment.ts for production
+  private apiUrl = `${environment.backend}/api/memories`;
+
 
   constructor(private http: HttpClient) {}
 

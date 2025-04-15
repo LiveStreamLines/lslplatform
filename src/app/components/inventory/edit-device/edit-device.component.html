@@ -1,0 +1,105 @@
+<div class="edit-container">
+    <div class="header">
+      <button mat-icon-button (click)="onCancel()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1>Edit Device</h1>
+    </div>
+  
+    <mat-card *ngIf="!isLoading">
+      <mat-card-content>
+        <form [formGroup]="deviceForm">
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Device Type</mat-label>
+              <mat-select formControlName="type">
+                <mat-option *ngFor="let type of ['Box', 'Pi', 'Battery', 'Camera']" [value]="type">
+                  {{type}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+  
+            <mat-form-field appearance="outline">
+              <mat-label>Serial Number</mat-label>
+              <input matInput formControlName="serialNumber">
+            </mat-form-field>
+          </div>
+  
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Model</mat-label>
+              <input matInput formControlName="model">
+            </mat-form-field>
+  
+            <mat-form-field appearance="outline">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="status">
+                <mat-option *ngFor="let status of ['available', 'assigned', 'retired']" [value]="status">
+                  {{status | uppercase}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+  
+          <mat-form-field appearance="outline">
+            <mat-label>Validity Days</mat-label>
+            <input matInput type="number" formControlName="validityDays">
+          </mat-form-field>
+        </form>
+
+          <!-- Assignment Actions -->
+      <div class="action-buttons" *ngIf="currentItem.status !== 'retired'">
+        <button mat-raised-button color="primary" 
+                *ngIf="currentItem.status === 'available'"
+                (click)="openAssignDialog()">
+          Assign Device
+        </button>
+        
+        <button mat-raised-button color="warn" 
+                *ngIf="currentItem.status === 'assigned'"
+                (click)="openUnassignDialog()">
+          Unassign Device
+        </button>
+      </div>
+  
+        <div class="section" *ngIf="currentItem.currentAssignment">
+          <h2>Current Assignment</h2>
+          <div class="assignment-details">
+            <p><strong>Developer:</strong> {{getDeveloperName(currentItem.currentAssignment.developer) | async }}</p>
+            <p><strong>Project:</strong> {{ getProjectName(currentItem.currentAssignment.project) | async }}</p>
+            <p><strong>Camera:</strong> {{getCameraName(currentItem.currentAssignment.camera) | async }}</p>
+            <p><strong>Assigned Date:</strong> {{currentItem.currentAssignment.assignedDate | date}}</p>
+            <p><strong>Notes:</strong> {{currentItem.currentAssignment.notes || 'None'}}</p>
+          </div>
+        </div>
+  
+        <div class="section" *ngIf="currentItem.assignmentHistory?.length">
+          <h2>Assignment History</h2>
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let assignment of currentItem.assignmentHistory">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{assignment.assignedDate | date}} - {{assignment.developer}}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="assignment-details">
+                <p><strong>developer:</strong> {{ getDeveloperName(assignment.developer) | async }}</p>
+                <p><strong>Project:</strong> {{ getProjectName(assignment.project) | async }}</p>
+                <p><strong>Camera:</strong> {{ getCameraName(assignment.camera) | async }}</p>
+                <p><strong>Duration:</strong> {{calculateDuration(assignment.assignedDate , assignment.removedDate)}} days</p>
+                <p><strong>Notes:</strong> {{assignment.notes || 'None'}}</p>
+                <p><strong>Unassignment Reason:</strong> {{assignment.removalReason}}</p>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </mat-card-content>
+  
+      <mat-card-actions align="end">
+        <button mat-button (click)="onCancel()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!deviceForm.valid">
+          Save Changes
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>

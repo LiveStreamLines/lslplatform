@@ -3,7 +3,7 @@
   <form [formGroup]="assignForm">
     <mat-form-field appearance="outline">
       <mat-label>Developer</mat-label>
-      <mat-select formControlName="developerId" (selectionChange)="loadProjects($event.value)" required>
+      <mat-select formControlName="developer" (selectionChange)="loadProjects($event.value)" required>
         <mat-option *ngFor="let dev of developers" [value]="dev._id">
           {{dev.developerName}}
         </mat-option>
@@ -12,7 +12,7 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Project</mat-label>
-      <mat-select formControlName="projectId" (selectionChange)="loadCameras($event.value)" required>
+      <mat-select formControlName="project" (selectionChange)="loadCameras($event.value)" required>
         <mat-option *ngFor="let project of projects" [value]="project._id">
           {{project.projectName}}
         </mat-option>
@@ -21,7 +21,7 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Camera</mat-label>
-      <mat-select formControlName="cameraId">
+      <mat-select formControlName="camera">
         <mat-option *ngFor="let camera of cameras" [value]="camera._id">
           {{camera.camera}}
         </mat-option>

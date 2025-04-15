@@ -47,9 +47,9 @@ export class AssignDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.assignForm = this.fb.group({
-      developerId: ['', Validators.required],
-      projectId: ['', Validators.required],
-      cameraId: [''],
+      developer: ['', Validators.required],
+      project: ['', Validators.required],
+      camera: ['', Validators.required],
       notes: ['']
     });
 
@@ -65,15 +65,15 @@ export class AssignDialogComponent {
   loadProjects(developerId: string): void {
     this.projectService.getProjectsByDeveloper(developerId).subscribe(projects => {
       this.projects = projects;
-      this.assignForm.get('projectId')?.setValue('');
-      this.assignForm.get('cameraId')?.setValue('');
+      this.assignForm.get('project')?.setValue('');
+      this.assignForm.get('camera')?.setValue('');
     });
   }
 
   loadCameras(projectId: string): void {
     this.cameraService.getCamerasByProject(projectId).subscribe(cameras => {
       this.cameras = cameras;
-      this.assignForm.get('cameraId')?.setValue('');
+      this.assignForm.get('camera')?.setValue('');
     });
   }
 

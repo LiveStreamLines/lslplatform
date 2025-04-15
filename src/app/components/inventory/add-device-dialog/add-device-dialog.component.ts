@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { DeviceTypeService } from '../../../services/device-type.service';
 
 @Component({
   selector: 'app-add-device-dialog',
@@ -24,6 +25,7 @@ export class AddDeviceDialogComponent {
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<AddDeviceDialogComponent>,
+    private deviceTypeService: DeviceTypeService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.deviceForm = this.fb.group({

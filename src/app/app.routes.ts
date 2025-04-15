@@ -29,6 +29,7 @@ import { CameraFeedComponent } from './components/camera-feed/camera-feed.compon
 import { MemoriesComponent } from './components/memories/memories.component';
 import { MemoryFormComponent } from './components/memories/memory-form/memory-form.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
+import { EditDeviceComponent } from './components/inventory/edit-device/edit-device.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -62,6 +63,7 @@ export const routes: Routes = [
   { path: 'memory-form', component: MemoryFormComponent, canActivate:[AuthGuard]},  
   { path: 'memory-form/:id', component: MemoryFormComponent, canActivate:[AuthGuard]},  
   { path: 'inventory', component: InventoryComponent, canActivate:[AuthGuard]},
+  { path: 'inventory/edit/:id', component: EditDeviceComponent, canActivate:[AuthGuard]},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }  // Use the NotFoundComponent for 404
 ];
