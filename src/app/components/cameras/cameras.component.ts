@@ -113,9 +113,9 @@ export class CameraComponent implements OnInit {
 
     const configData = [
       {
-        user: "lslcloud",
-        server: "95.217.120.36",
-        port: 2222,
+        server: "tempcloud",
+        folder: "/home/lsl/media/lslcloud1",
+        country: "",
         developer: developer?.developerTag,
         project: project?.projectTag,
         camera: camera.camera

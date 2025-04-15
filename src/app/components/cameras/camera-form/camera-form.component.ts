@@ -40,6 +40,7 @@ export class CameraFormComponent implements OnInit {
       camera: ['', Validators.required],
       cameraDescription: [''],
       cindex: [0, Validators.required],
+      serverno:[''],
       lat: ['', Validators.required],
       lng: ['', Validators.required],
       isActive: [true],
