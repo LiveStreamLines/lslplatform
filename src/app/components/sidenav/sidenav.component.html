@@ -25,7 +25,7 @@
     <span>Manual</span>
   </a>
  
-  <h3 *ngIf="isSuper || isAdmin">Admin</h3>
+  <h3 *ngIf="isSuper">Admin</h3>
   <a mat-list-item *ngIf="isSuper" routerLink="/developers" routerLinkActive="active">
     <mat-icon>build</mat-icon>
     <span>Developers</span>
