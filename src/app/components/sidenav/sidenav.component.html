@@ -38,12 +38,12 @@
     <mat-icon>videocam</mat-icon>
     <span>Cameras</span>
   </a>
-  <a mat-list-item routerLink="/inventory">
+  <a mat-list-item *ngIf="isSuper" routerLink="/inventory">
     <mat-icon>inventory</mat-icon>
     <span>Inventory</span>
   </a>
 
-  <a mat-list-item routerLink="/memories">
+  <a mat-list-item *ngIf="isSuper" routerLink="/memories">
     <mat-icon>collections_bookmark</mat-icon>
     <span>Memories</span>
   </a>

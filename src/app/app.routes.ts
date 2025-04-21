@@ -45,12 +45,17 @@ export const routes: Routes = [
   { path: 'home/:developerTag/:projectTag/satellite-imagery', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
   { path: 'home/:developerTag/:projectTag/:cameraName', component: CameraDetailComponent,  canActivate: [AuthGuard] },  // Route for camera detail
   { path: 'compare', component: CameraCompareComponent,  canActivate: [AuthGuard] },
-  { path: 'developers', component: DevelopersComponent,  canActivate: [AuthGuard] },
-  { path: 'projects', component: ProjectsComponent,  canActivate: [AuthGuard] },
-  { path: 'cameras', component: CameraComponent,  canActivate: [AuthGuard] },
+  { path: 'developers', component: DevelopersComponent,  
+    canActivate: [AuthGuard], data: {roles: ['Super Admin', 'Admin']} },
+  { path: 'projects', component: ProjectsComponent,  
+    canActivate: [AuthGuard], data: {roles: ['Super Admin', 'Admin']} },
+  { path: 'cameras', component: CameraComponent,  
+    canActivate: [AuthGuard], data: {roles: ['Super Admin', 'Admin']} },
+  { path: 'camera-form', component: CameraFormComponent,  
+    canActivate: [AuthGuard], data: {roles: ['Super Admin', 'Admin']} }, // Route for adding a new camera
+  { path: 'camera-form/:id', component: CameraFormComponent,  
+    canActivate: [AuthGuard], data: {roles: ['Super Admin', 'Admin']} }, // Route for editing a camera by ID
   { path: 'users', component: UsersComponent,  canActivate: [AuthGuard] },
-  { path: 'camera-form', component: CameraFormComponent,  canActivate: [AuthGuard] }, // Route for adding a new camera
-  { path: 'camera-form/:id', component: CameraFormComponent,  canActivate: [AuthGuard] }, // Route for editing a camera by ID
   { path: 'users/add', component: UserFormComponent,  canActivate: [AuthGuard] },
   { path: 'users/edit/:id', component: UserFormComponent,  canActivate: [AuthGuard] }, // Route for editing
   { path: 'gallery', component: GalleryComponent,  canActivate: [AuthGuard]},
@@ -59,11 +64,16 @@ export const routes: Routes = [
   { path: 'media', component: MediaComponent,  canActivate: [AuthGuard]},
   { path: 'about', component: AboutUsComponent, canActivate:[AuthGuard]},
   { path: 'monitor', component: CameraViewerComponent, canActivate:[AuthGuard]},
-  { path: 'memories', component: MemoriesComponent, canActivate:[AuthGuard]},  
-  { path: 'memory-form', component: MemoryFormComponent, canActivate:[AuthGuard]},  
-  { path: 'memory-form/:id', component: MemoryFormComponent, canActivate:[AuthGuard]},  
-  { path: 'inventory', component: InventoryComponent, canActivate:[AuthGuard]},
-  { path: 'inventory/edit/:id', component: EditDeviceComponent, canActivate:[AuthGuard]},
+  { path: 'memories', component: MemoriesComponent, 
+    canActivate:[AuthGuard], data: {roles: ['Super Admin']}},  
+  { path: 'memory-form', component: MemoryFormComponent,
+     canActivate:[AuthGuard], data: {roles: ['Super Admin']}},  
+  { path: 'memory-form/:id', component: MemoryFormComponent, 
+    canActivate:[AuthGuard], data: {roles: ['Super Admin']}},  
+  { path: 'inventory', component: InventoryComponent, 
+    canActivate:[AuthGuard], data: {roles: ['Super Admin']}},
+  { path: 'inventory/edit/:id', component: EditDeviceComponent, 
+    canActivate:[AuthGuard], data: {roles: ['Super Admin']}},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }  // Use the NotFoundComponent for 404
 ];
