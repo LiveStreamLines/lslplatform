@@ -41,19 +41,19 @@
       </mat-form-field>
   
       <!-- User Dropdown -->
-      <mat-form-field appearance="outline">
+      <!-- <mat-form-field appearance="outline">
         <mat-label>User</mat-label>
         <mat-select [(ngModel)]="selectedUserId" name="user" (selectionChange)="onUserChange()" required>
           <mat-option *ngFor="let user of users" [value]="user._id">
             {{ user.name }}
           </mat-option>
         </mat-select>
-      </mat-form-field>
+      </mat-form-field> -->
   
       <!-- Start Date -->
       <mat-form-field appearance="outline">
         <mat-label>Start Date</mat-label>
-        <input matInput [matDatepicker]="startPicker" [(ngModel)]="memory.startDate" name="startDate" required>
+        <input matInput [matDatepicker]="startPicker" [(ngModel)]="memory.createdDate" name="startDate" required>
         <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
         <mat-datepicker #startPicker></mat-datepicker>
       </mat-form-field>

@@ -12,6 +12,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 
+import { Observable, of, map } from 'rxjs';
+
 // Services
 import { MemoryService } from '../../services/memory.service';
 import { DeveloperService } from '../../services/developer.service';
@@ -75,9 +77,10 @@ export class MemoriesComponent implements OnInit {
     'developer',
     'project',
     'camera',
-    'user',
     'dateRange',
     'pictures',
+    'memoryUsed',
+    'memoryAvailable',
     'status',
     'removeDate',
     'receiveDate',
@@ -107,7 +110,7 @@ export class MemoriesComponent implements OnInit {
         console.log(data);
         this.memories = data.map(memory => ({
           ...memory,
-          startDate: new Date(memory.startDate),
+        //  startDate: new Date(memory.startDate),
           endDate: new Date(memory.endDate),
           dateOfRemoval: memory.dateOfRemoval ? new Date(memory.dateOfRemoval) : null,
           dateOfReceive: memory.dateOfReceive ? new Date(memory.dateOfReceive) : null
@@ -156,19 +159,31 @@ export class MemoriesComponent implements OnInit {
   filterMemories(): void {
     this.filteredMemories = this.memories.filter(memory => {
       const matchesDeveloper = !this.selectedDeveloperId || 
-        memory.developer._id === this.selectedDeveloperId;
+        memory.developer === this.selectedDeveloperId;
       const matchesProject = !this.selectedProjectId || 
-        memory.project._id === this.selectedProjectId;
+        memory.project === this.selectedProjectId;
       const matchesCamera = !this.selectedCameraId || 
-        memory.camera._id === this.selectedCameraId;
-      const matchesUser = !this.selectedUserId || 
-        memory.user._id === this.selectedUserId;
+        memory.camera === this.selectedCameraId;
       const matchesStatus = !this.statusFilter || 
         memory.status === this.statusFilter;
       
-      return matchesDeveloper && matchesProject && matchesCamera && matchesUser && matchesStatus;
+      return matchesDeveloper && matchesProject && matchesCamera && matchesStatus;
     });
   }
+
+   getDeveloperName(developerTag?: string): Observable<string> {
+      if (!developerTag) return of ('Not assigned');
+      return this.developerService.getDeveloperByTag2(developerTag).pipe(
+        map(developer => developer?.developerName || 'Unkown')
+      );    
+    }
+
+    getProjectName(projectTag?: string): Observable<string> {
+      if (!projectTag) return of ('Not assigned');
+      return this.projectService.getProjectByTag2(projectTag).pipe(
+        map(project => project?.projectName || 'Unkown')
+      );    
+    }
 
   onDeveloperChange(): void {
     if (!this.selectedDeveloperId) {

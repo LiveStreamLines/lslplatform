@@ -51,6 +51,19 @@ export class DeveloperService {
     );
   }
 
+  getDeveloperByTag2(developerTag: string): Observable<Developer | null> {
+    if (this.developerLoaded) {
+      const developer = this.developers.find(d => d.developerTag === developerTag) || null;
+      return of(developer);
+    } 
+
+    return this.getAllDevelopers().pipe(
+      map(()=>{
+        return this.developers.find(d => d.developerTag === developerTag) || null
+      })
+    );
+  }
+
   getDeveloperIdByTag(developerTag: string): Observable<Developer[]> {
    
     const authh = this.authService.getAuthToken();  // Get auth token from AuthService

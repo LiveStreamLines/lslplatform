@@ -59,6 +59,22 @@ export class ProjectService {
     );
   }
 
+  getProjectByTag2(projectTag?: string): Observable<Project | null> {
+    // If we already have projects loaded
+    if (this.projectsLoaded) {
+      const project = this.projects.find(d => d.projectTag === projectTag) || null;
+      return of(project);
+    }
+    
+    // If projects array is empty, load them first
+    return this.getAllProjects().pipe(
+      map(() => {
+        return this.projects.find(d => d.projectTag === projectTag) || null;
+      })
+    );
+  }
+
+
    // Method to get developer details for editing
    getProjectById(projectId: string): Observable<Project> {
     const authh = this.authService.getAuthToken(); 

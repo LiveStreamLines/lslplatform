@@ -39,7 +39,6 @@ import { Memory } from '../../../models/memory.model';
 })
 export class MemoryFormComponent implements OnInit {
   memory: Partial<Memory> = {
-    startDate: new Date(),
     endDate: new Date(),
     numberOfPics: 0
   };
@@ -79,7 +78,7 @@ export class MemoryFormComponent implements OnInit {
     } else {
       // Set default dates
       const today = new Date();
-      this.memory.startDate = today;
+      //this.memory.startDate = today;
       this.memory.endDate = today;
       this.memory.dateOfRemoval = today;
       this.memory.dateOfReceive = today;
@@ -129,10 +128,7 @@ export class MemoryFormComponent implements OnInit {
         const currentUser = this.users.find(u => u._id === 'current-user-id'); // Replace with your auth logic
         if (currentUser) {
           this.selectedUserId = currentUser._id;
-          this.memory.user = {
-            _id: currentUser._id,
-            userName: currentUser.name
-          };
+          //this.memory.user = currentUser.name
         }
       },
       error: () => this.isLoading = false
@@ -145,12 +141,11 @@ export class MemoryFormComponent implements OnInit {
       next: (data) => {
         console.log(data);
         this.memory = data;
-        this.selectedDeveloperId = data.developer._id;
-        this.loadProjects(data.developer._id);
-        this.selectedProjectId = data.project._id;
-        this.loadCameras(data.project._id);
-        this.selectedCameraId = data.camera._id;
-        this.selectedUserId = data.user._id;
+        this.selectedDeveloperId = data.developer;
+        this.loadProjects(data.developer);
+        this.selectedProjectId = data.project;
+        this.loadCameras(data.project);
+        this.selectedCameraId = data.camera;
         this.isLoading = false;
       },
       error: () => this.isLoading = false
@@ -168,10 +163,7 @@ export class MemoryFormComponent implements OnInit {
       // Set developer in memory object
       const selectedDev = this.developers.find(d => d._id === this.selectedDeveloperId);
       if (selectedDev) {
-        this.memory.developer = {
-          _id: selectedDev._id,
-          developerName: selectedDev.developerName
-        };
+        this.memory.developer = selectedDev.developerName
       }
     }
   }
@@ -185,10 +177,7 @@ export class MemoryFormComponent implements OnInit {
       // Set project in memory object
       const selectedProj = this.projects.find(p => p._id === this.selectedProjectId);
       if (selectedProj) {
-        this.memory.project = {
-          _id: selectedProj._id,
-          projectName: selectedProj.projectName
-        };
+        this.memory.project = selectedProj.projectName
       }
     }
   }
@@ -197,28 +186,25 @@ export class MemoryFormComponent implements OnInit {
     if (this.selectedCameraId) {
       const selectedCam = this.cameras.find(c => c._id === this.selectedCameraId);
       if (selectedCam) {
-        this.memory.camera = {
-          _id: selectedCam._id,
-          cameraName: selectedCam.camera
+        this.memory.camera = selectedCam.camera
         };
-      }
-    }
+      }    
   }
 
-  onUserChange(): void {
-    if (this.selectedUserId) {
-      const selectedUser = this.users.find(u => u._id === this.selectedUserId);
-      if (selectedUser) {
-        this.memory.user = {
-          _id: selectedUser._id,
-          userName: selectedUser.name
-        };
-      }
-    }
-  }
+  // onUserChange(): void {
+  //   if (this.selectedUserId) {
+  //     const selectedUser = this.users.find(u => u._id === this.selectedUserId);
+  //     if (selectedUser) {
+  //       this.memory.user = {
+  //         _id: selectedUser._id,
+  //         userName: selectedUser.name
+  //       };
+  //     }
+  //   }
+  // }
 
   onSubmit(): void {
-    if (!this.memory.developer || !this.memory.project || !this.memory.camera || !this.memory.user) {
+    if (!this.memory.developer || !this.memory.project || !this.memory.camera) {
       alert('Please fill all required fields');
       return;
     }

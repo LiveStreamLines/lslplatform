@@ -6,7 +6,7 @@
       <mat-label>Developer</mat-label>
       <mat-select [(ngModel)]="selectedDeveloperId" (selectionChange)="onDeveloperChange()">
         <mat-option>All Developers</mat-option>
-        <mat-option *ngFor="let developer of developers" [value]="developer._id">
+        <mat-option *ngFor="let developer of developers" [value]="developer.developerTag">
           {{ developer.developerName }}
         </mat-option>
       </mat-select>
@@ -17,7 +17,7 @@
       <mat-label>Project</mat-label>
       <mat-select [(ngModel)]="selectedProjectId" (selectionChange)="onProjectChange()" [disabled]="!selectedDeveloperId">
         <mat-option>All Projects</mat-option>
-        <mat-option *ngFor="let project of projects" [value]="project._id">
+        <mat-option *ngFor="let project of projects" [value]="project.projectTag">
           {{ project.projectName }}
         </mat-option>
       </mat-select>
@@ -28,14 +28,14 @@
       <mat-label>Camera</mat-label>
       <mat-select [(ngModel)]="selectedCameraId" (selectionChange)="onCameraChange()" [disabled]="!selectedProjectId">
         <mat-option>All Cameras</mat-option>
-        <mat-option *ngFor="let camera of cameras" [value]="camera._id">
+        <mat-option *ngFor="let camera of cameras" [value]="camera.camera">
           {{ camera.camera }}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
     <!-- User Dropdown -->
-    <mat-form-field appearance="outline">
+    <!-- <mat-form-field appearance="outline">
       <mat-label>User</mat-label>
       <mat-select [(ngModel)]="selectedUserId" (selectionChange)="onUserChange()">
         <mat-option>All Users</mat-option>
@@ -43,7 +43,7 @@
           {{ user.name }}
         </mat-option>
       </mat-select>
-    </mat-form-field>
+    </mat-form-field> -->
 
     <!-- Add this with your other filters -->
     <mat-form-field appearance="outline">
@@ -55,9 +55,9 @@
       </mat-select>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" (click)="openAddMemory()" class="add-button">
+    <!-- <button mat-raised-button color="primary" (click)="openAddMemory()" class="add-button">
       <mat-icon>add</mat-icon> Add New Memory
-    </button>
+    </button> -->
   </div>
 
   <!-- Loading Spinner -->
@@ -70,39 +70,51 @@
     <!-- Developer Column -->
     <ng-container matColumnDef="developer">
       <th mat-header-cell *matHeaderCellDef> Developer </th>
-      <td mat-cell *matCellDef="let memory"> {{ memory.developer.developerName }} </td>
+      <td mat-cell *matCellDef="let memory"> {{ getDeveloperName(memory.developer) | async }} ({{ memory.developer}}) </td>
     </ng-container>
 
     <!-- Project Column -->
     <ng-container matColumnDef="project">
       <th mat-header-cell *matHeaderCellDef> Project </th>
-      <td mat-cell *matCellDef="let memory"> {{ memory.project.projectName }} </td>
+      <td mat-cell *matCellDef="let memory"> {{ getProjectName(memory.project) | async }} ({{ memory.project }}) </td>
     </ng-container>
 
     <!-- Camera Column -->
     <ng-container matColumnDef="camera">
       <th mat-header-cell *matHeaderCellDef> Camera </th>
-      <td mat-cell *matCellDef="let memory"> {{ memory.camera.cameraName }} </td>
+      <td mat-cell *matCellDef="let memory"> {{ memory.camera }} </td>
     </ng-container>
 
-    <!-- User Column -->
+    <!-- User Column
     <ng-container matColumnDef="user">
       <th mat-header-cell *matHeaderCellDef> User </th>
       <td mat-cell *matCellDef="let memory"> {{ memory.user.userName }} </td>
-    </ng-container>
+    </ng-container> -->
 
     <!-- Date Range Column -->
     <ng-container matColumnDef="dateRange">
       <th mat-header-cell *matHeaderCellDef> Date Range </th>
       <td mat-cell *matCellDef="let memory"> 
-        {{ memory.startDate | date:'shortDate' }} - {{ memory.endDate | date:'shortDate' }}
+        {{ memory.createdDate | date:'shortDate' }} - {{ memory.endDate | date:'shortDate' }}
       </td>
     </ng-container>
 
     <!-- Pictures Column -->
     <ng-container matColumnDef="pictures">
       <th mat-header-cell *matHeaderCellDef> Pictures </th>
-      <td mat-cell *matCellDef="let memory"> {{ memory.numberOfPics }} </td>
+      <td mat-cell *matCellDef="let memory"> {{ memory.numberofpics }} </td>
+    </ng-container>
+
+     <!-- Pictures Column -->
+     <ng-container matColumnDef="memoryUsed">
+      <th mat-header-cell *matHeaderCellDef> Memory Used </th>
+      <td mat-cell *matCellDef="let memory"> {{ memory.memoryUsed }} </td>
+    </ng-container>
+
+     <!-- Pictures Column -->
+     <ng-container matColumnDef="memoryAvailable">
+      <th mat-header-cell *matHeaderCellDef> Memory Avaialable </th>
+      <td mat-cell *matCellDef="let memory"> {{ memory.memoryAvailable }} </td>
     </ng-container>
 
     <!-- Status Column -->
@@ -155,12 +167,11 @@
           </button>
           
           <!-- Edit Button (always shown except for received) -->
-          <button mat-icon-button color="accent" 
-                  
+          <!-- <button mat-icon-button color="accent"                   
                   (click)="openEditMemory(memory._id)"
                   matTooltip="Edit">
-            <mat-icon>edit</mat-icon>
-          </button>
+                 <mat-icon>edit</mat-icon>
+          </button> -->
         </div>
       </td>
     </ng-container>

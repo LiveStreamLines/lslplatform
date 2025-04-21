@@ -48,6 +48,21 @@ export class CameraService {
         );
       }
 
+      getCameraByTag2(cameraTag?: string): Observable<Camera | null> {
+        // If we already have projects loaded
+        if (this.camerasLoaded) {
+          const camera = this.cameras.find(d => d.camera === cameraTag) || null;
+          return of(camera);
+        }
+        
+        // If projects array is empty, load them first
+        return this.getAllCameras().pipe(
+          map(() => {
+            return this.cameras.find(d => d.camera === cameraTag) || null;
+          })
+        );
+      }
+
   // Fetch cameras by project ID
   getCamerasByProject(projectId: string): Observable<Camera[]> {
     const authh = this.authService.getAuthToken();  // Get the auth token from AuthService
