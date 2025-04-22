@@ -65,7 +65,7 @@ export const routes: Routes = [
   { path: 'about', component: AboutUsComponent, canActivate:[AuthGuard]},
   { path: 'monitor', component: CameraViewerComponent, canActivate:[AuthGuard]},
   { path: 'memories', component: MemoriesComponent, 
-    canActivate:[AuthGuard], data: {roles: ['Super Admin']}},  
+    canActivate:[AuthGuard], data: {roles: ['Super Admin', 'Admin']}},  
   { path: 'memory-form', component: MemoryFormComponent,
      canActivate:[AuthGuard], data: {roles: ['Super Admin']}},  
   { path: 'memory-form/:id', component: MemoryFormComponent, 

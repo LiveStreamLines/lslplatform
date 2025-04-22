@@ -117,7 +117,7 @@
     <!-- Memory Role (shown only for admin) -->
     <mat-form-field appearance="outline" *ngIf="showAdminRoles()">
       <mat-label>Memory Role</mat-label>
-      <mat-select formControlName="memoryRole" required>
+      <mat-select formControlName="memoryRole">
         <mat-option *ngFor="let role of memoryRoles" [value]="role.value">
           {{ role.viewValue }}
         </mat-option>

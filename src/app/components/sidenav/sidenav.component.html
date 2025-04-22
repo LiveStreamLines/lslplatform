@@ -38,20 +38,21 @@
     <mat-icon>videocam</mat-icon>
     <span>Cameras</span>
   </a>
-  <a mat-list-item *ngIf="isSuper" routerLink="/inventory">
+  <a mat-list-item *ngIf="isSuper || (isAdmin && invenotryRole !== '')" routerLink="/inventory">
     <mat-icon>inventory</mat-icon>
     <span>Inventory</span>
   </a>
 
-  <a mat-list-item *ngIf="isSuper" routerLink="/memories">
+  <a mat-list-item *ngIf="isSuper || (isAdmin && memoryRole)" routerLink="/memories">
     <mat-icon>collections_bookmark</mat-icon>
     <span>Memories</span>
   </a>
 
-  <a mat-list-item *ngIf="isSuper || isAdmin" routerLink="/">
+  <!-- <a mat-list-item *ngIf="isSuper" routerLink="/">
     <mat-icon>notifications</mat-icon>
     <span>Notifications</span>
   </a>
+
   <a mat-list-item *ngIf="isSuper || isAdmin" routerLink="/media" routerLinkActive="active">
     <mat-icon>collections</mat-icon>
     <span>Media Admin</span>
@@ -59,7 +60,7 @@
   <a mat-list-item *ngIf="isSuper || isAdmin" routerLink="/login-history">
     <mat-icon>history</mat-icon>
     <span>Login History</span>
-  </a>
+  </a> -->
   <a mat-list-item *ngIf="isSuper || isAdmin || isAddingUser" routerLink="/users">
     <mat-icon>lock</mat-icon>
     <span>Users & Permissions</span>

@@ -7,7 +7,8 @@ export interface Memory {
   createdDate: Date | string;
   endDate: Date | string;
   numberOfPics: number;
+  memoryAvailable: string;
   dateOfRemoval?: Date | string | null;  // Allow null
   dateOfReceive?: Date | string | null;  // Allow null
-  status: 'active' | 'removed' | 'received';
+  status: 'active' | 'removed' | 'archived';
 }

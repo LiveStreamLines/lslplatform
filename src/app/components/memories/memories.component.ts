@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -19,6 +20,7 @@ import { MemoryService } from '../../services/memory.service';
 import { DeveloperService } from '../../services/developer.service';
 import { ProjectService } from '../../services/project.service';
 import { UserService } from '../../services/users.service';
+import { AuthService } from '../../services/auth.service';
 
 
 // Models
@@ -43,7 +45,8 @@ import { CameraService } from '../../services/camera.service';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatChipsModule
+    MatChipsModule,
+    MatCheckboxModule
   ],
   templateUrl: './memories.component.html',
   styleUrls: ['./memories.component.css']
@@ -55,7 +58,12 @@ export class MemoriesComponent implements OnInit {
   memories: Memory[] = [];
   cameras: Camera[] = [];
   users: User[] = [];
+
+  showSizeWarning = true; // New filter flag
   filteredMemories: Memory[] = [];     // Filtered subset for display
+
+  memoryRole: string | null  = "";
+  userRole: string | null = "";
 
   // Selected Filters
   selectedDeveloperId: string | null = null;
@@ -68,7 +76,7 @@ export class MemoriesComponent implements OnInit {
     { value: null, viewValue: 'All Statuses' },
     { value: 'active', viewValue: 'Active' },
     { value: 'removed', viewValue: 'Removed' },
-    { value: 'received', viewValue: 'Received' }
+    { value: 'archived', viewValue: 'Archived' }
   ];
 
   // UI State
@@ -93,10 +101,22 @@ export class MemoriesComponent implements OnInit {
     private projectService: ProjectService,
     private cameraService: CameraService,
     private userService: UserService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.memoryRole = this.authService.getMemoryRole() || null;
+    this.userRole = this.authService.getUserRole() || null;
+
+    // Set initial status filter based on role
+    if (this.memoryRole === 'removal') {
+      this.statusFilter = 'active'; // Lock to active for removal role
+    } 
+    else if (this.memoryRole === 'archiver') {
+      this.statusFilter = 'removed'; // Lock to removed for archiver role
+    }
+
     this.loadDevelopers();
     this.loadMemories();  // Load all memories upfront
     this.loadUsers();
@@ -156,6 +176,33 @@ export class MemoriesComponent implements OnInit {
     });
   }
 
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'active': return 'primary';
+      case 'archived': return 'success';
+      case 'removed': return 'warn';
+      case 'maintenance': return '';
+      case 'expiring': return '';
+      case 'expired': return 'warn';
+      default: return '';
+    }
+  }
+
+  // Add this method to parse the memory string
+  parseMemorySize(memorySize: string): number {
+    if (!memorySize) return 0;
+    const size = parseFloat(memorySize.replace(/[^\d.]/g, ''));
+    return size;
+  }
+
+  // Update the isLowMemory method
+  isLowMemory(memory: Memory): boolean {
+    if (memory.status !== 'active') return false;
+    const availableGB = this.parseMemorySize(memory.memoryAvailable);
+    return availableGB < 10;
+  }
+
+
   filterMemories(): void {
     this.filteredMemories = this.memories.filter(memory => {
       const matchesDeveloper = !this.selectedDeveloperId || 
@@ -166,8 +213,10 @@ export class MemoriesComponent implements OnInit {
         memory.camera === this.selectedCameraId;
       const matchesStatus = !this.statusFilter || 
         memory.status === this.statusFilter;
+        const matchesSizeWarning = !this.showSizeWarning || 
+        this.isLowMemory(memory);
       
-      return matchesDeveloper && matchesProject && matchesCamera && matchesStatus;
+      return matchesDeveloper && matchesProject && matchesCamera && matchesStatus && matchesSizeWarning;
     });
   }
 
@@ -230,11 +279,11 @@ export class MemoriesComponent implements OnInit {
     this.router.navigate(['/memory-form', memoryId]);
   }
 
-  updateMemoryStatus(memoryId: string, newStatus: 'removed' | 'received'): void {
+  updateMemoryStatus(memoryId: string, newStatus: 'removed' | 'archived'): void {
     const update = {
       status: newStatus,
-      ...(newStatus === 'removed' && { dateOfRemoval: new Date() }),
-      ...(newStatus === 'received' && { dateOfReceive: new Date() })
+      ...(newStatus === 'removed' && { dateOfRemoval: new Date(), RemovalUser: this.authService.getUsername() }),
+      ...(newStatus === 'archived' && { dateOfReceive: new Date(), RecieveUser: this.authService.getUsername() })
     };
   
     this.memoryService.updateMemory(memoryId, update).subscribe({

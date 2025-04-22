@@ -24,6 +24,8 @@ import { MatDialog } from '@angular/material/dialog';
 export class SidenavComponent implements OnInit {
   userRole: string = '';
   permission: string | null = null;
+  memoryRole: string | null = '';
+  invenotryRole: string | null = '';
   isAdmin: boolean = false;  // You can set this dynamically later
   isSuper: boolean = false;
   isAddingUser: boolean = false;
@@ -36,6 +38,8 @@ export class SidenavComponent implements OnInit {
   ngOnInit(): void {
     this.userRole = this.authService.getUserRole() || '';
     this.permission = this.authService.getCanAddUser() || null;
+    this.memoryRole = this.authService.getMemoryRole() || null;
+    this.invenotryRole = this.authService.getInentoryRole() || null;
 
     if (this.userRole === 'Super Admin') {
       this.isSuper = true;
@@ -48,6 +52,8 @@ export class SidenavComponent implements OnInit {
     if(this.permission === 'true') {
       this.isAddingUser = true;
     }
+
+    console.log(this.memoryRole);
 
     console.log(this.isSuper, this.isAdmin, this.isAddingUser, this.permission);
   }

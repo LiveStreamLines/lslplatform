@@ -21,6 +21,8 @@ interface AuthResponse {
   message?: string; // Optional message
   userId?: string;
   manual?: string;
+  memoryRole?: string;
+  invenotryRole?: string;
 }
 
 @Injectable({
@@ -41,6 +43,8 @@ export class AuthService {
   private canGenerateVideoAndPics: string | null = null;
   private userId: string | null = null;
   private manual: string | null = null;
+  private memoryRole: string | null = null;
+  private inventoryRole: string | null = null ;
 
   constructor(private http: HttpClient, private router: Router) {
     // Initialize from localStorage
@@ -57,6 +61,8 @@ export class AuthService {
     this.canAdduser = localStorage.getItem('canAdduser');
     this.canGenerateVideoAndPics = localStorage.getItem('canGenerateVideoAndPics');
     this.manual = localStorage.getItem('manual');
+    this.memoryRole = localStorage.getItem('memoryRole');
+    this.inventoryRole = localStorage.getItem('inventoryRole');
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
@@ -92,20 +98,23 @@ export class AuthService {
     );
   }
 
-  private setUserData(response: AuthResponse): void {
-    this.userId = response.userId || null;
-    this.username = response.username || null;
+  private setUserData(response: any): void {
+    console.log(response);
+    this.userId = response._id || null;
+    this.username = response.name || null;
     this.useremail = response.email || null;
     this.phone = response.phone || null;
     this.authToken = response.authh || null;
     this.userRole = response.role || null;
-    this.accessibleDevelopers = response.developers || [];
-    this.accessibleProjects = response.projects || [];
-    this.accessibleCameras = response.cameras || [];
-    this.accessibleServices = response.services || [];
+    this.accessibleDevelopers = response.accessibleDevelopers || [];
+    this.accessibleProjects = response.accessibleProjects || [];
+    this.accessibleCameras = response.accessibleCameras || [];
+    this.accessibleServices = response.accessibleServices || [];
     this.canAdduser = response.canAdduser || null;
     this.canGenerateVideoAndPics = response.canGenerateVideoAndPics || null;
     this.manual = response.manual || null;
+    this.memoryRole = response.memoryRole || null;
+    this.inventoryRole = response.invenotryRole || null;
 
 
     // Save to localStorage
@@ -122,6 +131,9 @@ export class AuthService {
     localStorage.setItem('canAdduser', JSON.stringify(this.canAdduser));
     localStorage.setItem('canGenerateVideoAndPics', JSON.stringify(this.canGenerateVideoAndPics));
     localStorage.setItem('manual', JSON.stringify(this.manual));
+    localStorage.setItem('memoryRole', JSON.stringify(this.memoryRole));
+    localStorage.setItem('inventoryRole', JSON.stringify(this.inventoryRole));
+
   }
   
 
@@ -140,7 +152,9 @@ export class AuthService {
     this.canGenerateVideoAndPics = null;
     this.userId = null;
     this.manual = null;
-
+    this.memoryRole = null;
+    this.inventoryRole = null;
+   
     // Remove from localStorage
     localStorage.clear();
 
@@ -192,7 +206,15 @@ export class AuthService {
     return this.canGenerateVideoAndPics;
   }
 
+  getMemoryRole(): string | null {
+    return this.memoryRole;
+  }
+
+  getInentoryRole(): string | null {
+    return this.inventoryRole;
+  }
+
   isLoggedIn(): boolean {
-    return !!this.authToken || !!localStorage.getItem('authToken');
+    return !!this.authToken   || !!localStorage.getItem('authToken');
   }
 }

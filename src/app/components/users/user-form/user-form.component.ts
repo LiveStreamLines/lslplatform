@@ -52,8 +52,10 @@ export class UserFormComponent implements OnInit {
     'Satellite Imagery'
   ];
   memoryRoles = [
-    { value: 'tech', viewValue: 'Memory Technician' },
-    { value: 'memory-admin', viewValue: 'Memory Administrator' }
+    { value: '', viewValue: '-'},
+    { value: 'viewer', viewValue: 'Memory Viewer' },
+    { value: 'removal', viewValue: 'Memory Removal' },
+    { value: 'archiver', viewValue: "Memory Archiver"},
   ];
   
   inventoryRoles = [

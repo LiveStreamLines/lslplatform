@@ -60,6 +60,40 @@
   .filter-section ::ng-deep .mat-mdc-select-arrow {
     color: rgba(255, 255, 255, 0.7) !important;
   }
+
+  /* In memories.component.css */
+.warning-filter {
+  margin-left: 16px;
+  margin-top: 16px;
+  display: block;
+}
+
+.low-memory {
+  background-color: #fff8e1;
+  border-left: 4px solid #ffa000;
+}
+
+.low-memory:hover {
+  background-color: #ffecb3;
+  transition: background-color 0.3s ease;
+}
+
+.low-memory-text {
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+.warning-icon {
+  font-size: 18px;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+.warning-text {
+  color: #d32f2f;
+  font-size: 0.8em;
+  margin-left: 4px;
+}
   
   
   /* Dark Buttons */
@@ -101,6 +135,11 @@
   
   mat-chip.mat-warn {
     background-color: #c62828 !important;
+    color: white !important;
+  }
+
+  mat-chip.mat-success {
+    background-color: #28c640c8 !important;
     color: white !important;
   }
   

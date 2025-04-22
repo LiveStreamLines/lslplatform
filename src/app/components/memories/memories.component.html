@@ -60,10 +60,18 @@
     </button> -->
   </div>
 
+  <!-- Add this checkbox near your other filters -->
+  <mat-checkbox [(ngModel)]="showSizeWarning" (change)="filterMemories()" class="warning-filter">
+    Show only memories with less than 10GB available
+  </mat-checkbox>
+  <br><br>
+
   <!-- Loading Spinner -->
   <div *ngIf="isLoading" class="spinner-container">
     <mat-spinner diameter="40"></mat-spinner>
   </div>
+
+  <h3>Memory {{memoryRole}}</h3>
 
   <!-- Memories Table -->
   <table mat-table [dataSource]="filteredMemories" class="mat-elevation-z8" *ngIf="!isLoading">
@@ -95,7 +103,7 @@
     <ng-container matColumnDef="dateRange">
       <th mat-header-cell *matHeaderCellDef> Date Range </th>
       <td mat-cell *matCellDef="let memory"> 
-        {{ memory.createdDate | date:'shortDate' }} - {{ memory.endDate | date:'shortDate' }}
+        {{ memory.createdDate | date:'shortDate' }} - {{ memory.dateOfRemoval | date:'shortDate' }}
       </td>
     </ng-container>
 
@@ -113,8 +121,13 @@
 
      <!-- Pictures Column -->
      <ng-container matColumnDef="memoryAvailable">
-      <th mat-header-cell *matHeaderCellDef> Memory Avaialable </th>
-      <td mat-cell *matCellDef="let memory"> {{ memory.memoryAvailable }} </td>
+      <th mat-header-cell *matHeaderCellDef> Memory Available </th>
+      <td mat-cell *matCellDef="let memory" 
+          [class.low-memory-text]="isLowMemory(memory)">
+        {{ memory.memoryAvailable }}
+        <mat-icon *ngIf="isLowMemory(memory)" color="warn" class="warning-icon">warning</mat-icon>
+        <span *ngIf="isLowMemory(memory)" class="warning-text">(Low Memory)</span>
+      </td>
     </ng-container>
 
     <!-- Status Column -->
@@ -122,7 +135,7 @@
       <th mat-header-cell *matHeaderCellDef> Status </th>
       <td mat-cell *matCellDef="let memory"> 
         <mat-chip-listbox>
-          <mat-chip [color]="memory.status === 'active' ? 'primary' : 'warn'">
+          <mat-chip  [color]="getStatusColor(memory.status)" selected>
             {{ memory.status || 'active' }}
           </mat-chip>
         </mat-chip-listbox>
@@ -133,7 +146,8 @@
     <ng-container matColumnDef="removeDate">
       <th mat-header-cell *matHeaderCellDef> Remove Date </th>
       <td mat-cell *matCellDef="let memory">
-        {{ memory.dateOfRemoval ? (memory.dateOfRemoval | date:'shortDate') : 'N/A' }}
+        {{ memory.dateOfRemoval ? (memory.dateOfRemoval | date:'shortDate') : 'N/A' }} 
+        <br> by {{ memory.RemovalUser }}
       </td>
     </ng-container>
 
@@ -142,17 +156,19 @@
       <th mat-header-cell *matHeaderCellDef> Receive Date </th>
       <td mat-cell *matCellDef="let memory">
         {{ memory.dateOfReceive ? (memory.dateOfReceive | date:'shortDate') : 'N/A' }}
+        <br> by {{ memory.RecieveUser }}
       </td>
     </ng-container>
 
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef> Actions </th>
-      <td mat-cell *matCellDef="let memory">
-        <div class="action-buttons">
+      <td  mat-cell *matCellDef="let memory">
+
+        <div *ngIf="memoryRole !== 'viewer'" class="action-buttons">
           <!-- Remove Button (shown only for active memories) -->
           <button mat-icon-button color="warn" 
-                  *ngIf="memory.status === 'active'"
+                  *ngIf="memory.status === 'active' && (memoryRole === 'removal' || userRole === 'Super Admin')"
                   (click)="updateMemoryStatus(memory._id, 'removed')"
                   matTooltip="Mark as Removed">
             <mat-icon>handyman</mat-icon>
@@ -160,18 +176,13 @@
           
           <!-- Receive Button (shown only for removed memories) -->
           <button mat-icon-button color="primary" 
-                  *ngIf="memory.status === 'removed'"
-                  (click)="updateMemoryStatus(memory._id, 'received')"
-                  matTooltip="Mark as Received">
+                  *ngIf="memory.status === 'removed' && (memoryRole === 'archiver' || userRole === 'Super Admin')"
+                  (click)="updateMemoryStatus(memory._id, 'archived')"
+                  matTooltip="Mark as Archived">
             <mat-icon>check_circle</mat-icon>
           </button>
           
-          <!-- Edit Button (always shown except for received) -->
-          <!-- <button mat-icon-button color="accent"                   
-                  (click)="openEditMemory(memory._id)"
-                  matTooltip="Edit">
-                 <mat-icon>edit</mat-icon>
-          </button> -->
+        
         </div>
       </td>
     </ng-container>
