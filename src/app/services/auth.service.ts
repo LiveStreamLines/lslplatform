@@ -110,7 +110,7 @@ export class AuthService {
     this.accessibleProjects = response.accessibleProjects || [];
     this.accessibleCameras = response.accessibleCameras || [];
     this.accessibleServices = response.accessibleServices || [];
-    this.canAdduser = response.canAdduser || null;
+    this.canAdduser = response.canAddUser || null;
     this.canGenerateVideoAndPics = response.canGenerateVideoAndPics || null;
     this.manual = response.manual || null;
     this.memoryRole = response.memoryRole || null;

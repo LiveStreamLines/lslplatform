@@ -59,8 +59,10 @@ export class UserFormComponent implements OnInit {
   ];
   
   inventoryRoles = [
+    { value: '', viewValue: '-' }, 
+    { value: 'viewer', viewValue: 'Inventory viewer' },
     { value: 'tech', viewValue: 'Inventory Technician' },
-    { value: 'inventory-admin', viewValue: 'Inventory Administrator' }
+    { value: 'stock', viewValue: 'Inventory Stockeeper' }
   ];
 
   constructor(
@@ -129,8 +131,8 @@ export class UserFormComponent implements OnInit {
         accessibleServices: [[]],
         canAddUser: [true],        // Permission to add user
         canGenerateVideoAndPics: [true],    // Permission to upload video
-        memoryRole: ['tech'],
-        inventoryRole: ['tech']
+        memoryRole: [''],
+        inventoryRole: ['']
       }
     );
     if (this.isEditing) {

@@ -20,11 +20,15 @@ import { InventoryService } from '../../../services/inventory.service';
 import { DeveloperService } from '../../../services/developer.service';
 import { ProjectService } from '../../../services/project.service';
 import { CameraService } from '../../../services/camera.service';
+import { DeviceTypeService } from '../../../services/device-type.service';
+import { AuthService } from '../../../services/auth.service';
+
 
 import { InventoryItem, Assignment } from '../../../models/inventory.model';
 
 import { AssignDialogComponent } from '../assign-dialog/assign-dialog.component';
 import { UnassignDialogComponent } from '../unassign-dialog/unassign-dialog.component';
+import { DeviceType } from '../../../models/device-type.model';
 
 
 @Component({
@@ -51,7 +55,13 @@ import { UnassignDialogComponent } from '../unassign-dialog/unassign-dialog.comp
 export class EditDeviceComponent implements OnInit {
   deviceForm: FormGroup;
   currentItem!: InventoryItem;
+  deviceTypes: DeviceType[] = [];
+  validityDaysMap: { [key: string]: number } = {};
+
   isLoading = true;
+
+  userRole: string | null ='';
+  memoryRole: string | null = '';
 
   developers: any[] = [];
   projects: any[] = [];
@@ -64,6 +74,8 @@ export class EditDeviceComponent implements OnInit {
     private developerService: DeveloperService,
     private projectService: ProjectService,
     private cameraService: CameraService,
+    private deviceTypeService: DeviceTypeService,
+    private authService: AuthService,
     private fb: FormBuilder,
     private dialog: MatDialog
   ) {
@@ -77,6 +89,10 @@ export class EditDeviceComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.memoryRole = this.authService.getMemoryRole();
+    this.userRole = this.authService.getUserRole();
+    this.loadDeviceTypes();
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.inventoryService.getById(id).subscribe({
@@ -97,6 +113,17 @@ export class EditDeviceComponent implements OnInit {
       });
     }
   }
+
+    loadDeviceTypes(): void {
+      this.deviceTypeService.getAll().subscribe(types => {
+        this.deviceTypes = types;
+        // Create validityDaysMap from loaded device types
+        this.validityDaysMap = types.reduce((acc, type) => {
+          acc[type.name] = type.validityDays;
+          return acc;
+        }, {} as { [key: string]: number });
+      });
+    }
 
    getDeveloperName(developerId?: string): Observable<string> {
       if (!developerId) return of ('Not assigned');

@@ -26,19 +26,24 @@ import { Camera } from '../../models/camera.model';
 import { DeviceType } from '../../models/device-type.model';
 
 
+
 import { AddDeviceDialogComponent } from './add-device-dialog/add-device-dialog.component';
 import { AssignDialogComponent } from './assign-dialog/assign-dialog.component';
 import { UnassignDialogComponent } from './unassign-dialog/unassign-dialog.component';
 import { DeviceTypeListComponent } from './device-type-list/device-type-list.component';
+import { RelocationDialogComponent } from './relocation-dialog/relocation-dialog.component';
+
 
 import { InventoryService } from '../../services/inventory.service';
 import { DeveloperService } from '../../services/developer.service';
 import { ProjectService } from '../../services/project.service';
 import { CameraService } from '../../services/camera.service';
 import { DeviceTypeService } from '../../services/device-type.service';
+import { UserService } from '../../services/users.service';
 
 
 import { Observable } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-inventory',
@@ -65,10 +70,13 @@ import { Observable } from 'rxjs';
 })
 export class InventoryComponent implements OnInit {
   // Selected Filters
+  selectedDeviceType: string | null = null;
+  serialNumberSearch: string = '';
   selectedDeveloperId: string | null = null;
   selectedProjectId: string | null = null;
   selectedCameraId: string | null = null;
   selectedStatus: string | null = null;
+
 
   projectlist: Project[] = [];
   cameralist: Camera[] = [];
@@ -77,6 +85,9 @@ export class InventoryComponent implements OnInit {
   projects: Project[] = [];
   cameras: Camera[] = [];
   filteredItems: InventoryItem[] = [];
+
+  memoryRole: string | null = '';
+  userRole: string | null = '';
   
   inventoryItems: InventoryItem[] = [];
   displayedColumns: string[] = [
@@ -114,11 +125,15 @@ export class InventoryComponent implements OnInit {
     private developerService: DeveloperService,
     private projectService: ProjectService,
     private cameraService: CameraService,
+    private authService: AuthService,
     private deviceTypeService: DeviceTypeService,
     private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
+    this.memoryRole = this.authService.getMemoryRole() || null;
+    this.userRole = this.authService.getUserRole() || null;
+
     this.loadDeviceTypes();
     this.loadInventory();
   }
@@ -169,6 +184,12 @@ export class InventoryComponent implements OnInit {
 
   filterItems(): void {
     this.filteredItems = this.inventoryItems.filter(item => {
+      const matchesDeviceType = !this.selectedDeviceType ||
+      item.device.type === this.selectedDeviceType;
+
+      const matchesSerialNumber = !this.serialNumberSearch ||
+      item.device.serialNumber.toLowerCase().includes(this.serialNumberSearch.toLowerCase());
+    
       const matchesDeveloper = !this.selectedDeveloperId || 
         (item.currentAssignment && item.currentAssignment.developer === this.selectedDeveloperId);
       
@@ -180,10 +201,21 @@ export class InventoryComponent implements OnInit {
       
       const matchesStatus = !this.selectedStatus || 
         item.status === this.selectedStatus;
+
       
-      return matchesDeveloper && matchesProject && matchesCamera && matchesStatus;
+      
+      return matchesDeviceType &&  matchesSerialNumber &&  matchesDeveloper && matchesProject && matchesCamera && matchesStatus;
     });
   }
+
+  onDeviceTypeChange(): void {
+    this.filterItems();
+  }
+
+  onSerialNumberSearch(): void {
+    this.filterItems();
+  }
+  
 
   onDeveloperChange(): void {
     if (!this.selectedDeveloperId) {
@@ -305,12 +337,48 @@ export class InventoryComponent implements OnInit {
   }
 
   // <!-- Add this method to your component -->
-      openDeviceTypesDialog(): void {
-        this.dialog.open(DeviceTypeListComponent, {
-          width: '800px',
-          maxHeight: '90vh'
-        });
+  openDeviceTypesDialog(): void {
+    this.dialog.open(DeviceTypeListComponent, {
+      width: '800px',
+      maxHeight: '90vh'
+    });
+  }
+
+        // Add these methods to your class
+  openRelocationDialog(item: InventoryItem): void {
+    const dialogRef = this.dialog.open(RelocationDialogComponent, {
+      width: '500px',
+      data: { item }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.relocateDevice(item._id!, result.adminId);
       }
+    });
+  }
+
+  relocateDevice(itemId: string, adminId: string): void {
+    const assignment: Assignment = {
+      developer: adminId,
+      project: '',
+      camera: '',
+      assignedDate: new Date(),
+      //isRelocation: true
+    };
+
+    this.inventoryService.assignItem(itemId, assignment).subscribe(() => {
+      this.loadInventory();
+    });
+  }
+
+  scrapDevice(itemId: string): void {
+    if (confirm('Are you sure you want to mark this device as scrapped?')) {
+      this.inventoryService.retireItem(itemId).subscribe(() => {
+        this.loadInventory();
+      });
+    }
+  }
 
 
   // addDevice(): void {

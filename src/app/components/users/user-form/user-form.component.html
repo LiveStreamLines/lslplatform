@@ -127,7 +127,7 @@
     <!-- Inventory Role (shown only for admin) -->
     <mat-form-field appearance="outline" *ngIf="showAdminRoles()">
       <mat-label>Inventory Role</mat-label>
-      <mat-select formControlName="inventoryRole" required>
+      <mat-select formControlName="inventoryRole">
         <mat-option *ngFor="let role of inventoryRoles" [value]="role.value">
           {{ role.viewValue }}
         </mat-option>

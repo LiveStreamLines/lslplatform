@@ -13,8 +13,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Device Type</mat-label>
               <mat-select formControlName="type">
-                <mat-option *ngFor="let type of ['Box', 'Pi', 'Battery', 'Camera']" [value]="type">
-                  {{type}}
+                <mat-option *ngFor="let type of deviceTypes" [value]="type.name">
+                  {{type.name}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -48,7 +48,7 @@
         </form>
 
           <!-- Assignment Actions -->
-      <div class="action-buttons" *ngIf="currentItem.status !== 'retired'">
+      <div class="action-buttons" *ngIf="(currentItem.status !== 'retired') && (memoryRole !== 'viewer' || userRole === 'Super Admin')">
         <button mat-raised-button color="primary" 
                 *ngIf="currentItem.status === 'available'"
                 (click)="openAssignDialog()">
@@ -96,7 +96,7 @@
       </mat-card-content>
   
       <mat-card-actions align="end">
-        <button mat-button (click)="onCancel()">Cancel</button>
+        <button mat-button (click)="onCancel()">close</button>
         <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!deviceForm.valid">
           Save Changes
         </button>

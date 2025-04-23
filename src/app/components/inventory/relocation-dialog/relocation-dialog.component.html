@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Relocate Device</h2>
+    <div mat-dialog-content>
+      <p>Select an admin to relocate this device to:</p>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Admin User</mat-label>
+        <mat-select [(ngModel)]="selectedAdminId">
+          <mat-option *ngFor="let admin of admins" [value]="admin._id">
+            {{ admin.name }} ({{ admin.email }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-raised-button color="primary" (click)="onConfirm()" [disabled]="!selectedAdminId">Confirm</button>
+    </div>
