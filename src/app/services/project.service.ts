@@ -44,6 +44,15 @@ export class ProjectService {
       return this.http.get<Project[]>(`${this.apiUrl}/${developerId}`, { headers });
   }
 
+  getProjectsByDeveloperTag(developerTag: string): Observable<Project[]> {
+    const authh = this.authService.getAuthToken();  // Get the auth token from AuthService
+    // Set the custom header with the authh token
+    const headers = new HttpHeaders({
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+      return this.http.get<Project[]>(`${this.baseUrl}/devtag/${developerTag}`, { headers });
+  }
+
   getProjectById2(projectId?: string): Observable<Project | null> {
     // If we already have projects loaded
     if (this.projectsLoaded) {

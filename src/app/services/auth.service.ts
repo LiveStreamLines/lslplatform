@@ -2,34 +2,24 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environments';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-
-interface AuthResponse {
-  authh?: string; // Token
-  username?: string;
-  email?: string;
-  phone?: string;
-  role?: string;
-  developers?: string[];
-  projects?: string[];
-  cameras?: string[];
-  services?: string[];
-  canAdduser: string;
-  canGenerateVideoAndPics: string;
-  phoneRequired?: boolean; // Indicates if phone verification is needed
-  message?: string; // Optional message
-  userId?: string;
-  manual?: string;
-  memoryRole?: string;
-  invenotryRole?: string;
-}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private apiUrl = environment.backend + "/api";
+
+   // Subjects for reactive updates
+   private userRoleSubject = new BehaviorSubject<string | null>(null);
+   private canAddUserSubject = new BehaviorSubject<boolean | null>(null);
+   
+   // Expose as observables
+   userRole$ = this.userRoleSubject.asObservable();
+   canAddUser$ = this.canAddUserSubject.asObservable();
+
+
   private authToken: string | null = null;
   private userRole: string | null = null;
   private username: string | null = null;
@@ -50,23 +40,41 @@ export class AuthService {
     // Initialize from localStorage
     this.userId = localStorage.getItem('userId');
     this.authToken = localStorage.getItem('authToken');
-    this.userRole = localStorage.getItem('userRole');
+
+    // Initialize with proper type conversion
+    const role = localStorage.getItem('userRole');
+    this.userRole = role;
+    this.userRoleSubject.next(role);
+
     this.username = localStorage.getItem('username');
     this.useremail = localStorage.getItem('useremail');
     this.phone = localStorage.getItem('phone');
+
     this.accessibleDevelopers = JSON.parse(localStorage.getItem('accessibleDevelopers') || '[]');
     this.accessibleProjects = JSON.parse(localStorage.getItem('accessibleProjects') || '[]');
     this.accessibleCameras = JSON.parse(localStorage.getItem('accessibleCameras') || '[]');
     this.accessibleServices = JSON.parse(localStorage.getItem('accessibleServices') || '[]');
-    this.canAdduser = localStorage.getItem('canAdduser');
+
+    // Properly handle canAddUser
+    const canAddUser = localStorage.getItem('canAdduser');
+    this.canAdduser = canAddUser;
+    const userbool = canAddUser === 'true';
+    this.canAddUserSubject.next(userbool);
+
     this.canGenerateVideoAndPics = localStorage.getItem('canGenerateVideoAndPics');
     this.manual = localStorage.getItem('manual');
     this.memoryRole = localStorage.getItem('memoryRole');
     this.inventoryRole = localStorage.getItem('inventoryRole');
+
+
+   
+    this.canAddUser$ = this.canAddUserSubject.asObservable().pipe(
+      tap(perm => console.log('canAddUser$ emitted:', perm))
+    );
   }
 
-  login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, { email, password }).pipe(
+  login(email: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/login`, { email, password }).pipe(
       tap((response) => {
         if (!response.phoneRequired) {
           this.setUserData(response);
@@ -85,13 +93,13 @@ export class AuthService {
     return this.http.post<{ success: boolean; message: string }>(`${this.apiUrl}/otp/send-otp`, { phone });
   }
 
-  verifyOtp(phone: string, otp: string, userId?: string): Observable<AuthResponse> {
+  verifyOtp(phone: string, otp: string, userId?: string): Observable<any> {
 
     const payload: any = { phone, otp };
     if (this.userId) {
       payload.userId = this.userId; // Add userId only if provided
     }
-    return this.http.post<AuthResponse>(`${this.apiUrl}/otp/verify-otp`, payload).pipe(
+    return this.http.post<any>(`${this.apiUrl}/otp/verify-otp`, payload).pipe(
       tap((response) => {
         this.setUserData(response);
       })
@@ -116,6 +124,9 @@ export class AuthService {
     this.memoryRole = response.memoryRole || null;
     this.inventoryRole = response.invenotryRole || null;
 
+    // Update subjects
+    this.userRoleSubject.next(response.role || null);
+    this.canAddUserSubject.next(response.canAddUser || null);
 
     // Save to localStorage
     localStorage.setItem('userId', this.userId || '');
@@ -128,11 +139,11 @@ export class AuthService {
     localStorage.setItem('accessibleProjects', JSON.stringify(this.accessibleProjects));
     localStorage.setItem('accessibleCameras', JSON.stringify(this.accessibleCameras));
     localStorage.setItem('accessibleServices', JSON.stringify(this.accessibleServices));
-    localStorage.setItem('canAdduser', JSON.stringify(this.canAdduser));
-    localStorage.setItem('canGenerateVideoAndPics', JSON.stringify(this.canGenerateVideoAndPics));
-    localStorage.setItem('manual', JSON.stringify(this.manual));
-    localStorage.setItem('memoryRole', JSON.stringify(this.memoryRole));
-    localStorage.setItem('inventoryRole', JSON.stringify(this.inventoryRole));
+    localStorage.setItem('canAdduser', this.canAdduser || '');
+    localStorage.setItem('canGenerateVideoAndPics', this.canGenerateVideoAndPics || '');
+    localStorage.setItem('manual', this.manual || '');
+    localStorage.setItem('memoryRole', this.memoryRole || '');
+    localStorage.setItem('inventoryRole', this.inventoryRole || '');
 
   }
   
@@ -179,7 +190,7 @@ export class AuthService {
   }
 
   getUserRole(): string | null {
-    return this.userRole;
+    return this.userRoleSubject.value;
   }
 
   getAccessibleDevelopers(): string[] {
@@ -198,9 +209,14 @@ export class AuthService {
     return this.accessibleCameras;
   }
 
-  getCanAddUser(): string | null {
-    return this.canAdduser;
-  }
+  // getCanAddUser(): string | null {
+  //   return this.canAddUserSubject.value;
+  // }
+
+  // Add a method to get canAddUser as boolean
+  // getCanAddUserAsBoolean(): boolean {
+  //   return this.canAddUserSubject.value === 'true';
+  // }
 
   getCanGenerateVideoAndPics(): string | null {
     return this.canGenerateVideoAndPics;

@@ -25,25 +25,25 @@
     <span>Manual</span>
   </a>
  
-  <h3 *ngIf="isSuper">Admin</h3>
-  <a mat-list-item *ngIf="isSuper" routerLink="/developers" routerLinkActive="active">
+  <h3 *ngIf="(isSuper$ | async)">Admin</h3>
+  <a mat-list-item *ngIf="(isSuper$ | async)" routerLink="/developers" routerLinkActive="active">
     <mat-icon>build</mat-icon>
     <span>Developers</span>
   </a>
-  <a mat-list-item *ngIf="isSuper" routerLink="/projects" routerLinkActive="active">
+  <a mat-list-item *ngIf="(isSuper$ | async)" routerLink="/projects" routerLinkActive="active">
     <mat-icon>folder</mat-icon>
     <span>Projects</span>
   </a>
-  <a mat-list-item *ngIf="isSuper" routerLink="/cameras">
+  <a mat-list-item *ngIf="(isSuper$ | async)" routerLink="/cameras">
     <mat-icon>videocam</mat-icon>
     <span>Cameras</span>
   </a>
-  <a mat-list-item *ngIf="isSuper || (isAdmin && invenotryRole !== '')" routerLink="/inventory">
+  <a mat-list-item *ngIf="(isSuper$ | async) || ((isAdmin$ | async) && invenotryRole !== '')" routerLink="/inventory">
     <mat-icon>inventory</mat-icon>
     <span>Inventory</span>
   </a>
 
-  <a mat-list-item *ngIf="isSuper || (isAdmin && memoryRole)" routerLink="/memories">
+  <a mat-list-item *ngIf="(isSuper$ | async) || ((isAdmin$ | async) && memoryRole)" routerLink="/memories">
     <mat-icon>collections_bookmark</mat-icon>
     <span>Memories</span>
   </a>
@@ -61,7 +61,7 @@
     <mat-icon>history</mat-icon>
     <span>Login History</span>
   </a> -->
-  <a mat-list-item *ngIf="isSuper || isAdmin || isAddingUser" routerLink="/users">
+  <a mat-list-item *ngIf="(isSuper$ | async) || (isAdmin$ | async) || (isAddingUser$ | async)" routerLink="/users">
     <mat-icon>lock</mat-icon>
     <span>Users & Permissions</span>
   </a>

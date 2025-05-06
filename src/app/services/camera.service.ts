@@ -79,6 +79,21 @@ export class CameraService {
     );
   }
 
+  getCamerasByProjectTag(projectId: string): Observable<Camera[]> {
+    const authh = this.authService.getAuthToken();  // Get the auth token from AuthService
+    // Set the custom header with the authh token
+    const headers = new HttpHeaders({
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    
+    return this.http.get<any>(`${this.apiUrl}projtag/${projectId}`, { headers }).pipe(
+      map((response) => response)  // Extract only the 'cameras' array
+      // tap((data) => {
+      //   this.cameras = data;  // Store the list of project
+      // })
+    );
+  }
+
   getCameraById(cameraId: string) {
     const authh = this.authService.getAuthToken(); 
     const headers = new HttpHeaders({ 

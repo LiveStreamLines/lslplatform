@@ -150,7 +150,9 @@ export class MemoriesComponent implements OnInit {
 
   loadProjects(developerId: string): void {
     if (developerId) {
-      this.projectService.getProjectsByDeveloper(developerId).subscribe(projects => {
+      this.projectService.getProjectsByDeveloperTag(developerId).subscribe(projects => {
+        console.log(developerId);
+        console.log(projects);
         this.projects = projects;
         this.selectedProjectId = null;
         this.cameras = [];
@@ -162,7 +164,7 @@ export class MemoriesComponent implements OnInit {
 
   loadCameras(projectId: string): void {
     if (projectId) {
-      this.cameraService.getCamerasByProject(projectId).subscribe(cameras => {
+      this.cameraService.getCamerasByProjectTag(projectId).subscribe(cameras => {
         this.cameras = cameras;
         this.selectedCameraId = null;
         this.filterMemories();

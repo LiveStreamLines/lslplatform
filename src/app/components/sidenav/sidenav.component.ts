@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';  // Import MatIconModule
 import { AuthService } from '../../services/auth.service';
 import { ManualVideoDialogComponent } from '../manual-video-dialog/manual-video-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Observable , map, tap } from 'rxjs';
 
 @Component({
   selector: 'app-sidenav',
@@ -22,13 +23,12 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./sidenav.component.scss']
 })
 export class SidenavComponent implements OnInit {
-  userRole: string = '';
-  permission: string | null = null;
   memoryRole: string | null = '';
   invenotryRole: string | null = '';
-  isAdmin: boolean = false;  // You can set this dynamically later
-  isSuper: boolean = false;
-  isAddingUser: boolean = false;
+  
+  isSuper$: Observable<boolean> | undefined;
+  isAdmin$: Observable<boolean> | undefined;
+  isAddingUser$: Observable<boolean> | undefined;
 
   constructor(
     private authService:AuthService,
@@ -36,26 +36,27 @@ export class SidenavComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
-    this.userRole = this.authService.getUserRole() || '';
-    this.permission = this.authService.getCanAddUser() || null;
-    this.memoryRole = this.authService.getMemoryRole() || null;
-    this.invenotryRole = this.authService.getInentoryRole() || null;
 
-    if (this.userRole === 'Super Admin') {
-      this.isSuper = true;
-    }
+    // Convert authService observables into boolean streams
+    this.isSuper$ = this.authService.userRole$.pipe(
+      map(role => role === 'Super Admin')
+    );
 
-    if (this.userRole === 'Admin') {
-      this.isAdmin = true;
-    }
+    this.isAdmin$ = this.authService.userRole$.pipe(
+      map(role => role === 'Admin')
+    );
 
-    if(this.permission === 'true') {
-      this.isAddingUser = true;
-    }
+   
 
-    console.log(this.memoryRole);
-
-    console.log(this.isSuper, this.isAdmin, this.isAddingUser, this.permission);
+    this.isAddingUser$ = this.authService.canAddUser$.pipe(
+      map(permission => {
+        if (permission === null || permission === undefined) return false;
+        if (typeof permission === 'boolean') return permission;
+        return String(permission).toLowerCase() === 'true';
+      }),
+      tap(data => console.log('adding User updated: ', data))
+    );
+    
   }
 
   openManual() {
