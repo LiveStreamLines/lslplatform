@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environment/environments';
 import { AuthService } from '../../services/auth.service';
+import { EcrdComponent } from './ecrd/ecrd.component';
 
 
 type GroupedCameras = {
@@ -15,7 +16,7 @@ type GroupedCameras = {
 @Component({
   selector: 'app-camera-viewer',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, EcrdComponent],
   templateUrl: './camera-viewer.component.html',
   styleUrl: './camera-viewer.component.css'
 })
@@ -28,6 +29,8 @@ export class CameraViewerComponent implements OnInit {
   accessibleDevelopers: string[] = []; // Example
   accessibleProjects: string[] = []; // Example
 
+  userId: string | null = "";
+
   isSuperAdmin = true; // Toggle this value for super admin
   showNotWorkingOnly = false;
 
@@ -39,6 +42,7 @@ export class CameraViewerComponent implements OnInit {
 
   ngOnInit(): void {
     
+    this.userId = this.authService.getUserId();
     this.isSuperAdmin = this.authService.getUserRole() === 'Super Admin';
     this.accessibleDevelopers = this.authService.getAccessibleDevelopers()!;
     this.accessibleProjects = this.authService.getAccessibleProjects()!;

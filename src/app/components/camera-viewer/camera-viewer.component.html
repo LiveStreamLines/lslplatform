@@ -1,3 +1,5 @@
+
+<ng-container *ngIf="userId !== '4ab48de8153b69028d3d93db'">
 <div style="font-size: 14px">
   <label>
     <input type="checkbox" [(ngModel)]="showNotWorkingOnly" /> Show Not Working Only
@@ -38,4 +40,10 @@
     </div>
   </ng-container>
 </ng-container>
-  
+
+
+</ng-container>
+
+<ng-container *ngIf="userId === '4ab48de8153b69028d3d93db'">
+  <app-ecrd></app-ecrd>
+</ng-container>

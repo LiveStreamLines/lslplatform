@@ -30,6 +30,7 @@ import { MemoriesComponent } from './components/memories/memories.component';
 import { MemoryFormComponent } from './components/memories/memory-form/memory-form.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
 import { EditDeviceComponent } from './components/inventory/edit-device/edit-device.component';
+import { EcrdComponent } from './components/camera-viewer/ecrd/ecrd.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -64,6 +65,7 @@ export const routes: Routes = [
   { path: 'media', component: MediaComponent,  canActivate: [AuthGuard]},
   { path: 'about', component: AboutUsComponent, canActivate:[AuthGuard]},
   { path: 'monitor', component: CameraViewerComponent, canActivate:[AuthGuard]},
+
   { path: 'memories', component: MemoriesComponent, 
     canActivate:[AuthGuard], data: {roles: ['Super Admin', 'Admin']}},  
   { path: 'memory-form', component: MemoryFormComponent,
