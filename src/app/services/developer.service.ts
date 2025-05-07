@@ -38,6 +38,25 @@ export class DeveloperService {
     //}
   }
 
+
+   // Fetch all developers
+   getAllDevelopers2(filterIds?: string[]): Observable<Developer[]> {
+    const authh = this.authService.getAuthToken();  // Get auth token from AuthService
+    // Set the custom header with the authh token
+    const headers = new HttpHeaders({
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+      return this.http.get<Developer[]>(this.apiUrl, { headers }).pipe(
+        map(developers => {
+          if (!filterIds || filterIds.length === 0 || filterIds[0] === 'all') {
+            return developers;
+          }
+          return developers.filter(dev => filterIds.includes(dev._id));
+        })
+      );
+    //}
+  }
+
   getDeveloperById2(developerId: string): Observable<Developer | null> {
     if (this.developerLoaded) {
       const developer = this.developers.find(d => d._id === developerId) || null;

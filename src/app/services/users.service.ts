@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environments';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { tap, map } from 'rxjs/operators';
 import { User } from '../models/user.model';
 import { AuthService } from './auth.service';
 
@@ -24,6 +25,42 @@ export class UserService {
     });
 
     return this.http.get<User[]>(`${this.apiUrl}`,{ headers });
+  }
+
+  getAllUsers2( 
+    SuperAdmin?: boolean,
+    accessibleDevelopers?: string[],
+    accessibleProjects?: string[],
+    accessibleCameras?: string[]): Observable<User[]> {
+    
+    const authh = this.authService.getAuthToken();  // Get auth token from AuthService
+    // Set the custom header with the authh token
+    const headers = new HttpHeaders({
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+
+    return this.http.get<User[]>(`${this.apiUrl}`,{ headers }).pipe(
+      map((users: User[]) => {
+        
+  
+        if (SuperAdmin) return users;
+  
+        return users.filter((user) => {
+          const matchesDeveloper =
+            accessibleDevelopers?.includes('all') ||
+            user.accessibleDevelopers.some(devId => accessibleDevelopers?.includes(devId));
+          const matchesProject =
+            accessibleProjects?.includes('all') ||
+            user.accessibleProjects.some(projId => accessibleProjects?.includes(projId));
+          const matchesCamera =
+            accessibleCameras?.includes('all') ||
+            user.accessibleCameras.some(camId => accessibleCameras?.includes(camId));
+  
+          return matchesDeveloper && matchesProject && matchesCamera;
+        });
+      })
+    );
+  
   }
 
   // Get a user by ID

@@ -76,7 +76,7 @@ export class UsersComponent implements OnInit{
   // Fetch users from the service
   fetchUsers(): void {
     this.isLoading = true; // Set loading to true
-    this.userService.getAllUsers().subscribe({
+    this.userService.getAllUsers2(this.isSuperAdmin, this.accessibleDeveloper, this.accessibleProject, this.accessibleCamera).subscribe({
       next: (users) => {
         this.users = users;
         this.filteredUsers = [...this.users]; // Initialize filtered users
@@ -221,7 +221,7 @@ export class UsersComponent implements OnInit{
     if (this.searchTerm.trim()) {
       
       // Filter users based on the search term
-      this.filteredUsers = this.filteredUsers.filter((user) =>
+      this.filteredUsers = this.users.filter((user) =>
         user.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         user.role.toLowerCase().includes(this.searchTerm.toLowerCase())

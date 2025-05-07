@@ -57,29 +57,47 @@
       this.userRole = this.authService.getUserRole();
       this.accessibleDevelopers = this.authService.getAccessibleDevelopers();
 
-      this.developerService.getAllDevelopers().subscribe({
+      this.developerService.getAllDevelopers2(this.accessibleDevelopers).subscribe({
         next: (data: Developer[]) => {
-          // If the logo is a relative path, prepend the base URL
           this.developers = data.map(dev => ({
             ...dev,
-            logo: this.logopath + "/" + dev.logo  // Prepend the base URL if needed
+            logo: this.logopath + "/" + dev.logo
           }));
-          // Filter developers based on role and accessible developers
-          this.filteredDevelopers = this.userRole === 'Super Admin' || this.accessibleDevelopers[0] === 'all'
-          ? this.developers // Admins see all developers
-          : this.developers.filter((dev) =>
-              this.accessibleDevelopers.includes(dev._id)
-            );
-          this.loading = false;  // Stop loading when data is fetched
+          this.filteredDevelopers = this.developers;
+          this.loading = false;
         },
         error: (err: any) => {
           console.error('Error fetching developers:', err);
-          this.loading = false;  // Stop loading in case of error
+          this.loading = false;
         },
         complete: () => {
           console.log('Developer data loading complete.');
         }
       });
+
+      // this.developerService.getAllDevelopers().subscribe({
+      //   next: (data: Developer[]) => {
+      //     // If the logo is a relative path, prepend the base URL
+      //     this.developers = data.map(dev => ({
+      //       ...dev,
+      //       logo: this.logopath + "/" + dev.logo  // Prepend the base URL if needed
+      //     }));
+      //     // Filter developers based on role and accessible developers
+      //     this.filteredDevelopers = this.userRole === 'Super Admin' || this.accessibleDevelopers[0] === 'all'
+      //     ? this.developers // Admins see all developers
+      //     : this.developers.filter((dev) =>
+      //         this.accessibleDevelopers.includes(dev._id)
+      //       );
+      //     this.loading = false;  // Stop loading when data is fetched
+      //   },
+      //   error: (err: any) => {
+      //     console.error('Error fetching developers:', err);
+      //     this.loading = false;  // Stop loading in case of error
+      //   },
+      //   complete: () => {
+      //     console.log('Developer data loading complete.');
+      //   }
+      // });
 
       this.breadcrumbService.setBreadcrumbs([
         { label: 'Home' },
