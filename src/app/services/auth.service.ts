@@ -152,9 +152,11 @@ export class AuthService {
     this.memoryRole = response.memoryRole;
     this.inventoryRole = response.invenotryRole;
 
+    
     // Emit to subscribers
     this.userRoleSubject.next(this.userRole);
-    this.canAddUserSubject.next(this.canAddUser === 'true');
+    const check = this.canAddUser.toString();
+    this.canAddUserSubject.next(check === 'true');
 
     // Save to localStorage
     localStorage.setItem('userId', this.userId);

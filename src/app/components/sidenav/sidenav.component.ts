@@ -50,6 +50,7 @@ export class SidenavComponent implements OnInit {
 
     this.isAddingUser$ = this.authService.canAddUser$.pipe(
       map(permission => {
+        console.log(permission);
         if (permission === null || permission === undefined) return false;
         if (typeof permission === 'boolean') return permission;
         return String(permission).toLowerCase() === 'true';
