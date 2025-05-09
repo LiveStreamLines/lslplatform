@@ -91,7 +91,7 @@ export class ResetPasswordComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error resetting password:', err);
-          this.message = 'Failed to reset password. Please try again.';
+          this.message = 'Failed to reset password. Please try again. ' + err;
         },
       });
   }
