@@ -48,3 +48,20 @@
     border-radius: 5px;
     border: 1px solid gray;
   }
+
+  .status-new {
+  color: orange;
+  font-weight: bold;
+}
+.status-reset {
+  color: #03a9f4;
+  font-weight: bold;
+}
+.status-phone {
+  color: #e91e63;
+  font-weight: bold;
+}
+.status-active {
+  color: green;
+  font-weight: bold;
+}

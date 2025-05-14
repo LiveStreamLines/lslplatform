@@ -246,4 +246,20 @@ export class UsersComponent implements OnInit{
     console.log('Delete User:', userId);
   }
 
+  formatDate(dateString: string): string {
+  if (!dateString) return 'Never';
+  const date = new Date(dateString);
+  return date.toLocaleString(); // You can customize the format
+}
+
+getStatusClass(status: string): string {
+  switch (status) {
+    case 'New': return 'status-new';
+    case 'Reset Password Sent': return 'status-reset';
+    case 'Phone Required': return 'status-phone';
+    case 'active': return 'status-active';
+    default: return '';
+  }
+}
+
 }
