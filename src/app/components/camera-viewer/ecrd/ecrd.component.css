@@ -47,3 +47,9 @@
     font-weight: bold;
   }
   
+  .loading-container {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #aaa;
+}

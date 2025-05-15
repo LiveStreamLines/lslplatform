@@ -1,5 +1,8 @@
-<h3>Emirates Council For Rural Development (ECRD)</h3>
-<div class="camera-grid">
+<h3>EMIRATES COUNCIL FOR BALANCED DEVELOPMENT (ECBD)</h3>
+<div *ngIf="loading" class="loading-container">
+  <p>Loading cameras...</p>
+</div>
+<div *ngIf="!loading" class="camera-grid">
     <div *ngFor="let camera of filteredCameras" class="camera-item">
       
       <div class="camera-title">

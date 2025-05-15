@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { CameraService } from '../../../services/camera.service';
 import { AuthService } from '../../../services/auth.service';
 import { environment } from '../../../../environment/environments';
+import { interval } from 'rxjs';
+
 
 @Component({
   selector: 'app-ecrd',
@@ -15,6 +17,7 @@ import { environment } from '../../../../environment/environments';
 export class EcrdComponent {
   //@Input() developerId: string = ''; // Passed input for filtering
 
+  loading = true;
   developerId: string = '46acd2f3e22af1628efdea27';
   cameras: any[] = [];
   filteredCameras: any[] = [];
@@ -28,6 +31,11 @@ export class EcrdComponent {
     this.cameraService.getLastPicture().subscribe((data) => {
       this.cameras = data;
       this.filteredCameras = this.cameras.filter(cam => cam.developerId === this.developerId);
+      this.loading = false; // Hide loading after data is ready
+    });
+
+    interval(1200000).subscribe(() => {
+      window.location.reload();
     });
   }
 
