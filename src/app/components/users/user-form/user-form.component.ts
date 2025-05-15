@@ -312,7 +312,7 @@ export class UserFormComponent implements OnInit {
     const addingUserId = this.authService.getUserId();
     const addingUserName = this.authService.getUsername();
 
-    userData = {...userData, addedUserId: `${addingUserId}`, addedUserName: `${addingUserName}`};
+    userData = {...userData, addedUserId: `${addingUserId}`, addedUserName: `${addingUserName}`, status: "New"};
 
     if (this.isEditing) {
       this.userService
@@ -323,11 +323,21 @@ export class UserFormComponent implements OnInit {
           console.log('User updated successfully');
         });
     } else {
-      this.userService.addUser(userData).subscribe((response: any) => {
-        this.submitted = true;
-        this.userId = response._id; // Assuming the backend returns `user_id` in the response
-        this.resetEmail = userData.email;
-        console.log('User added successfully');
+      this.userService.addUser(userData).subscribe({
+        next: (response: any) => {
+          this.submitted = true;
+          this.userId = response._id; // Assuming the backend returns `user_id` in the response
+          this.resetEmail = userData.email;
+          console.log('User added successfully');
+        },
+        error: (err) => {
+          if (err?.error?.message === 'Email is already Registered') {
+            alert('This email is already registered. Please use a different email.');
+          } else {
+            console.error('Error adding user:', err);
+            alert('An error occurred while adding the user.');
+          }
+        }      
       });
     }
   }
