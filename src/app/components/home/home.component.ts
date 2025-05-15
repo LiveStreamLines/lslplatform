@@ -7,11 +7,13 @@
   import { DeveloperService } from '../../services/developer.service';
   import { Developer } from '../../models//developer.model';
   import { AuthService } from '../../services/auth.service';
+  import { UserService } from '../../services/users.service';
   import { BreadcrumbService } from '../../services/breadcrumb.service';
   import { environment } from '../../../environment/environments';
   import { MatDialog } from '@angular/material/dialog';
   import { ManualVideoDialogComponent } from '../manual-video-dialog/manual-video-dialog.component';
   import { HeaderService } from '../../services/header.service';
+import { User } from '../../models/user.model';
 
   @Component({
     selector: 'app-home',
@@ -30,11 +32,13 @@
     accessibleDevelopers: string[] = [];
     logopath: string =  environment.backend;
 
+
     constructor(
       private developerService: DeveloperService, 
       private breadcrumbService: BreadcrumbService,
       private headerService: HeaderService,
       private authService: AuthService,
+      private userService: UserService,
       private router: Router,
       private dialog: MatDialog
     ) {}
@@ -98,7 +102,7 @@
       //     console.log('Developer data loading complete.');
       //   }
       // });
-
+      
       this.breadcrumbService.setBreadcrumbs([
         { label: 'Home' },
       ]);
@@ -124,6 +128,17 @@
 
     onDeveloperClick(developer: Developer): void {
       this.router.navigate(['/home', developer.developerTag]);  // Navigate to ProjectListComponent with developer ID
+    }
+
+
+    checkloginStat() {
+      const userId = this.authService.getUserId();
+      const lastlogintime = this.authService.getlastlogintime();
+      const now = new Date().toISOString();
+      console.log(lastlogintime);
+        if (!lastlogintime && userId) {
+          this.userService.updateUser(userId, {LastLoginTime: now});
+        }
     }
 
   }

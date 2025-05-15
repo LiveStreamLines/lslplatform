@@ -13,5 +13,6 @@ export interface User {
     inventoryRole?: 'tech' | 'invenotry-admin';
     createdDate: string;
     manual?: boolean;
+    LastLoginTime?: string;
   }
   

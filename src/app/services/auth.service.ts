@@ -23,6 +23,7 @@ interface AuthResponse {
   manual: string;
   memoryRole: string;
   invenotryRole: string; // Keep typo if backend returns this
+  LastLoginTime: string;
 }
 
 @Injectable({
@@ -53,6 +54,7 @@ export class AuthService {
   private manual: string | null = null;
   private memoryRole: string | null = null;
   private inventoryRole: string | null = null;
+  private LastLoginTime: string | null = null;
 
   private accessibleDevelopers: string[] = [];
   private accessibleProjects: string[] = [];
@@ -151,6 +153,7 @@ export class AuthService {
     this.manual = response.manual;
     this.memoryRole = response.memoryRole;
     this.inventoryRole = response.invenotryRole;
+    this.LastLoginTime = response.LastLoginTime;
 
     
     // Emit to subscribers
@@ -179,6 +182,10 @@ export class AuthService {
   // Public getters
   getUserId(): string | null {
     return this.userId;
+  }
+
+  getlastlogintime(): string | null {
+     return this.LastLoginTime;
   }
 
   getManual(): string | null {
