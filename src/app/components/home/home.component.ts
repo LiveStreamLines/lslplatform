@@ -31,7 +31,7 @@ import { User } from '../../models/user.model';
     userRole: string | null = null;
     accessibleDevelopers: string[] = [];
     logopath: string =  environment.backend;
-
+    lastlogin: string | null = null;
 
     constructor(
       private developerService: DeveloperService, 
@@ -44,6 +44,8 @@ import { User } from '../../models/user.model';
     ) {}
 
     ngOnInit(): void {
+
+      this.checkloginStat();
 
       this.headerService.showHeaderAndSidenav = true;
 
@@ -133,12 +135,32 @@ import { User } from '../../models/user.model';
 
     checkloginStat() {
       const userId = this.authService.getUserId();
-      const lastlogintime = this.authService.getlastlogintime();
+      if (userId) {
+        const user = this.userService.getUserById(userId).subscribe(
+          {
+            next: data => {
+              console.log("Get User Data");
+              if (!data.LastLoginTime) {
+                
+                console.log("No loginTime");
+                const now = new Date().toISOString();
+
+                this.userService.updateUser(userId, {LastLoginTime: now}).subscribe(
+                  {
+                    next: data => console.log("update login time"),
+                    error: err => console.log(err)
+                  }
+                );
+
+              }
+            },
+            error: err => console.log(err)
+          }
+        );
+      }
+
       const now = new Date().toISOString();
-      console.log(lastlogintime);
-        if (!lastlogintime && userId) {
-          this.userService.updateUser(userId, {LastLoginTime: now});
-        }
+      
     }
 
   }
