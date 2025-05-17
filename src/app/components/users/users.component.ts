@@ -3,18 +3,25 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
-import { MatPaginator, PageEvent } from '@angular/material/paginator'; // Import MatPaginator
+import { MatPaginator, PageEvent, MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatInputModule } from '@angular/material/input';
 import { UserService } from '../../services/users.service';
 import { DeveloperService } from '../../services/developer.service';
 import { ProjectService } from '../../services/project.service';
 import { CameraService } from '../../services/camera.service';
 import { User } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
+import { MatSortModule, Sort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+
+
 
 @Component({
   selector: 'app-users',
@@ -23,17 +30,19 @@ import { AuthService } from '../../services/auth.service';
     CommonModule,
     FormsModule,
     MatTableModule,
-    MatPaginator,
+    MatPaginatorModule,
     MatFormFieldModule,
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSortModule,
+    MatInputModule
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
 })
-export class UsersComponent implements OnInit{
+export class UsersComponent implements OnInit, AfterViewInit {
   userRole: string | null = null;
   accessibleDeveloper: string[]=[];
   accessibleProject: string[]=[];
@@ -41,7 +50,7 @@ export class UsersComponent implements OnInit{
   isSuperAdmin: boolean = false;
   users : User[] = [];
   filteredUsers: User[] = [];
-  paginatedUsers: User[] = []; // Users to display on the current page
+  displayedUsers: User[] = []; // The users to display on the current page
   pageSize: number = 5; // Default number of rows per page
   pageIndex: number = 0; // Current page index
   developers: any[] = [];
@@ -53,6 +62,15 @@ export class UsersComponent implements OnInit{
   selectedCameraId: string | null = null;
   searchTerm: string = ''; // To hold the search term
   isLoading : boolean = true;
+  
+  // Sorting properties
+  currentSortColumn: string = 'name';
+  currentSortDirection: 'asc' | 'desc' = 'asc';
+
+  displayedColumns: string[] = ['name', 'email', 'role', 'status', 'lastLogin', 'createdDate', 'actions'];
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
 
  constructor(
   private userService: UserService, 
@@ -60,8 +78,9 @@ export class UsersComponent implements OnInit{
   private developerService: DeveloperService,
   private projectService: ProjectService,
   private cameraService: CameraService,
-  private authService: AuthService
- ) {} // Inject UserService
+  private authService: AuthService,
+  private changeDetector: ChangeDetectorRef
+ ) {}
 
   ngOnInit(): void {
     this.isSuperAdmin = this.authService.getUserRole() === 'Super Admin';
@@ -70,7 +89,10 @@ export class UsersComponent implements OnInit{
     this.accessibleCamera = this.authService.getAccessibleCameras();
     this.fetchUsers();
     this.loadDevelopers();
-    this.filterUsersByAccess();
+  }
+
+  ngAfterViewInit() {
+    // Nothing needed here anymore as we're handling pagination manually
   }
 
   // Fetch users from the service
@@ -80,14 +102,23 @@ export class UsersComponent implements OnInit{
       next: (users) => {
         this.users = users;
         this.filteredUsers = [...this.users]; // Initialize filtered users
+        this.sortData({ active: 'name', direction: 'asc' }); // Default sort
+        this.updateDisplayedUsers(); // Set initial page of users
         this.isLoading = false; // Loading complete
-        this.updatePaginatedUsers();
       },
       error: (err) => {
         console.error('Error fetching users:', err);
         this.isLoading = false; // Stop loading on error
       },
     });
+  }
+
+  // Update the displayed users based on current page and page size
+  updateDisplayedUsers(): void {
+    const startIndex = this.pageIndex * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.displayedUsers = this.filteredUsers.slice(startIndex, endIndex);
+    this.changeDetector.detectChanges();
   }
 
   loadDevelopers(): void {
@@ -105,7 +136,6 @@ export class UsersComponent implements OnInit{
 
       this.isLoading = false;
       this.selectedDeveloperId = this.developers.length ? this.developers[0]._id : null;
-      this.filterUsersByAccess();
       this.loadProjects();
     });
   }
@@ -124,7 +154,6 @@ export class UsersComponent implements OnInit{
         }
         this.isLoading = false;
         this.selectedProjectId = this.projects.length ? this.projects[0]._id : null;
-        this.filterUsersByAccess();
         this.loadCameras();
       });
     } else {
@@ -176,15 +205,62 @@ export class UsersComponent implements OnInit{
   onPageChange(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.updatePaginatedUsers();
+    this.updateDisplayedUsers();
   }
 
-  updatePaginatedUsers(): void {
-    const start = this.pageIndex * this.pageSize;
-    const end = start + this.pageSize;
-    this.paginatedUsers = this.filteredUsers.slice(start, end);
+  // Manual sorting implementation
+  sortData(sort: Sort) {
+    console.log('Sorting by', sort.active, 'in', sort.direction, 'order');
+    
+    this.currentSortColumn = sort.active || 'name';
+    this.currentSortDirection = (sort.direction as 'asc' | 'desc') || 'asc';
+    
+    if (this.filteredUsers.length > 0) {
+      // Create a new sorted array to trigger change detection
+      this.filteredUsers = [...this.filteredUsers].sort((a, b) => {
+        const isAsc = this.currentSortDirection === 'asc';
+        switch (this.currentSortColumn) {
+          case 'name':
+            return this.compare(a.name?.toLowerCase() || '', b.name?.toLowerCase() || '', isAsc);
+          case 'email':
+            return this.compare(a.email?.toLowerCase() || '', b.email?.toLowerCase() || '', isAsc);
+          case 'role':
+            return this.compare(a.role?.toLowerCase() || '', b.role?.toLowerCase() || '', isAsc);
+          case 'status':
+            // Handle the case where status might not exist on User type
+            return this.compare(
+              (a as any).status?.toLowerCase() || '', 
+              (b as any).status?.toLowerCase() || '', 
+              isAsc
+            );
+          case 'lastLogin':
+            const lastLoginA = a.LastLoginTime ? new Date(a.LastLoginTime).getTime() : 0;
+            const lastLoginB = b.LastLoginTime ? new Date(b.LastLoginTime).getTime() : 0;
+            return this.compare(lastLoginA, lastLoginB, isAsc);
+          case 'createdDate':
+            const createdDateA = a.createdDate ? new Date(a.createdDate).getTime() : 0;
+            const createdDateB = b.createdDate ? new Date(b.createdDate).getTime() : 0;
+            return this.compare(createdDateA, createdDateB, isAsc);
+          default:
+            return 0;
+        }
+      });
+      
+      // Reset to first page
+      this.pageIndex = 0;
+      if (this.paginator) {
+        this.paginator.pageIndex = 0;
+      }
+      
+      // Update displayed users
+      this.updateDisplayedUsers();
+    }
   }
 
+  // Comparison function for sorting
+  private compare(a: any, b: any, isAsc: boolean) {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
 
   filterUsersByAccess(): void {
     this.filteredUsers = this.users.filter((user) => {
@@ -208,30 +284,35 @@ export class UsersComponent implements OnInit{
         return (matchesDeveloper && matchesProject && matchesCamera);
       }
     });
-    this.updatePaginatedUsers(); // Update paginated users after filtering
+    
+    // Re-apply the current sort
+    this.sortData({ active: this.currentSortColumn, direction: this.currentSortDirection });
   }
 
   onRoleChange(): void {
     this.filteredUsers = this.selectedRole
       ? this.users.filter(user => user.role === this.selectedRole)
       : [...this.users];
+    
+    // Re-apply the current sort
+    this.sortData({ active: this.currentSortColumn, direction: this.currentSortDirection });
   }
 
   onSearch(): void {
     if (this.searchTerm.trim()) {
-      
       // Filter users based on the search term
       this.filteredUsers = this.users.filter((user) =>
         user.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         user.role.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
+      
+      // Re-apply the current sort
+      this.sortData({ active: this.currentSortColumn, direction: this.currentSortDirection });
     } else {
       // If search term is empty, apply filters
       this.filterUsersByAccess();
     }
-    this.pageIndex = 0; // Reset to the first page
-    this.updatePaginatedUsers();
   }
 
   openAddUser(): void {
@@ -247,19 +328,18 @@ export class UsersComponent implements OnInit{
   }
 
   formatDate(dateString: string): string {
-  if (!dateString) return 'Never';
-  const date = new Date(dateString);
-  return date.toLocaleString(); // You can customize the format
-}
-
-getStatusClass(status: string): string {
-  switch (status) {
-    case 'New': return 'status-new';
-    case 'Reset Password Sent': return 'status-reset';
-    case 'Phone Required': return 'status-phone';
-    case 'active': return 'status-active';
-    default: return '';
+    if (!dateString) return 'Never';
+    const date = new Date(dateString);
+    return date.toLocaleString(); // You can customize the format
   }
-}
 
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'New': return 'status-new';
+      case 'Reset Password Sent': return 'status-reset';
+      case 'Phone Required': return 'status-phone';
+      case 'active': return 'status-active';
+      default: return '';
+    }
+  }
 }
