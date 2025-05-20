@@ -86,12 +86,21 @@ export class ResetPasswordComponent implements OnInit {
     this.authService.resetpassword(this.token, newPassword)
       .subscribe({
         next: () => {
-          this.message = 'Password reset successfully.';
-          setTimeout(() => this.router.navigate(['/login']), 2000); // Redirect after 2 seconds
+          this.message = 'Password reset successfully. You will be redirected shortly';
+          setTimeout(() => this.router.navigate(['/login']), 3000);// Redirect after 3 seconds
         },
         error: (err) => {
           console.error('Error resetting password:', err);
-          this.message = 'Failed to reset password. Please try again. ' + err;
+          if (err.error.msg === 'Invalid or expired token' || err.error.msg === 'Token has expired') {
+            this.message = 'Invalid or expired Token please reset your password again, You will be directed shortly.';
+            setTimeout(() => {
+              this.router.navigate(['/login'], { 
+                queryParams: { view: 'forgotPassword' }
+              });
+            }, 3000);
+          } else {
+            this.message = 'Failed to reset password ' + err.error.msg;
+          }
         },
       });
   }

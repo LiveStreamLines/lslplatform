@@ -6,6 +6,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/users.service';
 import { HeaderService } from '../../services/header.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -43,11 +44,17 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
     private userService: UserService,
     private router: Router, 
-    private headerService: HeaderService) {}
+    private headerService: HeaderService,
+    private route: ActivatedRoute) {}
 
     ngOnInit(): void {
-      this.headerService.showHeaderAndSidenav = false; 
+      this.headerService.showHeaderAndSidenav = false;
       
+      // Check for view query parameter
+      const viewParam = this.route.snapshot.queryParams['view'];
+      if (viewParam === 'forgotPassword') {
+        this.currentView = 'forgotPassword';
+      }
     }
   
     ngAfterViewInit(): void {
