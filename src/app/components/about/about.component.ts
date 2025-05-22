@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 })
 export class AboutUsComponent {
   uaeContacts = [
-    { role: 'Sales', name: 'Sakina lastname', phone: '+971 37363636', email: 'sakina@livestreamlines.com' },
+    { role: 'Sales', name: 'Sakina Elyassini', phone: '+971 37363636', email: 'sakina@livestreamlines.com' },
     { role: 'Accounting', name: 'Shimaa Elhaj', phone: '+971 50 585 9336', email: 'shimaa@livestreamlines.com' },
     { role: 'Operation', name: 'Anna Umali', phone: '+971 50558 4301', email: 'anna@livestreamlines.com' },
     { role: 'Technical', name: 'Michael Triol', phone: '+971 507186796', email: 'michael@livestreamlines.com' },
