@@ -87,49 +87,97 @@ interface DialogData {
     </mat-dialog-actions>
   `,
   styles: [`
+    :host {
+      display: block;
+      background-color: #1a1a1a;
+      color: #ffffff;
+    }
+
+    h2[mat-dialog-title] {
+      color: #ffffff;
+    }
+
     .info-section {
-      background-color: #f5f5f5;
+      background-color: #2d2d2d;
       padding: 16px;
       border-radius: 8px;
       margin-bottom: 24px;
     }
+
     .info-row {
       display: flex;
       align-items: center;
       margin-bottom: 12px;
       padding: 8px;
-      background-color: white;
+      background-color: #333333;
       border-radius: 4px;
     }
+
     .info-row:last-child {
       margin-bottom: 0;
     }
+
     .info-row mat-icon {
       margin-right: 12px;
-      color: #666;
+      color: #b0b0b0;
     }
+
     .info-content {
       display: flex;
       flex-direction: column;
     }
+
     .info-label {
       font-size: 12px;
-      color: #666;
+      color: #b0b0b0;
       margin-bottom: 2px;
     }
+
     .info-value {
       font-size: 16px;
       font-weight: 500;
-      color: #333;
+      color: #ffffff;
     }
+
     .info-tag {
       font-size: 12px;
-      color: #666;
+      color: #b0b0b0;
       margin-top: 2px;
     }
+
     mat-form-field {
       width: 100%;
       margin-bottom: 16px;
+    }
+
+    ::ng-deep .mat-mdc-form-field {
+      .mat-mdc-text-field-wrapper {
+        background-color: #2d2d2d;
+      }
+
+      .mat-mdc-form-field-label {
+        color: #b0b0b0;
+      }
+
+      .mat-mdc-input-element {
+        color: #ffffff;
+      }
+
+      .mat-mdc-select-value {
+        color: #ffffff;
+      }
+
+      .mat-mdc-select-arrow {
+        color: #b0b0b0;
+      }
+    }
+
+    ::ng-deep .mat-mdc-dialog-container {
+      background-color: #1a1a1a;
+    }
+
+    ::ng-deep .mat-mdc-dialog-actions {
+      border-top: 1px solid #333333;
     }
   `],
   standalone: true,

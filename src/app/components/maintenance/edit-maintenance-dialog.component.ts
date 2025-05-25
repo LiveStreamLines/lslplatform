@@ -100,6 +100,8 @@ import { User } from '../../models/user.model';
       padding: 24px;
       max-width: 800px;
       width: 100%;
+      background-color: #1a1a1a;
+      color: #ffffff;
     }
 
     mat-dialog-content {
@@ -109,7 +111,7 @@ import { User } from '../../models/user.model';
     }
 
     .info-section {
-      background-color: #f5f5f5;
+      background-color: #2d2d2d;
       border-radius: 4px;
       padding: 16px;
       margin-bottom: 24px;
@@ -128,14 +130,14 @@ import { User } from '../../models/user.model';
 
     .info-item label {
       font-size: 12px;
-      color: #666;
+      color: #b0b0b0;
       margin-bottom: 4px;
       font-weight: 500;
     }
 
     .info-item span {
       font-size: 14px;
-      color: #333;
+      color: #ffffff;
       padding: 4px 0;
     }
 
@@ -152,7 +154,7 @@ import { User } from '../../models/user.model';
     mat-dialog-actions {
       padding: 16px 24px;
       margin: 0;
-      border-top: 1px solid #e0e0e0;
+      border-top: 1px solid #333333;
     }
 
     mat-dialog-actions button {
@@ -162,7 +164,55 @@ import { User } from '../../models/user.model';
     h2[mat-dialog-title] {
       margin: 0;
       padding: 16px 24px;
-      border-bottom: 1px solid #e0e0e0;
+      border-bottom: 1px solid #333333;
+      color: #ffffff;
+    }
+
+    ::ng-deep .mat-mdc-form-field {
+      .mat-mdc-text-field-wrapper {
+        background-color: #2d2d2d;
+      }
+
+      .mat-mdc-form-field-label {
+        color: #b0b0b0;
+      }
+
+      .mat-mdc-input-element {
+        color: #ffffff;
+      }
+
+      .mat-mdc-select-value {
+        color: #ffffff;
+      }
+
+      .mat-mdc-select-arrow {
+        color: #b0b0b0;
+      }
+    }
+
+    ::ng-deep .mat-mdc-dialog-container {
+      background-color: #1a1a1a;
+    }
+
+    ::ng-deep .mat-mdc-dialog-actions {
+      border-top: 1px solid #333333;
+    }
+
+    ::ng-deep .mat-mdc-select-panel {
+      background-color: #2d2d2d;
+      color: #ffffff;
+    }
+
+    ::ng-deep .mat-mdc-option {
+      color: #ffffff;
+    }
+
+    ::ng-deep .mat-mdc-option:hover:not([disabled]) {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    ::ng-deep .mat-mdc-option.mat-selected {
+      background-color: rgba(33, 150, 243, 0.12);
     }
   `]
 })
