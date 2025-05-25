@@ -3,7 +3,7 @@ export interface Maintenance {
     dateOfRequest: string;
     taskType: string;
     taskDescription: string;
-    assignedUser: string;
+    assignedUsers: string[];
     userComment: string;
     status: 'pending' | 'in-progress' | 'completed' | 'cancelled';
     cameraId: string;

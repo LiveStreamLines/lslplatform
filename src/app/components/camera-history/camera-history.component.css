@@ -203,3 +203,32 @@ strong {
   width: 20px;
   line-height: 20px;
 }
+
+.assigned-to {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.assigned-to .label {
+  font-size: 12px;
+  color: #b0b0b0;
+  font-weight: 500;
+}
+
+.assigned-users {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.user-chip {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+}

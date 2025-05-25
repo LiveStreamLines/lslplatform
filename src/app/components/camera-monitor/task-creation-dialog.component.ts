@@ -19,7 +19,7 @@ interface DialogData {
   taskTypes: string[];
   taskType: string;
   taskDescription: string;
-  assignedUser: string;
+  assignedUsers: string[];
   developer: Developer;
   project: Project;
 }
@@ -70,8 +70,8 @@ interface DialogData {
         </mat-form-field>
 
         <mat-form-field appearance="fill">
-          <mat-label>Assigned User</mat-label>
-          <mat-select [(ngModel)]="data.assignedUser" name="assignedUser" required>
+          <mat-label>Assigned Users</mat-label>
+          <mat-select [(ngModel)]="data.assignedUsers" name="assignedUsers" required multiple>
             <mat-option *ngFor="let user of data.users" [value]="user._id">
               {{user.name}} ({{user.role}})
             </mat-option>
@@ -196,18 +196,22 @@ export class TaskCreationDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<TaskCreationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
-  ) {}
+  ) {
+    if (!this.data.assignedUsers) {
+      this.data.assignedUsers = [];
+    }
+  }
 
   onCancel(): void {
     this.dialogRef.close();
   }
 
   onSave(): void {
-    if (this.data.taskType && this.data.taskDescription && this.data.assignedUser) {
+    if (this.data.taskType && this.data.taskDescription && this.data.assignedUsers.length > 0) {
       const task: Maintenance = {
         taskType: this.data.taskType,
         taskDescription: this.data.taskDescription,
-        assignedUser: this.data.assignedUser,
+        assignedUsers: this.data.assignedUsers,
         status: 'pending',
         cameraId: this.data.camera._id,
         developerId: this.data.developer._id,

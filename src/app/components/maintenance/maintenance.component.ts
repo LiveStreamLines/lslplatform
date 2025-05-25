@@ -62,7 +62,7 @@ export class MaintenanceComponent implements OnInit {
     'taskType',
     'taskDescription',
     'camera',
-    'assignedUser',
+    'assignedUsers',
     'status',
     'actions'
   ];
@@ -312,7 +312,7 @@ export class MaintenanceComponent implements OnInit {
     }
 
     if (this.selectedUserId) {
-      filtered = filtered.filter(m => m.assignedUser === this.selectedUserId);
+      filtered = filtered.filter(m => m.assignedUsers.includes(this.selectedUserId!));
     }
 
     if (this.selectedTaskType) {
@@ -334,8 +334,8 @@ export class MaintenanceComponent implements OnInit {
             return this.compareStrings(a.taskType, b.taskType, isAsc);
           case 'taskDescription':
             return this.compareStrings(a.taskDescription, b.taskDescription, isAsc);
-          case 'assignedUser':
-            return this.compareStrings(this.getUserName(a.assignedUser), this.getUserName(b.assignedUser), isAsc);
+          case 'assignedUsers':
+            return this.compareStrings(this.getUserName(a.assignedUsers[0]), this.getUserName(b.assignedUsers[0]), isAsc);
           case 'status':
             return this.compareStrings(a.status, b.status, isAsc);
           default:

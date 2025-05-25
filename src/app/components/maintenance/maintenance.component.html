@@ -111,9 +111,15 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="assignedUser">
+      <ng-container matColumnDef="assignedUsers">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Assigned To</th>
-        <td mat-cell *matCellDef="let maintenance">{{getUserName(maintenance.assignedUser)}}</td>
+        <td mat-cell *matCellDef="let maintenance">
+          <div class="assigned-users">
+            <span *ngFor="let userId of maintenance.assignedUsers" class="user-chip">
+              {{getUserName(userId)}}
+            </span>
+          </div>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="status">
@@ -192,8 +198,12 @@
         </div>
       </div>
     </ng-container>
-    <ng-container *ngSwitchCase="'assignedUser'">
-      {{getUserName(element.assignedUser)}}
+    <ng-container *ngSwitchCase="'assignedUsers'">
+      <div class="assigned-users">
+        <span *ngFor="let userId of element.assignedUsers" class="user-chip">
+          {{getUserName(userId)}}
+        </span>
+      </div>
     </ng-container>
     <ng-container *ngSwitchCase="'status'">
       <span class="status-badge" [ngClass]="getStatusClass(element.status)">

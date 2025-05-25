@@ -22,7 +22,7 @@ import { User } from '../../models/user.model';
 
 interface MaintenanceWithLast extends Maintenance {
   isLast?: boolean;
-  assignedUserName?: string;
+  assignedUserNames?: string[];
 }
 
 @Component({
@@ -146,7 +146,7 @@ export class CameraHistoryComponent implements OnInit {
         }).map((task, index, array) => ({
           ...task,
           isLast: index === array.length - 1,
-          assignedUserName: this.getUserName(task.assignedUser)
+          assignedUserNames: task.assignedUsers.map(userId => this.getUserName(userId))
         }));
         this.isLoading = false;
       },

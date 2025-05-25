@@ -68,8 +68,8 @@ import { User } from '../../models/user.model';
           </mat-form-field>
 
           <mat-form-field appearance="fill">
-            <mat-label>Assigned User</mat-label>
-            <mat-select [(ngModel)]="data.maintenance.assignedUser" name="assignedUser" required>
+            <mat-label>Assigned Users</mat-label>
+            <mat-select [(ngModel)]="data.maintenance.assignedUsers" name="assignedUsers" required multiple>
               <mat-option *ngFor="let user of data.users" [value]="user._id">
                 {{user.name}} ({{user.role}})
               </mat-option>

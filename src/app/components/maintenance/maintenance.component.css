@@ -81,8 +81,9 @@ table {
   width: 100px;
 }
 
-.mat-column-assignedUser {
-  width: 120px;
+.mat-column-assignedUsers {
+  width: 150px;
+  min-width: 150px;
 }
 
 .mat-column-camera {
@@ -628,4 +629,20 @@ button[mat-icon-button]:hover {
 
 ::ng-deep .mat-mdc-dialog-container .mat-mdc-option .mdc-list-item__secondary-text {
   color: #bdbdbd;
+}
+
+.assigned-users {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.user-chip {
+  background-color: #2d2d2d;
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
 } 

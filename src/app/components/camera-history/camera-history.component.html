@@ -54,9 +54,14 @@
             <p class="task-description">{{task.taskDescription}}</p>
             <div class="task-meta">
               <div class="task-info">
-                <span class="assigned-to" *ngIf="task.assignedUserName">
-                  <strong>Assigned to:</strong> {{task.assignedUserName}}
-                </span>
+                <div class="assigned-to" *ngIf="task.assignedUsers?.length">
+                  <span class="label">Assigned to:</span>
+                  <div class="assigned-users">
+                    <span *ngFor="let userName of task.assignedUserNames" class="user-chip">
+                      {{userName}}
+                    </span>
+                  </div>
+                </div>
                 <span class="task-status" [ngClass]="getTaskStatusClass(task.status)">
                   <strong>Status:</strong> {{task.status}}
                 </span>

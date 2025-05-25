@@ -530,7 +530,7 @@ export class CameraMonitorComponent implements OnInit {
         taskTypes: this.taskTypes,
         taskType: '',
         taskDescription: '',
-        assignedUser: '',
+        assignedUsers: [],
         developer: developer,
         project: project
       }
