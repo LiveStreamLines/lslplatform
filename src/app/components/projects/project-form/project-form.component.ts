@@ -55,12 +55,13 @@ export class ProjectFormComponent implements OnInit {
       projectName: ['', Validators.required],
       projectTag: ['', Validators.required],
       description: ['', Validators.required],
-      developerId: ['', Validators.required], // Add developerId field
+      developerId: ['', Validators.required],
       index:['0', Validators.required],
       isActive: [true],
+      status: [this.isEditMode ? '' : 'new', Validators.required]
     });
 
-    this.fetchDevelopers(); // Fetch developers list
+    this.fetchDevelopers();
 
     if (!this.isEditMode && this.data.developerId) {
       this.projectForm.patchValue({ developerId: this.data.developerId })
@@ -83,11 +84,12 @@ export class ProjectFormComponent implements OnInit {
       projectName: project.projectName,
       projectTag: project.projectTag,
       description: project.description,
-      developerId: project.developer, // Set the developer ID if in edit mode
+      developerId: project.developer,
       index: project.index,
       isActive: project.isActive,
+      status: project.status
     });
-    this.logoPreview = environment.backend +'/' + project.logo; // Show the existing logo if editing
+    this.logoPreview = environment.backend +'/' + project.logo;
   }
 
   onLogoChange(event: Event): void {
@@ -112,20 +114,18 @@ export class ProjectFormComponent implements OnInit {
     if (this.projectForm.valid) {
       const projectData = this.projectForm.value;
   
-      // Prepare FormData for the backend
       const formData = new FormData();
       formData.append('projectName', projectData.projectName);
       formData.append('projectTag', projectData.projectTag);
       formData.append('description', projectData.description);
-      formData.append('developer', projectData.developerId); // Include selected developer ID
+      formData.append('developer', projectData.developerId);
       formData.append('index', projectData.index);
       formData.append('isActive', projectData.isActive);
+      formData.append('status', projectData.status);
 
-      // Append logo file if present
       if (this.logoFile) {
         formData.append('logo', this.logoFile);
       } else if (this.isEditMode && this.data.project.logo) {
-        // In edit mode, if no new logo is uploaded, keep the existing logo reference
         formData.append('logo', this.data.project.logo);
       }
   

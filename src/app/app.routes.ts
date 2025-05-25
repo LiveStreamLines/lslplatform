@@ -31,6 +31,9 @@ import { MemoryFormComponent } from './components/memories/memory-form/memory-fo
 import { InventoryComponent } from './components/inventory/inventory.component';
 import { EditDeviceComponent } from './components/inventory/edit-device/edit-device.component';
 import { EcrdComponent } from './components/camera-viewer/ecrd/ecrd.component';
+import { CameraMonitorComponent } from './components/camera-monitor/camera-monitor.component';
+import { MaintenanceComponent } from './components/maintenance/maintenance.component';
+import { CameraHistoryComponent } from './components/camera-history/camera-history.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -65,7 +68,10 @@ export const routes: Routes = [
   { path: 'media', component: MediaComponent,  canActivate: [AuthGuard]},
   { path: 'about', component: AboutUsComponent, canActivate:[AuthGuard]},
   { path: 'monitor', component: CameraViewerComponent, canActivate:[AuthGuard]},
-
+  { path: 'camera-monitor', component: CameraMonitorComponent, 
+    canActivate:[AuthGuard], 
+    data: {roles: ['Super Admin']}
+  },
   { path: 'memories', component: MemoriesComponent, 
     canActivate:[AuthGuard], data: {roles: ['Super Admin', 'Admin']}},  
   { path: 'memory-form', component: MemoryFormComponent,
@@ -76,6 +82,12 @@ export const routes: Routes = [
     canActivate:[AuthGuard], data: {roles: ['Super Admin']}},
   { path: 'inventory/edit/:id', component: EditDeviceComponent, 
     canActivate:[AuthGuard], data: {roles: ['Super Admin']}},
+  { path: 'maintenance', component: MaintenanceComponent, 
+    canActivate:[AuthGuard], data: {roles: ['Super Admin', 'Admin']}},
+  { path: 'camera-history/:id', component: CameraHistoryComponent, 
+    canActivate: [AuthGuard], 
+    data: {roles: ['Super Admin', 'Admin']}
+  },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }  // Use the NotFoundComponent for 404
 ];

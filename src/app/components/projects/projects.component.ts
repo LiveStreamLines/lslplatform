@@ -127,5 +127,17 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
+  updateProjectStatus(project: Project): void {
+    this.projectService.updateProjectStatus(project._id, { status: project.status }).subscribe({
+      next: (response) => {
+        console.log(`Project ${project.projectName} status updated to ${project.status}`);
+      },
+      error: (error) => {
+        console.error(`Error updating project ${project.projectName} status:`, error);
+        // Optionally, revert the change in case of an error
+        this.fetchProjectsByDeveloper(this.selectedDeveloperId);
+      }
+    });
+  }
 
 }

@@ -10,9 +10,14 @@
     <span>Gallery</span>
   </a>
 
-  <a mat-list-item routerLink="/monitor">
-      <mat-icon>monitor</mat-icon>
-      <span>Monitor</span>
+  <a mat-list-item routerLink="/monitor" routerLinkActive="active">
+    <mat-icon>videocam</mat-icon>
+    <span>Monitor</span>
+  </a>
+
+  <a mat-list-item *ngIf="isSuper$ | async" routerLink="/camera-monitor" routerLinkActive="active">
+    <mat-icon>videocam</mat-icon>
+    <span>Camera Monitor</span>
   </a>
   
   <a mat-list-item routerLink="/about">
@@ -46,6 +51,11 @@
   <a mat-list-item *ngIf="(isSuper$ | async) || ((isAdmin$ | async) && memoryRole)" routerLink="/memories">
     <mat-icon>collections_bookmark</mat-icon>
     <span>Memories</span>
+  </a>
+
+  <a mat-list-item *ngIf="(isSuper$ | async) || (isAdmin$ | async)" routerLink="/maintenance">
+    <mat-icon>build</mat-icon>
+    <span>Maintenance</span>
   </a>
 
   <!-- <a mat-list-item *ngIf="isSuper" routerLink="/">

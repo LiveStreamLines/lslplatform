@@ -8,6 +8,7 @@ export interface Project {
   isActive: true,
   createdDate: string,
   logo: string,
-  blocked?: string
+  blocked?: string,
+  status: 'new' | 'active' | 'on hold' | 'finished'
 }
   

@@ -43,3 +43,4 @@ src/assets/videos
 .DS_Store
 Thumbs.db
 backend.zip
+/backend
