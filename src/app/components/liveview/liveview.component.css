@@ -13,7 +13,7 @@
     flex: 7; /* Takes 70% of the width */
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     min-width: 0; /* Prevents flex item from overflowing */
   }
   
