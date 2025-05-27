@@ -11,6 +11,7 @@ import { TokenService } from '../../services/token.service';
 })
 export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() projectTag!: string;
+  @Input() cameraId: string = 'main'; // Default to main camera if not specified
 
   private appKey = "itwwm7benooi6li6p4p1xrz5rsgy1l9e";
   private appSecret = "kpivtt3r0bfv4eb2dl7apv1icyl8z48z";

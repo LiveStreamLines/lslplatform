@@ -2,209 +2,253 @@
 .container {
     display: flex;
     flex-direction: row;
-    height: 100vh; /* Full height */
+    height: 100vh;
     width: 100%;
     overflow: hidden;
-  }
+    padding: 20px;
+    gap: 20px;
+    box-sizing: border-box;
+}
   
-  /* Live View Section */
-  .iframe-container {
-    margin-left: 5%;
-    flex: 7; /* Takes 70% of the width */
+/* Live View Section */
+.iframe-container {
+    flex: 8; /* Takes 80% of the width */
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    min-width: 0; /* Prevents flex item from overflowing */
-  }
+    min-width: 0;
+    height: calc(100vh - 200px);
+    box-sizing: border-box;
+}
   
-  .live-view-iframe {
+.live-view-iframe {
     width: 100%;
     height: 100%;
     border: none; /* Remove iframe border */
     object-fit: contain;
-  }
+}
   
-  /* PTZ Control Section */
-  .ptz-control {
-    flex: 3; /* Takes 30% of the width */
+/* PTZ Control Section */
+.ptz-control {
+    flex: 2; /* Takes 20% of the width */
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow effect */
-    min-width: 300px; /* Minimum width for PTZ controls */
-  }
+    padding: 15px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 200px;
+    max-width: 250px;
+    color: white;
+    box-sizing: border-box;
+}
   
-  .ptz-circle {
+.ptz-control h4 {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+  
+.ptz-circle {
     position: relative;
-    width: 150px;
-    height: 150px;
-    border: 2px solid #ccc;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f5f5f5;
-  }
+    width: 160px;
+    height: 160px;
+    margin: 15px auto;
+}
   
-  .ptz-btn {
+.ptz-btn {
     position: absolute;
     width: 40px;
     height: 40px;
-    background: #fff;
-    border: 1px solid #ccc;
+    border: none;
     border-radius: 50%;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: #333;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     cursor: pointer;
-    transition: background-color 0.3s;
-  }
+    font-size: 16px;
+    transition: all 0.2s;
+}
   
-  .ptz-btn:hover {
-    background-color: #e0e0e0;
-  }
-
-  .ptz-btn:active {
-    background-color: #dcdcdc;
-    border-color: #a0a0a0;
+.ptz-btn:hover {
+    background: #444;
+    transform: scale(1.1);
 }
 
+.ptz-btn:active {
+    background: #555;
+}
   
-  .ptz-up {
-    top: 10px;
+.ptz-up {
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
-  }
+}
   
-  .ptz-down {
-    bottom: 10px;
+.ptz-down {
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-  }
+}
   
-  .ptz-left {
-    left: 10px;
+.ptz-left {
+    left: 0;
     top: 50%;
     transform: translateY(-50%);
-  }
+}
   
-  .ptz-right {
-    right: 10px;
+.ptz-right {
+    right: 0;
     top: 50%;
     transform: translateY(-50%);
-  }
+}
   
-  .ptz-center {
-    width: 50px;
-    height: 50px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    font-size: 20px;
-  }
+.ptz-center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #444;
+}
 
-  .zoom-control {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .ptz-btn.zoom-in, .ptz-btn.zoom-out {
-    width: 50px;
-    height: 50px;
+.zoom-control {
     display: flex;
     justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 50%;
+    gap: 12px;
+    margin-top: 15px;
+}
+  
+.zoom-in, .zoom-out {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    background: #333;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     cursor: pointer;
-    transition: background-color 0.3s;
-  }
+    transition: all 0.2s;
+    font-size: 14px;
+}
   
-  .ptz-btn.zoom-in:hover, .ptz-btn.zoom-out:hover {
-    background-color: #e0e0e0;
-  }
+.zoom-in:hover, .zoom-out:hover {
+    background: #444;
+    transform: scale(1.05);
+}
+
+.zoom-in:active, .zoom-out:active {
+    background: #555;
+}
   
-  .ptz-btn[disabled] {
+.ptz-btn[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
-  }
+}
   
-  /* Media Queries for Responsive Design */
-  @media screen and (max-width: 1024px) {
+/* Media Queries for Responsive Design */
+@media screen and (max-width: 1024px) {
     .container {
-      flex-direction: column;
-      height: auto;
-      min-height: 100vh;
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        padding: 15px;
+        gap: 15px;
     }
 
     .iframe-container {
-      flex: none;
-      width: 100%;
-      height: 60vh;
-      margin-left: 0;
-      margin-bottom: 20px;
+        flex: none;
+        width: 100%;
+        height: 40vh;
+        margin-bottom: 0;
     }
 
     .ptz-control {
-      flex: none;
-      width: 100%;
-      min-width: auto;
-      padding: 10px;
+        flex: none;
+        width: 100%;
+        min-width: auto;
+        max-width: none;
+        padding: 15px;
+        margin-top: 0;
     }
 
     .ptz-circle {
-      width: 120px;
-      height: 120px;
+        width: 140px;
+        height: 140px;
     }
 
     .ptz-btn {
-      width: 35px;
-      height: 35px;
-      font-size: 16px;
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        padding: 10px;
+        gap: 10px;
     }
 
-    .ptz-center {
-      width: 40px;
-      height: 40px;
-      font-size: 18px;
-    }
-  }
-
-  @media screen and (max-width: 480px) {
     .iframe-container {
-      height: 40vh;
+        height: 25vh;
+    }
+
+    .ptz-control {
+        padding: 10px;
     }
 
     .ptz-circle {
-      width: 100px;
-      height: 100px;
+        width: 120px;
+        height: 120px;
     }
 
     .ptz-btn {
-      width: 30px;
-      height: 30px;
-      font-size: 14px;
-    }
-
-    .ptz-center {
-      width: 35px;
-      height: 35px;
-      font-size: 16px;
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
     }
 
     .zoom-control {
-      gap: 5px;
+        gap: 8px;
     }
 
-    .ptz-btn.zoom-in, .ptz-btn.zoom-out {
-      width: 40px;
-      height: 40px;
-      font-size: 20px;
+    .zoom-in, .zoom-out {
+        padding: 5px 10px;
+        font-size: 12px;
     }
-  }
+}
+  
+.header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: #1a1a1a;
+    border-bottom: 1px solid #333;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.title {
+    margin: 0;
+    margin-left: 20px;
+    color: white;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.back-button {
+    padding: 8px 16px;
+    background: rgb(141, 13, 13);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.back-button:hover {
+    background: rgb(180, 17, 17);
+}
   
   

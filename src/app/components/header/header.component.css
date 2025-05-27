@@ -80,8 +80,13 @@ mat-toolbar {
 }
 
 @media (max-width: 768px) {
-  .breadcrumbs a, .breadcrumbs span {
-    max-width: 80px; /* Shorter truncation for tablets */
+  .breadcrumbs {
+    display: none;
+  }
+
+  /* Hide manual button in tablet and mobile view */
+  .user-info .manual-button {
+    display: none !important;
   }
 }
 

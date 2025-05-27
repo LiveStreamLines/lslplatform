@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -31,6 +31,7 @@ export class ServicesComponent implements OnInit {
   filteredServices: any[] = [];
   accessibleServices: string[] = [];
   userRole: string | null = null;
+  isMobile: boolean = false;
 
   allowedTags: string[] = ['prime', 'stg', 'gugg1', 'puredc', 'proj']; // Add all allowed tags here
   allowedSite: string[] =['gugg1'];
@@ -60,8 +61,44 @@ export class ServicesComponent implements OnInit {
     });
   }
 
-  
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  private checkScreenSize() {
+    this.isMobile = window.innerWidth <= 768;
+    this.updateFilteredServices();
+  }
+
+  private updateFilteredServices() {
+    if (this.userRole === 'Super Admin' || this.accessibleServices[0] === 'all') {
+      if (this.isMobile) {
+        // In mobile view, only show Timelapse and Live Streaming (if project is in allowedTags)
+        this.filteredServices = this.services.filter(service => 
+          service.name === 'Time lapse' || 
+          (service.name === 'Live Streaming' && this.allowedTags.includes(this.projectTag))
+        );
+      } else {
+        // In desktop view, show all services
+        this.filteredServices = this.services;
+      }
+    } else {
+      // For non-admin users, filter based on accessible services
+      this.filteredServices = this.services.filter((service) => {
+        if (this.isMobile) {
+          // In mobile view, only show Timelapse and Live Streaming (if project is in allowedTags)
+          return (service.name === 'Time lapse' || 
+                 (service.name === 'Live Streaming' && this.allowedTags.includes(this.projectTag))) &&
+                 this.accessibleServices.includes(service.name);
+        }
+        return this.accessibleServices.includes(service.name);
+      });
+    }
+  }
+
   ngOnInit(): void {
+    this.checkScreenSize(); // Initial check for screen size
     this.developerService.getDeveloperIdByTag(this.developerTag).subscribe({
         next: (developer: Developer[]) => {
           this.developerName = developer[0].developerName;
@@ -87,13 +124,7 @@ export class ServicesComponent implements OnInit {
     // Get user role and accessible projects
     this.userRole = this.authService.getUserRole();
     this.accessibleServices = this.authService.getAccessibleServices();
-     // Filter projects based on role and accessible projects
-     this.filteredServices = this.userRole === 'Super Admin' || this.accessibleServices[0] === 'all'
-     ? this.services // Admins see all projects
-     : this.services.filter((services) =>
-         this.accessibleServices.includes(services.name)
-     );  
-
+    this.updateFilteredServices();
   }
 
 
@@ -102,7 +133,7 @@ export class ServicesComponent implements OnInit {
     if (serviceRoute === '/timelapse') {
       this.router.navigate([`home/${this.developerTag}/${this.projectTag}/${serviceRoute}`]);
     } else if (this.allowedTags.includes(this.projectTag) && serviceRoute === '/liveview') {
-      this.router.navigate([`home/${this.developerTag}/${this.projectTag}/${serviceRoute}`]);  
+      this.router.navigate([`home/${this.developerTag}/${this.projectTag}/camera-selection`]);  
     } else if (this.allowedSite.includes(this.projectTag) && serviceRoute === "/site-photography") {
       this.router.navigate([`home/${this.developerTag}/${this.projectTag}/${serviceRoute}`]);   
     }

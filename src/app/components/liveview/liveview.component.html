@@ -1,7 +1,12 @@
+<div class="header">
+  <button (click)="goBack()" class="back-button">← Back</button>
+  <h1 class="title">Live View Camera</h1>
+</div>
+
 <div class="container">
     <!-- Live View Section -->
     <div class="iframe-container">
-      <app-camera-feed [projectTag]="projectTag"></app-camera-feed>
+      <app-camera-feed [projectTag]="projectTag" [cameraId]="cameraId"></app-camera-feed>
     </div>
   
     <div class="ptz-control">

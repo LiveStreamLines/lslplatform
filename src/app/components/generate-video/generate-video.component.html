@@ -324,7 +324,7 @@
           </div>
       </div>
 
-      <button class="submit" (click)="filterImages()" [disabled]="isLoading">Generate Video</button>
+      <button class="submit" (click)="filterImages()" [disabled]="isLoading" *ngIf="!isFilterComplete">Generate Video</button>
 
     </div>
 

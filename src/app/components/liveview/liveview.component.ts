@@ -21,6 +21,7 @@ export class LiveviewComponent {
 
   developerTag!: string;
   projectTag!: string;
+  cameraId!: string;
 
   id: string = "";
 
@@ -35,11 +36,13 @@ export class LiveviewComponent {
   constructor(
     private http: HttpClient,     
     private route: ActivatedRoute, 
+    private router: Router,
     private sanitizer: DomSanitizer
   ) {
     this.route.params.subscribe(params => {
       this.developerTag = params['developerTag'];
       this.projectTag = params['projectTag'];
+      this.cameraId = params['cameraId'];
 
       // Assign ID based on projectTag
       this.id = this.projectTagMap[this.projectTag] || "";
@@ -120,4 +123,7 @@ export class LiveviewComponent {
     });
   }
   
+  goBack() {
+    this.router.navigate([`home/${this.developerTag}/${this.projectTag}/camera-selection`]);
+  }
 }
