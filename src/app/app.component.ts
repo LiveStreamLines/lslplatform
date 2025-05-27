@@ -35,10 +35,10 @@ export class AppComponent {
       .subscribe(result => {
         if (result.matches) {
           this.sidenavMode = 'over'; // Overlay mode for smaller screens
-          this.sidenavOpened = false; // Closed by default
+          this.sidenavOpened = false; // Closed by default on mobile
         } else {
           this.sidenavMode = 'side'; // Side mode for larger screens
-          this.sidenavOpened = true; // Opened by default
+          this.sidenavOpened = true; // Opened by default on desktop
         }
       });
   }

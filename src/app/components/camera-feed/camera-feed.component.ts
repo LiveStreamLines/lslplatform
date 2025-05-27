@@ -1,7 +1,6 @@
-import { Component, ElementRef, OnInit, Renderer2, Input } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, Input, HostListener, AfterViewInit, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TokenService } from '../../services/token.service';
-
 
 @Component({
   selector: 'app-camera-feed',
@@ -10,8 +9,8 @@ import { TokenService } from '../../services/token.service';
   templateUrl: './camera-feed.component.html',
   styleUrl: './camera-feed.component.css'
 })
-export class CameraFeedComponent implements OnInit {
-  @Input() projectTag!: string; // Receive projectTag from LiveviewComponent
+export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() projectTag!: string;
 
   private appKey = "itwwm7benooi6li6p4p1xrz5rsgy1l9e";
   private appSecret = "kpivtt3r0bfv4eb2dl7apv1icyl8z48z";
@@ -26,8 +25,22 @@ export class CameraFeedComponent implements OnInit {
   private channelNumber = "1";
   private videoResolution = "hd";
   private domain = "https://isgpopen.ezvizlife.com";
-  
-  private pluginScriptUrl = 'assets/dist/jsPlugin-3.0.0.min.js'; // Make sure the JS file is placed here
+  private pluginScriptUrl = 'assets/dist/jsPlugin-3.0.0.min.js';
+  private oPlugin: any = null;
+  private resizeTimeout: any;
+  private isResizing = false;
+  private retryCount = 0;
+  private readonly MAX_RETRIES = 3;
+
+  // Minimum dimensions for different screen sizes
+  private readonly MIN_DIMENSIONS = {
+    default: { width: 640, height: 360 },
+    tablet: { width: 480, height: 270 },
+    mobile: { width: 320, height: 180 },
+    smallMobile: { width: 280, height: 157.5 },
+    extraSmall: { width: 240, height: 135 },
+    verySmall: { width: 200, height: 112.5 }
+  };
 
   private projectTagMap: { [key: string]: { secretKey: string, serialNumber: string } } = {
     gugg1: { secretKey: "guggenheim12", serialNumber: "AF5940863" },
@@ -50,7 +63,6 @@ export class CameraFeedComponent implements OnInit {
       return;
     }
 
-    // Retrieve correct secretKey & serialNumber based on projectTag
     const projectData = this.projectTagMap[this.projectTag];
     if (!projectData) {
       console.error("Invalid projectTag!");
@@ -59,24 +71,170 @@ export class CameraFeedComponent implements OnInit {
     this.secretKey = projectData.secretKey;
     this.serialNumber = projectData.serialNumber;
 
-     // Fetch all tokens in a single request
-     this.tokenService.getAllTokens().subscribe(tokens => {
-        this.accessToken = tokens.accessToken;
-        this.accessTokenExpiry = tokens.accessTokenExpiry;
-        this.streamToken = tokens.streamToken;
-        this.streamTokenExpiry = tokens.streamTokenExpiry;
-        
-        console.log("Tokens Received:", tokens);
+    this.tokenService.getAllTokens().subscribe(tokens => {
+      this.accessToken = tokens.accessToken;
+      this.accessTokenExpiry = tokens.accessTokenExpiry;
+      this.streamToken = tokens.streamToken;
+      this.streamTokenExpiry = tokens.streamTokenExpiry;
+      
+      console.log("Tokens Received:", tokens);
 
-        // Check if tokens are expired before proceeding
-        if (this.isTokenExpired(this.accessTokenExpiry) || this.isTokenExpired(this.streamTokenExpiry)) {
-          console.log("Tokens expired, fetching new ones...");
-        } else {
-          console.log("Tokens are valid, proceeding with Live View.");
-          this.loadScript().then(() => this.initializeLiveView());
-        }
+      if (this.isTokenExpired(this.accessTokenExpiry) || this.isTokenExpired(this.streamTokenExpiry)) {
+        console.log("Tokens expired, fetching new ones...");
+      } else {
+        console.log("Tokens are valid, proceeding with Live View.");
+        this.loadScript().then(() => this.initializeLiveView());
+      }
     });
+  }
 
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.forceContainerSize();
+      const dimensions = this.getContainerDimensions();
+      console.log('Initial container dimensions:', dimensions);
+    }, 100);
+  }
+
+  ngOnDestroy() {
+    if (this.resizeTimeout) {
+      clearTimeout(this.resizeTimeout);
+    }
+    if (this.oPlugin) {
+      this.stopPlayback();
+    }
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    if (this.isResizing) {
+      clearTimeout(this.resizeTimeout);
+    }
+    
+    this.isResizing = true;
+    this.resizeTimeout = setTimeout(() => {
+      this.isResizing = false;
+      if (this.oPlugin) {
+        this.handleResize();
+      }
+    }, 250); // Debounce resize events
+  }
+
+  private handleResize() {
+    this.forceContainerSize();
+    const dimensions = this.getContainerDimensions();
+    
+    // Pause playback during resize
+    this.pausePlayback().then(() => {
+      this.updateVideoDimensions().then(() => {
+        // Resume playback after resize
+        setTimeout(() => {
+          this.resumePlayback();
+        }, 500);
+      });
+    });
+  }
+
+  private async pausePlayback(): Promise<void> {
+    if (this.oPlugin) {
+      try {
+        await this.oPlugin.JS_Pause();
+        console.log("Playback paused during resize");
+      } catch (error) {
+        console.error("Error pausing playback:", error);
+      }
+    }
+  }
+
+  private async resumePlayback(): Promise<void> {
+    if (this.oPlugin) {
+      try {
+        await this.oPlugin.JS_Resume();
+        console.log("Playback resumed after resize");
+      } catch (error) {
+        console.error("Error resuming playback:", error);
+      }
+    }
+  }
+
+  private stopPlayback(): void {
+    if (this.oPlugin) {
+      try {
+        this.oPlugin.JS_Stop();
+        console.log("Playback stopped");
+      } catch (error) {
+        console.error("Error stopping playback:", error);
+      }
+    }
+  }
+
+  private getMinDimensions(): { width: number; height: number } {
+    const windowWidth = window.innerWidth;
+    if (windowWidth <= 280) return this.MIN_DIMENSIONS.verySmall;
+    if (windowWidth <= 360) return this.MIN_DIMENSIONS.extraSmall;
+    if (windowWidth <= 480) return this.MIN_DIMENSIONS.smallMobile;
+    if (windowWidth <= 768) return this.MIN_DIMENSIONS.mobile;
+    if (windowWidth <= 1024) return this.MIN_DIMENSIONS.tablet;
+    return this.MIN_DIMENSIONS.default;
+  }
+
+  private forceContainerSize() {
+    const container = this.elRef.nativeElement.querySelector("#playWind");
+    const parentContainer = this.elRef.nativeElement.querySelector(".playContainer");
+    
+    if (container && parentContainer) {
+      const parentRect = parentContainer.getBoundingClientRect();
+      const minDims = this.getMinDimensions();
+      
+      const width = Math.max(parentRect.width, minDims.width);
+      const height = Math.max(parentRect.height, minDims.height);
+      
+      this.renderer.setStyle(container, 'width', `${width}px`);
+      this.renderer.setStyle(container, 'height', `${height}px`);
+      
+      console.log('Forced container size:', { width, height, minDims });
+    }
+  }
+
+  private getContainerDimensions() {
+    const container = this.elRef.nativeElement.querySelector("#playWind");
+    if (!container) {
+      const minDims = this.getMinDimensions();
+      console.warn("Container not found, using fallback dimensions:", minDims);
+      return minDims;
+    }
+
+    const rect = container.getBoundingClientRect();
+    const minDims = this.getMinDimensions();
+    const dimensions = {
+      width: Math.max(Math.floor(rect.width), minDims.width),
+      height: Math.max(Math.floor(rect.height), minDims.height)
+    };
+
+    console.log('Container dimensions:', dimensions, 'Min dimensions:', minDims);
+    return dimensions;
+  }
+
+  private async updateVideoDimensions(): Promise<void> {
+    const dimensions = this.getContainerDimensions();
+    console.log('Updating video dimensions to:', dimensions);
+    
+    if (this.oPlugin) {
+      try {
+        await this.oPlugin.JS_Resize(dimensions.width, dimensions.height);
+        console.log("JS_Resize success");
+      } catch (error) {
+        console.error("JS_Resize failed:", error);
+        if (this.retryCount < this.MAX_RETRIES) {
+          this.retryCount++;
+          console.log(`Retrying resize (${this.retryCount}/${this.MAX_RETRIES})...`);
+          await this.updateVideoDimensions();
+        } else {
+          console.error("Max retries reached for resize operation");
+          this.retryCount = 0;
+        }
+      }
+    }
   }
 
   private isTokenExpired(expiryTime: number): boolean {
@@ -84,14 +242,10 @@ export class CameraFeedComponent implements OnInit {
     return currentTime >= expiryTime;
   }
 
-
-  /**
-   * Dynamically loads the JSPlugin script.
-   */
   private loadScript(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (document.getElementById('jsPluginScript')) {
-        resolve(); // Script already loaded
+        resolve();
         return;
       }
 
@@ -105,10 +259,7 @@ export class CameraFeedComponent implements OnInit {
     });
   }
 
-  /**
-   * Initializes the live view player after script is loaded.
-   */
-  private initializeLiveView(): void {
+  private async initializeLiveView(): Promise<void> {
     const container = this.elRef.nativeElement.querySelector("#playWind");
 
     if (!container) {
@@ -116,55 +267,55 @@ export class CameraFeedComponent implements OnInit {
       return;
     }
 
-    const oPlugin = new (window as any).JSPlugin({
-      szId: "playWind",
-      iWidth: 750,
-      iHeight: 500,
-      szBasePath: "./assets/dist",
-      iMaxSplit: 1, // Ensure only 1 channel is used
-      oStyle: {
-        border: "#343434",
-        background: "#4C4B4B"
+    try {
+      await this.forceContainerSize();
+      const dimensions = this.getContainerDimensions();
+      console.log('Initializing LiveView with dimensions:', dimensions);
+
+      this.oPlugin = new (window as any).JSPlugin({
+        szId: "playWind",
+        iWidth: dimensions.width,
+        iHeight: dimensions.height,
+        szBasePath: "./assets/dist",
+        iMaxSplit: 1,
+        oStyle: {
+          border: "#343434",
+          background: "#4C4B4B"
+        }
+      });
+
+      await this.oPlugin.JS_ArrangeWindow(1, false);
+      console.log("JS_ArrangeWindow success");
+      
+      await this.updateVideoDimensions();
+
+      const url = `ezopen://open.ezviz.com/${this.serialNumber}/${this.channelNumber}`;
+      const finalUrl = this.videoResolution === "hd" ? `${url}.hd.live` : `${url}.live`;
+
+      if (this.secretKey) {
+        await this.oPlugin.JS_SetSecretKey(0, this.secretKey);
+        console.log("JS_SetSecretKey success");
       }
-    });
 
-    oPlugin.JS_ArrangeWindow(1, false).then(
-      () => console.log("JS_ArrangeWindow success"),
-      () => console.log("JS_ArrangeWindow failed")
-    );
-
-    let realplayFinished = true;
-
-    if (!realplayFinished) return;
-
-    const url = `ezopen://open.ezviz.com/${this.serialNumber}/${this.channelNumber}`;
-    const finalUrl = this.videoResolution === "hd" ? `${url}.hd.live` : `${url}.live`;
-
-    if (this.secretKey) {
-      oPlugin.JS_SetSecretKey(0, this.secretKey).then(
-        () => console.log("JS_SetSecretKey success"),
-        () => console.log("JS_SetSecretKey failed")
-      );
+      await this.oPlugin.JS_Play(finalUrl, {
+        playURL: finalUrl,
+        ezuikit: true,
+        env: { domain: this.domain },
+        accessToken: this.streamToken,
+        mode: "media"
+      }, 0);
+      
+      console.log("LiveView initialized successfully");
+    } catch (error) {
+      console.error("Error initializing LiveView:", error);
+      if (this.retryCount < this.MAX_RETRIES) {
+        this.retryCount++;
+        console.log(`Retrying initialization (${this.retryCount}/${this.MAX_RETRIES})...`);
+        setTimeout(() => this.initializeLiveView(), 1000);
+      } else {
+        console.error("Max retries reached for initialization");
+        this.retryCount = 0;
+      }
     }
-
-    realplayFinished = false;
-
-    oPlugin.JS_Play(finalUrl, {
-      playURL: finalUrl,
-      ezuikit: true,
-      env: { domain: this.domain },
-      accessToken: this.streamToken,
-      mode: "media"
-    }, 0).then(
-      () => {
-        realplayFinished = true;
-        console.log("realplay success");
-      },
-      () => {
-        realplayFinished = true;
-        console.log("realplay failed");
-      }
-    );
   }
-
 }

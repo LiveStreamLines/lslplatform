@@ -34,7 +34,27 @@
 
 mat-sidenav {
   width: 250px;
-  background-color: rgba(0, 0, 0, 0);
+}
+
+/* Mobile view styles - ensure solid black background for all mobile widths */
+@media (max-width: 1024px) {
+  mat-sidenav {
+    background-color: #000000 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Add styles for the overlay backdrop only in mobile view */
+  ::ng-deep .mat-drawer-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Desktop view styles */
+@media (min-width: 1025px) {
+  mat-sidenav {
+    background-color: transparent;
+  }
 }
 
 /* Smaller screens: Reduce width */

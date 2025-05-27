@@ -3,6 +3,8 @@
     display: flex;
     flex-direction: row;
     height: 100vh; /* Full height */
+    width: 100%;
+    overflow: hidden;
   }
   
   /* Live View Section */
@@ -11,12 +13,15 @@
     flex: 7; /* Takes 70% of the width */
     display: flex;
     justify-content: center;
+    align-items: center;
+    min-width: 0; /* Prevents flex item from overflowing */
   }
   
   .live-view-iframe {
     width: 100%;
     height: 100%;
     border: none; /* Remove iframe border */
+    object-fit: contain;
   }
   
   /* PTZ Control Section */
@@ -27,6 +32,7 @@
     align-items: center;
     padding: 20px;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow effect */
+    min-width: 300px; /* Minimum width for PTZ controls */
   }
   
   .ptz-circle {
@@ -125,6 +131,80 @@
   .ptz-btn[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+  
+  /* Media Queries for Responsive Design */
+  @media screen and (max-width: 1024px) {
+    .container {
+      flex-direction: column;
+      height: auto;
+      min-height: 100vh;
+    }
+
+    .iframe-container {
+      flex: none;
+      width: 100%;
+      height: 60vh;
+      margin-left: 0;
+      margin-bottom: 20px;
+    }
+
+    .ptz-control {
+      flex: none;
+      width: 100%;
+      min-width: auto;
+      padding: 10px;
+    }
+
+    .ptz-circle {
+      width: 120px;
+      height: 120px;
+    }
+
+    .ptz-btn {
+      width: 35px;
+      height: 35px;
+      font-size: 16px;
+    }
+
+    .ptz-center {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .iframe-container {
+      height: 40vh;
+    }
+
+    .ptz-circle {
+      width: 100px;
+      height: 100px;
+    }
+
+    .ptz-btn {
+      width: 30px;
+      height: 30px;
+      font-size: 14px;
+    }
+
+    .ptz-center {
+      width: 35px;
+      height: 35px;
+      font-size: 16px;
+    }
+
+    .zoom-control {
+      gap: 5px;
+    }
+
+    .ptz-btn.zoom-in, .ptz-btn.zoom-out {
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+    }
   }
   
   
