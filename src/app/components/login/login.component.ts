@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, AfterViewInit, ViewChild, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';  // Import FormsModule
 import { CommonModule } from '@angular/common';  // Import CommonModule for *ngIf
@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/users.service';
 import { HeaderService } from '../../services/header.service';
 import { ActivatedRoute } from '@angular/router';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-login',
@@ -29,6 +30,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
   isForgotPassword = false; // Show the forgot password form
   resetPasswordEmail: string = '';
   currentView: 'login' | 'phoneVerification' | 'forgotPassword' = 'login'; // Current view state
+  isMobileView: boolean = false;
+  isIOS: boolean = false;
   
   @ViewChild('backgroundVideo', { static: true }) videoElement!: ElementRef<HTMLVideoElement>;
 
@@ -39,16 +42,23 @@ export class LoginComponent implements OnInit, AfterViewInit {
     { name: 'Saudi Arabia', code: '+966', flag: 'assets/saudi.png' },   
   ];
 
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkScreenSize();
+  }
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
     private router: Router, 
     private headerService: HeaderService,
-    private route: ActivatedRoute) {}
+    private route: ActivatedRoute) {
+      this.isIOS = Capacitor.getPlatform() === 'ios';
+    }
 
     ngOnInit(): void {
       this.headerService.showHeaderAndSidenav = false;
+      this.checkScreenSize();
       
       // Check for view query parameter
       const viewParam = this.route.snapshot.queryParams['view'];
@@ -57,8 +67,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
       }
     }
   
+    private checkScreenSize() {
+      this.isMobileView = this.isIOS || window.innerWidth <= 768;
+    }
+  
     ngAfterViewInit(): void {
-      if (this.videoElement && this.videoElement.nativeElement) {
+      if (!this.isMobileView && this.videoElement && this.videoElement.nativeElement) {
         this.videoElement.nativeElement.muted = true;
         this.videoElement.nativeElement.play(); // Ensures the video starts playing muted
       } 

@@ -2,6 +2,7 @@
   display: flex;
   height: 100vh;
   background-color: #333;
+  position: relative; /* Add this to ensure proper stacking */
 }
 
 .video-container {
@@ -193,13 +194,29 @@ label {
 
 @media (max-width: 768px) {
   .login-page {
-    flex-direction: column; /* Stack video and login card */
+    flex-direction: column;
+    background: #333; /* Ensure background color is visible */
+  }
+
+  .video-container,
+  .video-container video,
+  .video-overlay,
+  .background-video {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    position: absolute !important;
+    z-index: -1 !important;
   }
 
   .login-card {
-    margin: 30% 11%;
-    max-width: 90%; /* Full-width with padding for smaller screens */
+    position: relative;
+    margin: 20px auto;
+    max-width: 90%;
     padding: 20px;
+    background: rgba(10, 10, 10, 0.9); /* Make background more opaque */
   }
 
   .form-control {
