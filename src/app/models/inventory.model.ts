@@ -28,6 +28,18 @@ export interface Device {
     notes?: string;
   }
   
+  export interface UserAssignment {
+    userId: string;
+    userName: string;
+    assignedDate: Date;
+    notes?: string;
+  }
+  
+  export interface HistoricalUserAssignment extends UserAssignment {
+    removedDate: Date;
+    removalReason?: string;
+  }
+  
   export interface HistoricalAssignment extends Assignment {
     removedDate: Date;
     removalReason?: string;
@@ -37,7 +49,9 @@ export interface Device {
     _id: string;
     device: Device;
     currentAssignment?: Assignment;
+    currentUserAssignment?: UserAssignment;
     assignmentHistory: HistoricalAssignment[];
+    userAssignmentHistory: HistoricalUserAssignment[];
     status: 'available' | 'assigned' | 'retired' | 'maintenance';
     ageInDays: number;
     validityDays: number;

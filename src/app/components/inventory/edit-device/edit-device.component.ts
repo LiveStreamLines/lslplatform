@@ -13,6 +13,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatChipsModule } from '@angular/material/chips';
 
 import { of, map, Observable } from 'rxjs';
 
@@ -47,7 +48,8 @@ import { DeviceType } from '../../../models/device-type.model';
     MatNativeDateModule,
     MatExpansionModule,
     MatCardModule,
-    MatDialogModule
+    MatDialogModule,
+    MatChipsModule
   ],
   templateUrl: './edit-device.component.html',
   styleUrls: ['./edit-device.component.css']
@@ -66,6 +68,8 @@ export class EditDeviceComponent implements OnInit {
   developers: any[] = [];
   projects: any[] = [];
   cameras: any[] = [];
+
+  statusOptions = ['available', 'assigned', 'user_assigned', 'retired'];
 
   constructor(
     private route: ActivatedRoute,
@@ -191,6 +195,30 @@ export class EditDeviceComponent implements OnInit {
   
     unassignDevice(reason: string): void {
       this.inventoryService.unassignItem(this.currentItem._id, reason)
+        .subscribe(() => {
+          this.loadDeviceData(); // Refresh the device data
+        });
+    }
+
+    openUnassignUserDialog(): void {
+      const dialogRef = this.dialog.open(UnassignDialogComponent, {
+        width: '400px',
+        data: { 
+          item: this.currentItem,
+          title: 'Unassign From User',
+          message: 'Are you sure you want to unassign this device from the user?'
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.unassignUserFromDevice(result.reason);
+        }
+      });
+    }
+
+    unassignUserFromDevice(reason: string): void {
+      this.inventoryService.unassignUserFromItem(this.currentItem._id, reason)
         .subscribe(() => {
           this.loadDeviceData(); // Refresh the device data
         });

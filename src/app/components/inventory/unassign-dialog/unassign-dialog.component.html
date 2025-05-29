@@ -1,6 +1,6 @@
-<h2 mat-dialog-title>Unassign Device</h2>
+<h2 mat-dialog-title>{{data.title || 'Unassign Device'}}</h2>
 <div mat-dialog-content>
-  <p>Are you sure you want to unassign this device?</p>
+  <p>{{data.message || 'Are you sure you want to unassign this device?'}}</p>
   <form [formGroup]="unassignForm">
     <mat-form-field appearance="outline">
       <mat-label>Reason for unassignment</mat-label>

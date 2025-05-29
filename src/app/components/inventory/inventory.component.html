@@ -105,19 +105,25 @@
       </td>
     </ng-container>
 
-    <!-- Assigned To Column -->
-    <ng-container matColumnDef="assignedTo">
-      <th mat-header-cell *matHeaderCellDef>Assigned To</th>
+    <!-- Assignment Column -->
+    <ng-container matColumnDef="assignment">
+      <th mat-header-cell *matHeaderCellDef>Assignment</th>
       <td mat-cell *matCellDef="let item">
-        <div *ngIf="item.currentAssignment">
-          {{ getDeveloperName(item.currentAssignment?.developer) | async }} <br>
-           {{ getProjectName(item.currentAssignment?.project) | async }} <br>
-            Camera: {{ getCameraName(item.currentAssignment?.camera) | async }}
-          <div class="assignment-date">
-            Since: {{ item.currentAssignment.assignedDate | date }}
-          </div>
+        <div *ngIf="item.currentUserAssignment">
+          <p><strong>Assigned To:</strong> {{item.currentUserAssignment.userName}}</p>
+          <p><strong>Since:</strong> {{item.currentUserAssignment.assignedDate | date}}</p>
+          <p *ngIf="item.currentUserAssignment.notes"><strong>Notes:</strong> {{item.currentUserAssignment.notes}}</p>
         </div>
-        <div *ngIf="!item.currentAssignment">Not assigned</div>
+        <div *ngIf="item.currentAssignment && !item.currentUserAssignment">
+          <p><strong>Developer:</strong> {{getDeveloperName(item.currentAssignment.developer) | async}}</p>
+          <p><strong>Project:</strong> {{getProjectName(item.currentAssignment.project) | async}}</p>
+          <p><strong>Camera:</strong> {{getCameraName(item.currentAssignment.camera) | async}}</p>
+          <p><strong>Since:</strong> {{item.currentAssignment.assignedDate | date}}</p>
+          <p *ngIf="item.currentAssignment.notes"><strong>Notes:</strong> {{item.currentAssignment.notes}}</p>
+        </div>
+        <div *ngIf="!item.currentAssignment && !item.currentUserAssignment">
+          <mat-chip color="default">NOT ASSIGNED</mat-chip>
+        </div>
       </td>
     </ng-container>
 
@@ -149,23 +155,28 @@
           </button>
           
           <button mat-icon-button color="warn" 
-                  *ngIf="item.status === 'assigned' && memoryRole !== 'viewer'"
+                  *ngIf="item.currentAssignment && memoryRole !== 'viewer'"
                   (click)="openUnassignDialog(item)"
-                  matTooltip="Unassign">
+                  matTooltip="Unassign Device">
             <mat-icon>person_remove</mat-icon>
           </button>
 
+          <button mat-icon-button color="warn" 
+                  *ngIf="item.currentUserAssignment && memoryRole !== 'viewer'"
+                  (click)="openUnassignUserDialog(item)"
+                  matTooltip="Unassign User">
+            <mat-icon>person_remove</mat-icon>
+          </button>
 
           <!-- Scrap button -->
-          <button mat-icon-button color="warn" 
+          <!-- <button mat-icon-button color="warn" 
               *ngIf="memoryRole !== 'viewer'"
               (click)="scrapDevice(item._id)"
               matTooltip="Scrap">
             <mat-icon>delete_forever</mat-icon>
-          </button>
+          </button> -->
 
-         
-           <!-- Relocation button -->
+          <!-- Relocation button -->
           <button mat-icon-button color="accent" 
                   *ngIf="item.status === 'available' && (userRole === 'Super Admin' || userRole === 'Admin')"
                   (click)="openRelocationDialog(item)"
@@ -173,13 +184,12 @@
             <mat-icon>transfer_within_a_station</mat-icon>
           </button>       
           
-           <!-- Add Edit button -->
-           <button mat-icon-button color="accent"
-                    [routerLink]="['/inventory/edit', item._id]"
-                    matTooltip="Edit">
-              <mat-icon>visibility</mat-icon>
-            </button>
-              
+          <!-- Add Edit button -->
+          <button mat-icon-button color="accent"
+                  [routerLink]="['/inventory/edit', item._id]"
+                  matTooltip="Edit">
+            <mat-icon>visibility</mat-icon>
+          </button>
         </div>
       </td>
     </ng-container>

@@ -44,8 +44,16 @@ export class InventoryService {
     return this.http.patch<InventoryItem>(`${this.apiUrl}/assign/${itemId}`, assignment);
   }
 
+  assignUserToItem(itemId: string, userAssignment: any): Observable<InventoryItem> {
+    return this.http.patch<InventoryItem>(`${this.apiUrl}/assign-user/${itemId}`, userAssignment);
+  }
+
   unassignItem(itemId: string, reason: string) {
     return this.http.patch<InventoryItem>(`${this.apiUrl}/unassign/${itemId}`, { reason });
+  }
+
+  unassignUserFromItem(itemId: string, reason: string) {
+    return this.http.patch<InventoryItem>(`${this.apiUrl}/unassign-user/${itemId}`, { reason });
   }
 
   removeAssignment(itemId: string): Observable<InventoryItem> {

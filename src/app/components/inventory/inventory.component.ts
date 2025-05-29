@@ -19,13 +19,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
 import { InventoryItem } from '../../models/inventory.model';
-import { Assignment } from '../../models/inventory.model';
+import { Assignment, UserAssignment } from '../../models/inventory.model';
 import { Developer } from '../../models/developer.model';
 import { Project } from '../../models/project.model';
 import { Camera } from '../../models/camera.model';
 import { DeviceType } from '../../models/device-type.model';
-
-
+import { User } from '../../models/user.model';
 
 import { AddDeviceDialogComponent } from './add-device-dialog/add-device-dialog.component';
 import { AssignDialogComponent } from './assign-dialog/assign-dialog.component';
@@ -33,14 +32,12 @@ import { UnassignDialogComponent } from './unassign-dialog/unassign-dialog.compo
 import { DeviceTypeListComponent } from './device-type-list/device-type-list.component';
 import { RelocationDialogComponent } from './relocation-dialog/relocation-dialog.component';
 
-
 import { InventoryService } from '../../services/inventory.service';
 import { DeveloperService } from '../../services/developer.service';
 import { ProjectService } from '../../services/project.service';
 import { CameraService } from '../../services/camera.service';
 import { DeviceTypeService } from '../../services/device-type.service';
 import { UserService } from '../../services/users.service';
-
 
 import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
@@ -77,7 +74,6 @@ export class InventoryComponent implements OnInit {
   selectedCameraId: string | null = null;
   selectedStatus: string | null = null;
 
-
   projectlist: Project[] = [];
   cameralist: Camera[] = [];
 
@@ -94,13 +90,12 @@ export class InventoryComponent implements OnInit {
     'deviceType',
     'serialNumber',
     'status',
-    'assignedTo',
+    'assignment',
     'age',
     'validity',
     'actions'
   ];
 
- // Add to your component class
   deviceTypes: DeviceType[] = [];
   validityDaysMap: { [key: string]: number } = {};
 
@@ -108,7 +103,6 @@ export class InventoryComponent implements OnInit {
     type: '',
     serialNumber: ''
   };
-  
   
   statusOptions = [
     { value: null, viewValue: 'All Statuses' },
@@ -119,6 +113,10 @@ export class InventoryComponent implements OnInit {
 
   isLoading = false;
 
+  inventory: InventoryItem[] = [];
+  admins: User[] = [];
+  loading = false;
+  error: string | null = null;
 
   constructor(
     private inventoryService: InventoryService,
@@ -127,7 +125,8 @@ export class InventoryComponent implements OnInit {
     private cameraService: CameraService,
     private authService: AuthService,
     private deviceTypeService: DeviceTypeService,
-    private dialog: MatDialog
+    private userService: UserService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -148,7 +147,6 @@ export class InventoryComponent implements OnInit {
       }, {} as { [key: string]: number });
     });
   }
-
 
   loadDevelopers(): void {
     this.developerService.getAllDevelopers().subscribe(developers => {
@@ -216,7 +214,6 @@ export class InventoryComponent implements OnInit {
     this.filterItems();
   }
   
-
   onDeveloperChange(): void {
     if (!this.selectedDeveloperId) {
       this.projects = [];
@@ -251,6 +248,7 @@ export class InventoryComponent implements OnInit {
     switch (status) {
       case 'available': return 'primary';
       case 'assigned': return 'accent';
+      case 'user_assigned': return 'accent';
       case 'retired': return 'warn';
       case 'maintenance': return '';
       case 'expiring': return '';
@@ -336,7 +334,6 @@ export class InventoryComponent implements OnInit {
     return item.validityDays - item.ageInDays;
   }
 
-  // <!-- Add this method to your component -->
   openDeviceTypesDialog(): void {
     this.dialog.open(DeviceTypeListComponent, {
       width: '800px',
@@ -344,30 +341,48 @@ export class InventoryComponent implements OnInit {
     });
   }
 
-        // Add these methods to your class
   openRelocationDialog(item: InventoryItem): void {
-    const dialogRef = this.dialog.open(RelocationDialogComponent, {
-      width: '500px',
-      data: { item }
-    });
+    // Load admins first
+    this.userService.getAllUsers().subscribe({
+      next: (users) => {
+        this.admins = users.filter(user => 
+          user.role === 'Admin' || user.role === 'Super Admin'
+        );
+        // Sort by role (Super Admin first, then Admin) and then by name
+        this.admins.sort((a, b) => {
+          if (a.role === b.role) {
+            return a.name.localeCompare(b.name);
+          }
+          return a.role === 'Super Admin' ? -1 : 1;
+        });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.relocateDevice(item._id!, result.adminId);
+        // Open dialog after loading admins
+        const dialogRef = this.dialog.open(RelocationDialogComponent, {
+          width: '500px',
+          data: { item }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.relocateDevice(item._id!, result.adminId);
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Error loading admins:', err);
       }
     });
   }
 
   relocateDevice(itemId: string, adminId: string): void {
-    const assignment: Assignment = {
-      developer: adminId,
-      project: '',
-      camera: '',
+    const userAssignment: UserAssignment = {
+      userId: adminId,
+      userName: this.admins.find(admin => admin._id === adminId)?.name || '',
       assignedDate: new Date(),
-      //isRelocation: true
+      notes: 'Device relocated to User'
     };
 
-    this.inventoryService.assignItem(itemId, assignment).subscribe(() => {
+    this.inventoryService.assignUserToItem(itemId, userAssignment).subscribe(() => {
       this.loadInventory();
     });
   }
@@ -380,28 +395,6 @@ export class InventoryComponent implements OnInit {
     }
   }
 
-
-  // addDevice(): void {
-  //   if (!this.newDevice.type || !this.newDevice.serialNumber) return;
-
-  //   const newItem: Partial<InventoryItem> = {
-  //     device: {
-  //       type: this.newDevice.type,
-  //       serialNumber: this.newDevice.serialNumber
-  //     },
-  //     status: 'available',
-  //     validityDays: this.getValidityDays(this.newDevice.type),
-  //     assignmentHistory: [],
-  //     ageInDays: 0
-  //   };
-
-  //   this.inventoryService.create(newItem).subscribe(() => {
-  //     this.loadInventory();
-  //     this.newDevice = { type: '', serialNumber: '' };
-  //   });
-  // }
-  
-  // Add this method to open the dialog
   openAddDeviceDialog(): void {
     const dialogRef = this.dialog.open(AddDeviceDialogComponent, {
       width: '500px'
@@ -414,7 +407,6 @@ export class InventoryComponent implements OnInit {
     });
   }
 
-  // Add this method to handle creation
   createInventoryItem(deviceData: any): void {
     const newItem : Partial<InventoryItem> = {
       device: {
@@ -472,6 +464,29 @@ export class InventoryComponent implements OnInit {
 
   unassignDevice(itemId: string, reason: string): void {
     this.inventoryService.unassignItem(itemId, reason).subscribe(() => {
+      this.loadInventory();
+    });
+  }
+
+  openUnassignUserDialog(item: InventoryItem): void {
+    const dialogRef = this.dialog.open(UnassignDialogComponent, {
+      width: '400px',
+      data: { 
+        item,
+        title: 'Unassign User',
+        message: 'Are you sure you want to unassign this device from the user?'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.unassignUserFromDevice(item._id!, result.reason);
+      }
+    });
+  }
+
+  unassignUserFromDevice(itemId: string, reason: string): void {
+    this.inventoryService.unassignUserFromItem(itemId, reason).subscribe(() => {
       this.loadInventory();
     });
   }
