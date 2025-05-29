@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -7,6 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { DeviceTypeService } from '../../../services/device-type.service';
+import { DeviceType } from '../../../models/device-type.model';
 
 @Component({
   selector: 'app-add-device-dialog',
@@ -15,12 +16,9 @@ import { DeviceTypeService } from '../../../services/device-type.service';
   templateUrl: './add-device-dialog.component.html',
   styleUrl: './add-device-dialog.component.css'
 })
-export class AddDeviceDialogComponent {
+export class AddDeviceDialogComponent implements OnInit {
   deviceForm: FormGroup;
-  deviceTypes = [
-    'Box', 'Pi', 'Battery', 'Charge Controller', 
-    'Dongle', 'Enclosure', 'Camera', 'Lens', 'SIM Card'
-  ];
+  deviceTypes: DeviceType[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -32,6 +30,16 @@ export class AddDeviceDialogComponent {
       type: ['', Validators.required],
       serialNumber: ['', Validators.required],
       model: ['']
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadDeviceTypes();
+  }
+
+  loadDeviceTypes(): void {
+    this.deviceTypeService.getAll().subscribe(types => {
+      this.deviceTypes = types.filter(type => type.isActive);
     });
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -17,6 +17,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { InventoryItem } from '../../models/inventory.model';
 import { Assignment, UserAssignment } from '../../models/inventory.model';
@@ -60,12 +63,18 @@ import { AuthService } from '../../services/auth.service';
     MatDatepickerModule,
     MatNativeDateModule,
     MatChipsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatPaginator,
+    MatSortModule
   ],
   templateUrl: './inventory.component.html',
   styleUrls: ['./inventory.component.css']
 })
-export class InventoryComponent implements OnInit {
+export class InventoryComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  dataSource: MatTableDataSource<InventoryItem>;
+
   // Selected Filters
   selectedDeviceType: string | null = null;
   serialNumberSearch: string = '';
@@ -127,7 +136,19 @@ export class InventoryComponent implements OnInit {
     private deviceTypeService: DeviceTypeService,
     private userService: UserService,
     public dialog: MatDialog
-  ) {}
+  ) {
+    this.dataSource = new MatTableDataSource<InventoryItem>([]);
+    this.dataSource.sortingDataAccessor = (item: InventoryItem, property: string) => {
+      switch(property) {
+        case 'deviceType': return item.device.type;
+        case 'serialNumber': return item.device.serialNumber;
+        case 'status': return item.status;
+        case 'age': return item.ageInDays;
+        case 'validity': return this.getRemainingValidity(item);
+        default: return (item as any)[property];
+      }
+    };
+  }
 
   ngOnInit(): void {
     this.memoryRole = this.authService.getMemoryRole() || null;
@@ -135,6 +156,11 @@ export class InventoryComponent implements OnInit {
 
     this.loadDeviceTypes();
     this.loadInventory();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   loadDeviceTypes(): void {
@@ -181,7 +207,7 @@ export class InventoryComponent implements OnInit {
   }
 
   filterItems(): void {
-    this.filteredItems = this.inventoryItems.filter(item => {
+    let filtered = this.inventoryItems.filter(item => {
       const matchesDeviceType = !this.selectedDeviceType ||
       item.device.type === this.selectedDeviceType;
 
@@ -200,10 +226,10 @@ export class InventoryComponent implements OnInit {
       const matchesStatus = !this.selectedStatus || 
         item.status === this.selectedStatus;
 
-      
-      
-      return matchesDeviceType &&  matchesSerialNumber &&  matchesDeveloper && matchesProject && matchesCamera && matchesStatus;
+      return matchesDeviceType && matchesSerialNumber && matchesDeveloper && matchesProject && matchesCamera && matchesStatus;
     });
+
+    this.dataSource.data = filtered;
   }
 
   onDeviceTypeChange(): void {
