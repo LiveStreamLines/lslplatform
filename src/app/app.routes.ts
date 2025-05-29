@@ -35,6 +35,7 @@ import { CameraMonitorComponent } from './components/camera-monitor/camera-monit
 import { MaintenanceComponent } from './components/maintenance/maintenance.component';
 import { CameraHistoryComponent } from './components/camera-history/camera-history.component';
 import { CameraSelectionComponent } from './components/camera-selection/camera-selection.component';
+import { Liveview2Component } from './components/liveview2/liveview2.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -49,6 +50,7 @@ export const routes: Routes = [
   { path: 'home/:developerTag/:projectTag/site-photography', component: SitePhotoComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
   { path: 'home/:developerTag/:projectTag/360-photography', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
   { path: 'home/:developerTag/:projectTag/satellite-imagery', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
+  { path: 'home/:developerTag/:projectTag/liveview2', component: Liveview2Component, canActivate:[AuthGuard]},
   { path: 'home/:developerTag/:projectTag/:cameraName', component: CameraDetailComponent,  canActivate: [AuthGuard] },  // Route for camera detail
   { path: 'compare', component: CameraCompareComponent,  canActivate: [AuthGuard] },
   { path: 'developers', component: DevelopersComponent,  
