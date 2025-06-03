@@ -32,24 +32,39 @@
       <!-- Define Columns: Name, Status, Date Created -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Camera Name </th>
-        <td mat-cell *matCellDef="let camera"> {{ camera.camera }} </td>
+        <td mat-cell *matCellDef="let camera" [class.blocked]="camera.blocked"> {{ camera.camera }} </td>
       </ng-container>
   
       <ng-container matColumnDef="serverFolder">
         <th mat-header-cell *matHeaderCellDef> Server Folder </th>
-        <td mat-cell *matCellDef="let camera"> {{ camera.serverFolder }} </td>
+        <td mat-cell *matCellDef="let camera" [class.blocked]="camera.blocked"> {{ camera.serverFolder }} </td>
       </ng-container>
   
       <ng-container matColumnDef="createdDate">
         <th mat-header-cell *matHeaderCellDef> Created Date </th>
-        <td mat-cell *matCellDef="let camera"> {{ camera.createdDate | date }} </td>
+        <td mat-cell *matCellDef="let camera" [class.blocked]="camera.blocked"> {{ camera.createdDate | date }} </td>
+      </ng-container>
+
+      <!-- Block/Unblock Column -->
+      <ng-container matColumnDef="blockUnblock">
+        <th mat-header-cell *matHeaderCellDef> Block/Unblock </th>
+        <td mat-cell *matCellDef="let camera">
+          <button 
+            class="block-unblock-button" 
+            [class.blocked]="camera.blocked" 
+            (click)="toggleBlockStatus(camera)">
+            {{ camera.blocked ? 'Unblock' : 'Block' }}
+          </button>
+        </td>
       </ng-container>
 
       <!-- Actions Column -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Actions </th>
         <td mat-cell *matCellDef="let camera">
-          <button mat-icon-button color="warn" class="open-circle-button" (click)="openEditCamera(camera._id)">
+          <button mat-icon-button color="warn" class="open-circle-button" 
+                  (click)="openEditCamera(camera._id)"
+                  [disabled]="camera.blocked">
             <mat-icon>more_horiz</mat-icon>
           </button>
         </td>
@@ -59,13 +74,15 @@
       <ng-container matColumnDef="download">
         <th mat-header-cell *matHeaderCellDef> Download </th>
         <td mat-cell *matCellDef="let camera">
-          <button mat-raised-button color="accent" (click)="downloadConfig(camera)">
+          <button mat-raised-button color="accent" 
+                  (click)="downloadConfig(camera)"
+                  [disabled]="camera.blocked">
             Download
           </button>
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="['name', 'serverFolder', 'createdDate', 'actions', 'download']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['name', 'serverFolder', 'createdDate', 'actions', 'download'];"></tr>
+      <tr mat-header-row *matHeaderRowDef="['name', 'serverFolder', 'createdDate', 'blockUnblock', 'actions', 'download']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['name', 'serverFolder', 'createdDate', 'blockUnblock', 'actions', 'download'];"></tr>
     </table>
   </div>  

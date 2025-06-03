@@ -138,6 +138,12 @@ export class CameraService {
     return this.http.put(`${this.apiUrl}/${cameraId}`, formData, { headers });
   }
 
-
+  updateCameraStatus(cameraId: string, data: any): Observable<any> {
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    return this.http.put(`${this.apiUrl}/${cameraId}`, data, { headers });
+  }
 
 }

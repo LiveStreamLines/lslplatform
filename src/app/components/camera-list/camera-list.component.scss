@@ -1,0 +1,85 @@
+.cameras-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.cameras-card {
+  cursor: pointer;
+  transition: transform 0.2s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cameras-card:hover {
+  transform: translateY(-5px);
+}
+
+.cameras-card img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.cameras-card mat-card-title {
+  font-size: 1.2em;
+  margin: 10px 0;
+}
+
+.cameras-card mat-card-content {
+  flex-grow: 1;
+}
+
+.cameras-card mat-card-actions {
+  padding: 8px;
+}
+
+.cameras-card mat-card-actions button {
+  width: 100%;
+  background-color: #640808;
+  color: white;
+  font-weight: bold;
+}
+
+.cameras-card mat-card-actions button:hover {
+  background: radial-gradient(
+    rgba(215, 212, 212, 0.9) 20%,
+    transparent 15%
+  );
+  background-size: 3px 3px;
+  background-color: #7e0707;
+}
+
+.blocked-badge {
+  color: #d9534f;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.cameras-card.blocked {
+  background-color: #300505;
+  border: 1px solid #ff4d4d;
+  opacity: 0.8;
+}
+
+.back-button {
+  background-color: #590606;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 10px;
+}
+
+.back-button:hover {
+  background-color: #d10b0b;
+}
+
+@media (max-width: 768px) {
+  .cameras-container {
+    grid-template-columns: 1fr;
+  }
+} 

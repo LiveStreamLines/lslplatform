@@ -49,3 +49,40 @@
     background-color: #d50000;
   }
   
+  .block-unblock-button {
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .block-unblock-button:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .block-unblock-button.blocked {
+    background-color: #ff4444;
+    color: white;
+    border-color: #ff4444;
+  }
+  
+  .block-unblock-button.blocked:hover {
+    background-color: #ff0000;
+  }
+  
+  .blocked {
+    opacity: 0.6;
+    color: #666;
+  }
+  
+  td.blocked {
+    background-color: #f5f5f5;
+  }
+  
+  button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  

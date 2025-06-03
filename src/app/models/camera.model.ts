@@ -17,6 +17,7 @@ export interface Camera {
     "error": boolean,
     "country": string,
     "serverFolder": string,
-    "createdDate": string
+    "createdDate": string,
+    "blocked"?: boolean
   }
   

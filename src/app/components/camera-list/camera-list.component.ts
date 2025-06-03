@@ -16,8 +16,7 @@ import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { Developer } from '../../models/developer.model';
 import { Project } from '../../models/project.model';
 import { environment } from '../../../environment/environments';
-
-
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-camera-list',
@@ -47,6 +46,8 @@ export class CameraListComponent implements OnInit {
    // Current active tab index
    activeTab: number = 0;
 
+   userRole: string | null = null;  // Add userRole property
+
   constructor(
     private router: Router, 
     private cameraDetailService : CameraDetailService,
@@ -55,9 +56,13 @@ export class CameraListComponent implements OnInit {
     private developerService: DeveloperService,
     private breadcrumbService: BreadcrumbService,
     private route: ActivatedRoute, 
+    private authService: AuthService  // Add AuthService
   ) {}
 
   ngOnInit(): void {
+    // Get user role
+    this.userRole = this.authService.getUserRole();
+
     // Get the project ID from the route parameters
     this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;
     this.projectTag = this.route.snapshot.paramMap.get('projectTag')!;

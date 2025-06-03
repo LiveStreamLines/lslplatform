@@ -106,6 +106,31 @@ export class CameraComponent implements OnInit {
     this.router.navigate(['/camera-form',{ developerId: this.selectedDeveloperId, projectId: this.selectedProjectId }]);
   }
 
+  toggleBlockStatus(camera: Camera): void {
+    // Initialize blocked as false if undefined
+    if (camera.blocked === undefined) {
+      camera.blocked = false;
+    }
+    camera.blocked = !camera.blocked; // Toggle the blocked field
+    this.saveBlockStatus(camera); // Save the updated status
+  }
+  
+  saveBlockStatus(camera: Camera): void {
+    // Ensure blocked is a boolean
+    const blockedStatus = camera.blocked ?? false;
+    
+    // Send the blocked status using the new updateCameraStatus method
+    this.cameraService.updateCameraStatus(camera._id, { blocked: blockedStatus }).subscribe({
+      next: (response) => {
+        console.log(`Camera ${camera.camera} updated:`, response);
+      },
+      error: (error) => {
+        console.error(`Error updating camera ${camera.camera}:`, error);
+        // Revert the change in case of an error
+        camera.blocked = !blockedStatus;
+      }
+    });
+  }
 
   downloadConfig(camera: Camera): void {
     const developer = this.developers.find(dev => dev._id === camera.developer);
