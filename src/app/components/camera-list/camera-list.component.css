@@ -102,6 +102,19 @@
   cursor: not-allowed;
 }
 
+/* Add blocked state styling */
+.cameras-card.blocked {
+  background-color: #300505;
+  border: 1px solid #ff4d4d;
+  opacity: 0.8;
+}
+
+.blocked-badge {
+  color: #d9534f;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
 .back-button {
   background-color: #590606;
   color: white;
@@ -133,7 +146,6 @@
   .cameras-container {
     grid-template-columns: 1fr; /* Single column on small screens */
   }
-
 
   .cameras-card mat-card-title {
     font-size: 1em; /* Reduce font size for titles */

@@ -30,7 +30,7 @@ import { AuthService } from '../../services/auth.service';
             CameraMapComponent
           ],  // Import Sidenav, Header, and GoogleMapsModule
   templateUrl: './camera-list.component.html',
-  styleUrls: ['./camera-list.component.scss']
+  styleUrls: ['./camera-list.component.css']
 })
 export class CameraListComponent implements OnInit {
 
