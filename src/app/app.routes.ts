@@ -83,7 +83,7 @@ export const routes: Routes = [
   { path: 'memory-form/:id', component: MemoryFormComponent, 
     canActivate:[AuthGuard], data: {roles: ['Super Admin']}},  
   { path: 'inventory', component: InventoryComponent, 
-    canActivate:[AuthGuard], data: {roles: ['Super Admin']}},
+    canActivate:[AuthGuard], data: {roles: ['Super Admin', 'Admin']}},
   { path: 'inventory/edit/:id', component: EditDeviceComponent, 
     canActivate:[AuthGuard], data: {roles: ['Super Admin']}},
   { path: 'maintenance', component: MaintenanceComponent, 
