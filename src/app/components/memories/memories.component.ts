@@ -59,7 +59,7 @@ export class MemoriesComponent implements OnInit {
   cameras: Camera[] = [];
   users: User[] = [];
 
-  showSizeWarning = true; // New filter flag
+  showSizeWarning = false; // Changed from true to false
   filteredMemories: Memory[] = [];     // Filtered subset for display
 
   memoryRole: string | null  = "";

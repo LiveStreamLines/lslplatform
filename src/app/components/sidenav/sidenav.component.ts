@@ -30,6 +30,7 @@ export class SidenavComponent implements OnInit {
   isAdmin$: Observable<boolean> | undefined;
   isAddingUser$: Observable<boolean> | undefined;
   hasInventoryRole$: Observable<boolean> | undefined;
+  hasMemoryRole$: Observable<boolean> | undefined;
 
   constructor(
     private authService:AuthService,
@@ -48,6 +49,10 @@ export class SidenavComponent implements OnInit {
     );
 
     this.hasInventoryRole$ = this.authService.inventoryRole$.pipe(
+      map(role => role !== null && role !== '')
+    );
+
+    this.hasMemoryRole$ = this.authService.memoryRole$.pipe(
       map(role => role !== null && role !== '')
     );
 

@@ -36,6 +36,7 @@ export class AuthService {
   private userRoleSubject = new BehaviorSubject<string | null>(null);
   private canAddUserSubject = new BehaviorSubject<boolean | null>(null);
   private inventoryRoleSubject = new BehaviorSubject<string | null>(null);
+  private memoryRoleSubject = new BehaviorSubject<string | null>(null);
 
   // Observables exposed
   userRole$ = this.userRoleSubject.asObservable();
@@ -43,6 +44,7 @@ export class AuthService {
     tap((perm) => console.log('canAddUser$ emitted:', perm))
   );
   inventoryRole$ = this.inventoryRoleSubject.asObservable();
+  memoryRole$ = this.memoryRoleSubject.asObservable();
 
   // User state
   private authToken: string | null = null;
@@ -86,6 +88,7 @@ export class AuthService {
     this.userRoleSubject.next(this.userRole);
     this.canAddUserSubject.next(this.canAddUser === 'true');
     this.inventoryRoleSubject.next(this.inventoryRole);
+    this.memoryRoleSubject.next(this.memoryRole);
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
@@ -137,6 +140,7 @@ export class AuthService {
     this.userRoleSubject.next(null);
     this.canAddUserSubject.next(null);
     this.inventoryRoleSubject.next(null);
+    this.memoryRoleSubject.next(null);
 
     this.router.navigate(['/login']);
   }
@@ -175,6 +179,7 @@ export class AuthService {
     const check = this.canAddUser.toString();
     this.canAddUserSubject.next(check === 'true');
     this.inventoryRoleSubject.next(this.inventoryRole);
+    this.memoryRoleSubject.next(this.memoryRole);
 
     // Save to localStorage
     localStorage.setItem('userId', this.userId);

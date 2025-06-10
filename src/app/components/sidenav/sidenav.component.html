@@ -48,7 +48,7 @@
     <span>Inventory</span>
   </a>
 
-  <a mat-list-item *ngIf="(isSuper$ | async) || ((isAdmin$ | async) && memoryRole)" routerLink="/memories">
+  <a mat-list-item *ngIf="(isSuper$ | async) || ((isAdmin$ | async) && (hasMemoryRole$ | async) && memoryRole !== null)" routerLink="/memories">
     <mat-icon>collections_bookmark</mat-icon>
     <span>Memories</span>
   </a>
