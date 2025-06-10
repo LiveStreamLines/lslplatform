@@ -64,6 +64,7 @@ export class EditDeviceComponent implements OnInit {
 
   userRole: string | null ='';
   memoryRole: string | null = '';
+  inventoryRole: string | null = '';
 
   developers: any[] = [];
   projects: any[] = [];
@@ -95,6 +96,7 @@ export class EditDeviceComponent implements OnInit {
   ngOnInit(): void {
     this.memoryRole = this.authService.getMemoryRole();
     this.userRole = this.authService.getUserRole();
+    this.inventoryRole = this.authService.getInventoryRole();
     this.loadDeviceTypes();
 
     const id = this.route.snapshot.paramMap.get('id');
@@ -109,6 +111,16 @@ export class EditDeviceComponent implements OnInit {
             status: item.status,
             validityDays: item.validityDays
           });
+
+          // Disable form fields for non-Super Admin and non-stock users
+          if (this.userRole !== 'Super Admin' && this.inventoryRole !== 'stock') {
+            this.deviceForm.get('type')?.disable();
+            this.deviceForm.get('serialNumber')?.disable();
+            this.deviceForm.get('model')?.disable();
+            this.deviceForm.get('status')?.disable();
+            this.deviceForm.get('validityDays')?.disable();
+          }
+
           this.isLoading = false;
         },
         error: () => {
@@ -263,5 +275,9 @@ export class EditDeviceComponent implements OnInit {
     const start = new Date(startDate);
     const end = endDate ? new Date(endDate) : new Date();
     return Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+  }
+
+  canEdit(): boolean {
+    return this.userRole === 'Super Admin' || this.inventoryRole === 'stock';
   }
 }

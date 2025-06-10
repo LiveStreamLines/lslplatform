@@ -22,7 +22,7 @@ interface AuthResponse {
   canGenerateVideoAndPics: string;
   manual: string;
   memoryRole: string;
-  invenotryRole: string; // Keep typo if backend returns this
+  inventoryRole: string;
   LastLoginTime: string;
 }
 
@@ -35,12 +35,14 @@ export class AuthService {
   // Subjects for reactive updates
   private userRoleSubject = new BehaviorSubject<string | null>(null);
   private canAddUserSubject = new BehaviorSubject<boolean | null>(null);
+  private inventoryRoleSubject = new BehaviorSubject<string | null>(null);
 
   // Observables exposed
   userRole$ = this.userRoleSubject.asObservable();
   canAddUser$ = this.canAddUserSubject.asObservable().pipe(
     tap((perm) => console.log('canAddUser$ emitted:', perm))
   );
+  inventoryRole$ = this.inventoryRoleSubject.asObservable();
 
   // User state
   private authToken: string | null = null;
@@ -83,6 +85,7 @@ export class AuthService {
     // Notify subscribers
     this.userRoleSubject.next(this.userRole);
     this.canAddUserSubject.next(this.canAddUser === 'true');
+    this.inventoryRoleSubject.next(this.inventoryRole);
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
@@ -133,11 +136,20 @@ export class AuthService {
     localStorage.clear();
     this.userRoleSubject.next(null);
     this.canAddUserSubject.next(null);
+    this.inventoryRoleSubject.next(null);
 
     this.router.navigate(['/login']);
   }
 
   private setUserData(response: AuthResponse): void {
+    // Add detailed logging of the response
+    console.log('Auth Response:', response);
+    console.log('All response keys:', Object.keys(response));
+    console.log('Inventory role related fields:', {
+      inventoryRole: response.inventoryRole,
+      rawResponse: response
+    });
+
     this.userId = response._id;
     this.username = response.name;
     this.useremail = response.email;
@@ -152,14 +164,17 @@ export class AuthService {
     this.canGenerateVideoAndPics = response.canGenerateVideoAndPics;
     this.manual = response.manual;
     this.memoryRole = response.memoryRole;
-    this.inventoryRole = response.invenotryRole;
+    this.inventoryRole = response.inventoryRole || null;
     this.LastLoginTime = response.LastLoginTime;
 
-    
+    // Log the final inventory role value
+    console.log('Final inventory role value:', this.inventoryRole);
+
     // Emit to subscribers
     this.userRoleSubject.next(this.userRole);
     const check = this.canAddUser.toString();
     this.canAddUserSubject.next(check === 'true');
+    this.inventoryRoleSubject.next(this.inventoryRole);
 
     // Save to localStorage
     localStorage.setItem('userId', this.userId);
@@ -176,7 +191,7 @@ export class AuthService {
     localStorage.setItem('canGenerateVideoAndPics', this.canGenerateVideoAndPics);
     localStorage.setItem('manual', this.manual);
     localStorage.setItem('memoryRole', this.memoryRole);
-    localStorage.setItem('inventoryRole', this.inventoryRole);
+    localStorage.setItem('inventoryRole', this.inventoryRole || '');
   }
 
   // Public getters

@@ -56,6 +56,16 @@
       </mat-select>
     </mat-form-field>
 
+    <!-- Admin Dropdown -->
+    <mat-form-field appearance="outline" *ngIf="userRole === 'Super Admin' || inventoryRole === 'stock' || inventoryRole === 'viewer'">
+      <mat-label>Assigned Admin</mat-label>
+      <mat-select [(ngModel)]="selectedAdminId" (selectionChange)="onAdminChange()">
+        <mat-option>All Admins</mat-option>
+        <mat-option *ngFor="let admin of admins" [value]="admin._id">
+          {{ admin.name }} ({{ admin.role }})
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
     <!-- Serial Number Search -->
     <mat-form-field appearance="outline" class="search-field">
@@ -147,48 +157,44 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Actions </th>
         <td mat-cell *matCellDef="let item">
-          <div class="action-buttons">
+          <div class="action-buttons" *ngIf="canViewActions()">
+            <!-- Assign to Project button -->
             <button mat-icon-button color="primary" 
-                    *ngIf="item.status === 'available' && memoryRole !== 'viewer'"
+                    *ngIf="canAssignToProject(item) && !item.currentAssignment"
                     (click)="openAssignDialog(item)"
-                    matTooltip="Assign">
-              <mat-icon>person_add</mat-icon>
+                    matTooltip="Assign to Project">
+              <mat-icon>assignment</mat-icon>
             </button>
             
+            <!-- Unassign from Project button -->
             <button mat-icon-button color="warn" 
-                    *ngIf="item.currentAssignment && memoryRole !== 'viewer'"
+                    *ngIf="canUnassignFromProject(item)"
                     (click)="openUnassignDialog(item)"
-                    matTooltip="Unassign Device">
-              <mat-icon>person_remove</mat-icon>
+                    matTooltip="Unassign from Project">
+              <mat-icon>assignment_return</mat-icon>
             </button>
 
+            <!-- Assign to User button -->
+            <button mat-icon-button color="primary" 
+                    *ngIf="canAssignToUser(item)"
+                    (click)="openAssignToUserDialog(item)"
+                    matTooltip="Assign to User">
+              <mat-icon>person_add_alt</mat-icon>
+            </button>
+
+            <!-- Unassign from User button -->
             <button mat-icon-button color="warn" 
-                    *ngIf="item.currentUserAssignment && memoryRole !== 'viewer'"
+                    *ngIf="canUnassignFromUser(item)"
                     (click)="openUnassignUserDialog(item)"
-                    matTooltip="Unassign User">
-              <mat-icon>person_remove</mat-icon>
+                    matTooltip="Unassign from User">
+              <mat-icon>person_remove_alt</mat-icon>
             </button>
-
-            <!-- Scrap button -->
-            <!-- <button mat-icon-button color="warn" 
-                *ngIf="memoryRole !== 'viewer'"
-                (click)="scrapDevice(item._id)"
-                matTooltip="Scrap">
-              <mat-icon>delete_forever</mat-icon>
-            </button> -->
-
-            <!-- Relocation button -->
-            <button mat-icon-button color="accent" 
-                    *ngIf="item.status === 'available' && (userRole === 'Super Admin' || userRole === 'Admin')"
-                    (click)="openRelocationDialog(item)"
-                    matTooltip="Relocate to Admin">
-              <mat-icon>transfer_within_a_station</mat-icon>
-            </button>       
             
-            <!-- Add Edit button -->
+            <!-- Edit button -->
             <button mat-icon-button color="accent"
+                    *ngIf="canEdit(item)"
                     [routerLink]="['/inventory/edit', item._id]"
-                    matTooltip="Edit">
+                    matTooltip="View Details">
               <mat-icon>visibility</mat-icon>
             </button>
           </div>

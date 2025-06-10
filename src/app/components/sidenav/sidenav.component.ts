@@ -24,11 +24,12 @@ import { Observable , map, tap } from 'rxjs';
 })
 export class SidenavComponent implements OnInit {
   memoryRole: string | null = '';
-  invenotryRole: string | null = '';
+  inventoryRole: string | null = '';
   
   isSuper$: Observable<boolean> | undefined;
   isAdmin$: Observable<boolean> | undefined;
   isAddingUser$: Observable<boolean> | undefined;
+  hasInventoryRole$: Observable<boolean> | undefined;
 
   constructor(
     private authService:AuthService,
@@ -46,7 +47,9 @@ export class SidenavComponent implements OnInit {
       map(role => role === 'Admin')
     );
 
-   
+    this.hasInventoryRole$ = this.authService.inventoryRole$.pipe(
+      map(role => role !== null && role !== '')
+    );
 
     this.isAddingUser$ = this.authService.canAddUser$.pipe(
       map(permission => {

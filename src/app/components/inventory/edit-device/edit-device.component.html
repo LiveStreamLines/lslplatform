@@ -3,7 +3,7 @@
       <button mat-icon-button (click)="onCancel()">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <h1>Edit Device</h1>
+      <h1>Device Details</h1>
     </div>
   
     <mat-card *ngIf="!isLoading">
@@ -47,26 +47,26 @@
           </mat-form-field>
         </form>
 
-          <!-- Assignment Actions -->
-      <div class="action-buttons" *ngIf="(currentItem.status !== 'retired') && (memoryRole !== 'viewer' || userRole === 'Super Admin')">
-        <button mat-raised-button color="primary" 
-                *ngIf="!currentItem.currentAssignment && !currentItem.currentUserAssignment"
-                (click)="openAssignDialog()">
-          Assign Device
-        </button>
-        
-        <button mat-raised-button color="warn" 
-                *ngIf="currentItem.currentAssignment"
-                (click)="openUnassignDialog()">
-          Unassign Device
-        </button>
+        <!-- Assignment Actions -->
+        <div class="action-buttons" *ngIf="(currentItem.status !== 'retired') && (memoryRole !== 'viewer' || userRole === 'Super Admin')">
+          <button mat-raised-button color="primary" 
+                  *ngIf="!currentItem.currentAssignment && !currentItem.currentUserAssignment"
+                  (click)="openAssignDialog()">
+            Assign Device
+          </button>
+          
+          <button mat-raised-button color="warn" 
+                  *ngIf="currentItem.currentAssignment"
+                  (click)="openUnassignDialog()">
+            Unassign Device
+          </button>
 
-        <button mat-raised-button color="warn" 
-                *ngIf="currentItem.currentUserAssignment"
-                (click)="openUnassignUserDialog()">
-          Unassign From User
-        </button>
-      </div>
+          <button mat-raised-button color="warn" 
+                  *ngIf="currentItem.currentUserAssignment"
+                  (click)="openUnassignUserDialog()">
+            Unassign From User
+          </button>
+        </div>
   
         <div class="section" *ngIf="currentItem.currentUserAssignment">
           <h2>Current User Assignment</h2>
@@ -129,8 +129,11 @@
       </mat-card-content>
   
       <mat-card-actions align="end">
-        <button mat-button (click)="onCancel()">close</button>
-        <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!deviceForm.valid">
+        <button mat-button (click)="onCancel()">Close</button>
+        <button mat-raised-button color="primary" 
+                *ngIf="canEdit()"
+                (click)="onSave()" 
+                [disabled]="!deviceForm.valid">
           Save Changes
         </button>
       </mat-card-actions>

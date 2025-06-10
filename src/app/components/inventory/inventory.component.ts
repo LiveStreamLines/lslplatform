@@ -82,6 +82,7 @@ export class InventoryComponent implements OnInit, AfterViewInit {
   selectedProjectId: string | null = null;
   selectedCameraId: string | null = null;
   selectedStatus: string | null = null;
+  selectedAdminId: string | null = null;
 
   projectlist: Project[] = [];
   cameralist: Camera[] = [];
@@ -93,6 +94,7 @@ export class InventoryComponent implements OnInit, AfterViewInit {
 
   memoryRole: string | null = '';
   userRole: string | null = '';
+  inventoryRole: string | null = '';
   
   inventoryItems: InventoryItem[] = [];
   displayedColumns: string[] = [
@@ -117,8 +119,35 @@ export class InventoryComponent implements OnInit, AfterViewInit {
     { value: null, viewValue: 'All Statuses' },
     { value: 'available', viewValue: 'Available' },
     { value: 'assigned', viewValue: 'Assigned' },
+    { value: 'user_assigned', viewValue: 'User Assigned' },
     { value: 'retired', viewValue: 'Retired' }
   ];
+
+  getStatusOptions(): { value: string | null, viewValue: string }[] {
+    if (this.userRole === 'Super Admin' || this.inventoryRole === 'stock') {
+      return [
+        { value: null, viewValue: 'All Statuses' },
+        { value: 'available', viewValue: 'Available' },
+        { value: 'assigned', viewValue: 'Assigned' },
+        { value: 'user_assigned', viewValue: 'User Assigned' },
+        { value: 'retired', viewValue: 'Retired' }
+      ];
+    } else if (this.inventoryRole === 'tech') {
+      return [
+        { value: null, viewValue: 'All Statuses' },
+        { value: 'assigned', viewValue: 'Assigned' },
+        { value: 'user_assigned', viewValue: 'User Assigned' }
+      ];
+    } else {
+      return [
+        { value: null, viewValue: 'All Statuses' },
+        { value: 'available', viewValue: 'Available' },
+        { value: 'assigned', viewValue: 'Assigned' },
+        { value: 'user_assigned', viewValue: 'User Assigned' },
+        { value: 'retired', viewValue: 'Retired' }
+      ];
+    }
+  }
 
   isLoading = false;
 
@@ -153,9 +182,26 @@ export class InventoryComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.memoryRole = this.authService.getMemoryRole() || null;
     this.userRole = this.authService.getUserRole() || null;
+    this.inventoryRole = this.authService.getInventoryRole() || null;
+
+    // Update status options based on user role
+    this.statusOptions = this.getStatusOptions();
+
+    // Add logging for role and permissions
+    console.log('User Role:', this.userRole);
+    console.log('Inventory Role:', this.inventoryRole);
+    console.log('Permissions:');
+    console.log('- Can view actions:', this.canViewActions());
+    console.log('- Can assign to project:', this.canAssignToProject({} as InventoryItem));
+    console.log('- Can unassign from project:', this.canUnassignFromProject({} as InventoryItem));
+    console.log('- Can assign to user:', this.canAssignToUser({} as InventoryItem));
+    console.log('- Can unassign from user:', this.canUnassignFromUser({} as InventoryItem));
+    console.log('- Can relocate:', this.canRelocate({} as InventoryItem));
+    console.log('- Can edit:', this.canEdit({} as InventoryItem));
 
     this.loadDeviceTypes();
     this.loadInventory();
+    this.loadAdmins();
   }
 
   ngAfterViewInit() {
@@ -209,16 +255,16 @@ export class InventoryComponent implements OnInit, AfterViewInit {
   filterItems(): void {
     let filtered = this.inventoryItems.filter(item => {
       const matchesDeviceType = !this.selectedDeviceType ||
-      item.device.type === this.selectedDeviceType;
+        item.device.type === this.selectedDeviceType;
 
       const matchesSerialNumber = !this.serialNumberSearch ||
-      item.device.serialNumber.toLowerCase().includes(this.serialNumberSearch.toLowerCase());
+        item.device.serialNumber.toLowerCase().includes(this.serialNumberSearch.toLowerCase());
     
       const matchesDeveloper = !this.selectedDeveloperId || 
         (item.currentAssignment && item.currentAssignment.developer === this.selectedDeveloperId);
       
       const matchesProject = !this.selectedProjectId || 
-        (item.currentAssignment && item.currentAssignment.project=== this.selectedProjectId);
+        (item.currentAssignment && item.currentAssignment.project === this.selectedProjectId);
       
       const matchesCamera = !this.selectedCameraId || 
         (item.currentAssignment && item.currentAssignment.camera === this.selectedCameraId);
@@ -226,7 +272,11 @@ export class InventoryComponent implements OnInit, AfterViewInit {
       const matchesStatus = !this.selectedStatus || 
         item.status === this.selectedStatus;
 
-      return matchesDeviceType && matchesSerialNumber && matchesDeveloper && matchesProject && matchesCamera && matchesStatus;
+      const matchesAdmin = !this.selectedAdminId || 
+        (item.currentUserAssignment && item.currentUserAssignment.userId === this.selectedAdminId);
+
+      return matchesDeviceType && matchesSerialNumber && matchesDeveloper && 
+             matchesProject && matchesCamera && matchesStatus && matchesAdmin;
     });
 
     this.dataSource.data = filtered;
@@ -270,6 +320,10 @@ export class InventoryComponent implements OnInit, AfterViewInit {
     this.filterItems();
   }
 
+  onAdminChange(): void {
+    this.filterItems();
+  }
+
   getStatusColor(status: string): string {
     switch (status) {
       case 'available': return 'primary';
@@ -292,6 +346,17 @@ export class InventoryComponent implements OnInit, AfterViewInit {
           ageInDays: this.calculateAgeInDays(item),
           validityDays: this.getValidityDays(item.device.type)
         }));
+
+        // Filter items based on role
+        if (this.inventoryRole === 'tech') {
+          const currentUserId = this.authService.getUserId();
+          this.inventoryItems = this.inventoryItems.filter(item => 
+            // Show items assigned to projects
+            (item.currentAssignment && item.status !== 'available' && item.status !== 'retired') ||
+            // Show items assigned to this tech user
+            (item.currentUserAssignment && item.currentUserAssignment.userId === currentUserId)
+          );
+        }
 
         // Load developers first, then projects and cameras
         this.loadDevelopers();
@@ -367,7 +432,7 @@ export class InventoryComponent implements OnInit, AfterViewInit {
     });
   }
 
-  openRelocationDialog(item: InventoryItem): void {
+  openAssignToUserDialog(item: InventoryItem): void {
     // Load admins first
     this.userService.getAllUsers().subscribe({
       next: (users) => {
@@ -385,12 +450,16 @@ export class InventoryComponent implements OnInit, AfterViewInit {
         // Open dialog after loading admins
         const dialogRef = this.dialog.open(RelocationDialogComponent, {
           width: '500px',
-          data: { item }
+          data: { 
+            item,
+            title: 'Assign to User',
+            message: 'Select a user to assign this device to'
+          }
         });
 
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
-            this.relocateDevice(item._id!, result.adminId);
+            this.assignToUser(item._id!, result.adminId);
           }
         });
       },
@@ -400,12 +469,12 @@ export class InventoryComponent implements OnInit, AfterViewInit {
     });
   }
 
-  relocateDevice(itemId: string, adminId: string): void {
+  assignToUser(itemId: string, adminId: string): void {
     const userAssignment: UserAssignment = {
       userId: adminId,
       userName: this.admins.find(admin => admin._id === adminId)?.name || '',
       assignedDate: new Date(),
-      notes: 'Device relocated to User'
+      notes: 'Device assigned to User'
     };
 
     this.inventoryService.assignUserToItem(itemId, userAssignment).subscribe(() => {
@@ -470,8 +539,36 @@ export class InventoryComponent implements OnInit, AfterViewInit {
       assignedDate: new Date()
     };
 
-    this.inventoryService.assignItem(itemId, completeAssignment).subscribe(() => {
-      this.loadInventory();
+    // First, get the current item to check for user assignment
+    this.inventoryService.getById(itemId).subscribe({
+      next: (item) => {
+        if (item.currentUserAssignment) {
+          // If there's a current user assignment, move it to history
+          const userAssignmentHistory = item.userAssignmentHistory || [];
+          userAssignmentHistory.push({
+            ...item.currentUserAssignment,
+            removedDate: new Date(),
+            notes: 'Moved to project assignment'
+          });
+
+          // First unassign the user
+          this.inventoryService.unassignUserFromItem(itemId, 'Moved to project assignment').subscribe({
+            next: () => {
+              // Then assign to project
+              this.inventoryService.assignItem(itemId, completeAssignment).subscribe(() => {
+                this.loadInventory();
+              });
+            },
+            error: (err) => console.error('Error unassigning user:', err)
+          });
+        } else {
+          // If no user assignment, just assign to project
+          this.inventoryService.assignItem(itemId, completeAssignment).subscribe(() => {
+            this.loadInventory();
+          });
+        }
+      },
+      error: (err) => console.error('Error getting item:', err)
     });
   }
 
@@ -521,5 +618,79 @@ export class InventoryComponent implements OnInit, AfterViewInit {
     this.inventoryService.retireItem(itemId).subscribe(() => {
       this.loadInventory();
     });
+  }
+
+  loadAdmins(): void {
+    this.userService.getAllUsers().subscribe({
+      next: (users) => {
+        if (this.userRole === 'Super Admin' || this.inventoryRole === 'stock' || this.inventoryRole === 'viewer') {
+          // Super Admin, stock role, and viewer users see all admins
+          this.admins = users.filter(user => 
+            user.role === 'Admin' || user.role === 'Super Admin'
+          );
+          // Sort by role (Super Admin first, then Admin) and then by name
+          this.admins.sort((a, b) => {
+            if (a.role === b.role) {
+              return a.name.localeCompare(b.name);
+            }
+            return a.role === 'Super Admin' ? -1 : 1;
+          });
+        } else {
+          // Other users only see themselves
+          const currentUserId = this.authService.getUserId();
+          this.admins = users.filter(user => user._id === currentUserId);
+        }
+      },
+      error: (err) => {
+        console.error('Error loading admins:', err);
+      }
+    });
+  }
+
+  canViewActions(): boolean {
+    if (this.userRole === 'Super Admin' || this.inventoryRole === 'stock') return true;
+    if (this.inventoryRole === 'tech') return true;
+    if (this.inventoryRole === 'viewer') return true;
+    return false;
+  }
+
+  canAssignToProject(item: InventoryItem): boolean {
+    if (this.userRole === 'Super Admin' || this.inventoryRole === 'stock') return true;
+    if (this.inventoryRole === 'tech') {
+      const currentUserId = this.authService.getUserId();
+      return item.status === 'available' || 
+             (!!item.currentUserAssignment && item.currentUserAssignment.userId === currentUserId);
+    }
+    return false;
+  }
+
+  canUnassignFromProject(item: InventoryItem): boolean {
+    if (this.userRole === 'Super Admin' || this.inventoryRole === 'stock') return true;
+    if (this.inventoryRole === 'tech') {
+      return !!item.currentAssignment && !item.currentUserAssignment;
+    }
+    return false;
+  }
+
+  canAssignToUser(item: InventoryItem): boolean {
+    return (this.inventoryRole === 'stock' || this.userRole === 'Super Admin') 
+           && item.status === 'available';
+  }
+
+  canUnassignFromUser(item: InventoryItem): boolean {
+    return (this.inventoryRole === 'stock' || this.userRole === 'Super Admin') 
+           && !!item.currentUserAssignment;
+  }
+
+  canRelocate(item: InventoryItem): boolean {
+    return (this.userRole === 'Super Admin' || this.inventoryRole === 'stock') 
+           && item.status === 'available';
+  }
+
+  canEdit(item: InventoryItem): boolean {
+    if (this.userRole === 'Super Admin' || this.inventoryRole === 'stock') return true;
+    if (this.inventoryRole === 'viewer') return true;
+    if (this.inventoryRole === 'tech') return true;
+    return false;
   }
 }
