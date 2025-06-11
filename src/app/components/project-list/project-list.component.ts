@@ -56,7 +56,7 @@ export class ProjectListComponent implements OnInit {
             this.projects = data.map(project => ({
               ...project,
               logo: project.logo ? this.logopath + "/" + project.logo : this.logopath + "/logos/project/image.png"
-            }));    
+            })).sort((a, b) => a.projectName.localeCompare(b.projectName));    
              // Filter projects based on role and accessible projects
              this.filteredProjects = this.userRole === 'Super Admin' || this.accessibleProjects[0] === 'all'
              ? this.projects // Admins see all projects
