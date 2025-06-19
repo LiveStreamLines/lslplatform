@@ -1,0 +1,83 @@
+<form [formGroup]="salesOrderForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label>Developer (Customer):</label>
+    <select formControlName="customer">
+      <option value="" disabled selected>Select developer/customer</option>
+      <option *ngFor="let dev of developers" [value]="dev._id">{{ dev.developerName }}</option>
+    </select>
+    <div *ngIf="developers.length === 0" style="color:#ffb; font-size:0.95em;">No developers found or loading...</div>
+  </div>
+  <div>
+    <label>Project:</label>
+    <select formControlName="project">
+      <option value="" disabled selected>Select project</option>
+      <option *ngFor="let proj of projects" [value]="proj._id">{{ proj.projectName }}</option>
+    </select>
+    <div *ngIf="projects.length === 0" style="color:#ffb; font-size:0.95em;">No projects found or loading...</div>
+  </div>
+  <div formArrayName="lineItems">
+    <label>Line Items (Cameras):</label>
+    <table style="width:100%; margin: 12px 0; border-collapse: collapse;">
+      <thead>
+        <tr style="background:#181b20; color:#e0e6ed;">
+          <th style="padding:8px; border-bottom:1px solid #353a45;">Camera Name/ID</th>
+          <th style="padding:8px; border-bottom:1px solid #353a45;">Period (months)</th>
+          <th style="padding:8px; border-bottom:1px solid #353a45;">Price per month</th>
+          <th style="padding:8px; border-bottom:1px solid #353a45;">Remove</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of lineItems.controls; let i = index" [formGroupName]="i">
+          <td style="padding:6px;">
+            <input formControlName="camera" placeholder="Camera name/ID" />
+          </td>
+          <td style="padding:6px;">
+            <input type="number" formControlName="period" placeholder="Months" min="1" />
+          </td>
+          <td style="padding:6px;">
+            <input type="number" formControlName="pricePerMonth" placeholder="Price" min="0" />
+          </td>
+          <td class="camera-remove-cell">
+            <button type="button" class="remove-btn" (click)="removeLineItem(i)">Remove</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button type="button" (click)="addLineItem()">Add Camera</button>
+  </div>
+  <div formGroupName="paymentTerms">
+    <label>Initial Payment (%):</label>
+    <input type="number" formControlName="initialPercent" min="0" max="100" />
+    <label>Initial Trigger:</label>
+    <select formControlName="initialTrigger">
+      <option value="installation">After Installation</option>
+      <option value="order">On Order</option>
+    </select>
+    <label>Remainder Schedule:</label>
+    <select formControlName="remainderSchedule">
+      <option value="monthly">Monthly</option>
+      <option value="quarterly">Quarterly</option>
+    </select>
+    <label>Months:</label>
+    <input type="number" formControlName="months" min="1" />
+  </div>
+  <button type="button" (click)="generatePaymentSchedule()">Generate Payment Schedule</button>
+  <div *ngIf="paymentSchedule.length">
+    <h4>Payment Schedule</h4>
+    <ul>
+      <li *ngFor="let payment of paymentSchedule">
+        {{ payment | json }}
+      </li>
+    </ul>
+    <button type="button" (click)="generateInvoices()">Generate Invoices</button>
+  </div>
+  <div *ngIf="invoices.length">
+    <h4>Invoices</h4>
+    <ul>
+      <li *ngFor="let invoice of invoices">
+        {{ invoice | json }}
+      </li>
+    </ul>
+  </div>
+  <button type="submit" [disabled]="!salesOrderForm.valid">Save Sales Order</button>
+</form> 

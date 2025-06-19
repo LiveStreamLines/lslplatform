@@ -1,0 +1,112 @@
+form {
+  padding: 24px;
+  background: #23272f;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+  max-width: 700px;
+  margin: 24px auto;
+  color: #f3f6fa;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  transition: background 0.3s;
+}
+label {
+  display: block;
+  margin-top: 18px;
+  font-weight: 600;
+  color: #e0e6ed;
+  letter-spacing: 0.5px;
+}
+input, select {
+  margin-top: 6px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  width: 100%;
+  max-width: 400px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #444a57;
+  border-radius: 6px;
+  background: #181b20;
+  color: #f3f6fa;
+  font-size: 1rem;
+  transition: border 0.2s, background 0.2s;
+}
+input:focus, select:focus {
+  border-color: #2196F3;
+  outline: none;
+  background: #23272f;
+}
+button {
+  margin-top: 18px;
+  margin-right: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #2196F3;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(33,150,243,0.08);
+  transition: background 0.2s;
+}
+button[disabled] {
+  background: #444a57;
+  color: #aaa;
+  cursor: not-allowed;
+}
+div[formArrayName], div[formGroupName] {
+  margin-bottom: 18px;
+  padding: 10px 0;
+  border-bottom: 1px solid #353a45;
+}
+@media (max-width: 600px) {
+  form {
+    padding: 12px;
+    max-width: 98vw;
+    font-size: 0.98rem;
+  }
+  button {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  input, select {
+    font-size: 0.98rem;
+    max-width: 98vw;
+  }
+}
+::-webkit-input-placeholder { color: #b0b6c3; }
+::-moz-placeholder { color: #b0b6c3; }
+:-ms-input-placeholder { color: #b0b6c3; }
+::placeholder { color: #b0b6c3; }
+
+.remove-btn {
+  padding: 2px 6px;
+  font-size: 0.92rem;
+  border-radius: 4px;
+  background: #e53935;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+  box-shadow: none;
+  margin: 0;
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+.remove-btn:hover {
+  background: #b71c1c;
+}
+.camera-remove-cell {
+  width: 90px;
+  min-width: 70px;
+  max-width: 100px;
+  text-align: center;
+  vertical-align: middle;
+} 

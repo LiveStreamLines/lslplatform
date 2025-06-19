@@ -2,9 +2,19 @@
     padding: 16px;
   }
   
+  .toggle-container {
+    margin-bottom: 16px;
+    padding: 8px 0;
+  }
+  
   .mat-form-field {
     width: 300px;
     margin-right: 16px;
+  }
+  
+  .search-field {
+    width: 300px;
+    margin-left: 16px;
   }
   
   .spinner-container {
@@ -84,5 +94,16 @@
   button[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+  
+  .no-data-message {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 16px;
+  }
+  
+  .no-data-message p {
+    margin: 0;
   }
   

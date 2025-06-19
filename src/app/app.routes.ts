@@ -36,6 +36,7 @@ import { MaintenanceComponent } from './components/maintenance/maintenance.compo
 import { CameraHistoryComponent } from './components/camera-history/camera-history.component';
 import { CameraSelectionComponent } from './components/camera-selection/camera-selection.component';
 import { Liveview2Component } from './components/liveview2/liveview2.component';
+import { SalesOrderFormComponent } from './components/sales-order/sales-order-form.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -92,6 +93,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard], 
     data: {roles: ['Super Admin', 'Admin']}
   },
+  { path: 'sales-orders/new', component: SalesOrderFormComponent, canActivate: [AuthGuard], data: {roles: ['Super Admin', 'Admin']} },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }  // Use the NotFoundComponent for 404
 ];
