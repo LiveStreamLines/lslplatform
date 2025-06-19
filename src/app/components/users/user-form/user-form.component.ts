@@ -92,6 +92,12 @@ export class UserFormComponent implements OnInit {
     if (role === 'Super Admin') {
       this.userForm.get('phone')?.enable(); // To enable the field
       this.userForm.get('role')?.enable(); // Disable the control programmatically
+      this.userForm.get('email')?.enable(); // Enable email for super admin
+    } else {
+      // Only disable email when editing (not when adding new users)
+      if (this.isEditing) {
+        this.userForm.get('email')?.disable(); // Disable email for non-super admin when editing
+      }
     }
 
     // Load necessary data
@@ -128,8 +134,8 @@ export class UserFormComponent implements OnInit {
         accessibleDevelopers: [[]],
         accessibleProjects: [[]],
         accessibleCameras: [[]],
-        accessibleServices: [[]],
-        canAddUser: [true],        // Permission to add user
+        accessibleServices: [['all']], // Default to "All" services
+        canAddUser: [false],        // Permission to add user - default to false
         canGenerateVideoAndPics: [true],    // Permission to upload video
         memoryRole: [''],
         inventoryRole: ['']
@@ -152,6 +158,12 @@ export class UserFormComponent implements OnInit {
           this.developers = developers;
         } else {
           this.developers = developers.filter(dev => this.accessibleDeveloper.includes(dev._id));
+        }
+        
+        // Set first developer as default if not editing and not super admin
+        if (!this.isEditing && !this.isSuperAdmin && this.developers.length > 0) {
+          this.userForm.get('accessibleDevelopers')?.setValue([this.developers[0]._id]);
+          this.loadProjectsByDevelopers([this.developers[0]._id]);
         }
       },
       error: (error) => console.error('Error fetching developers:', error),
@@ -190,8 +202,8 @@ export class UserFormComponent implements OnInit {
   }
 
   loadCamerasByProjects(projectIds: string[]): void {
-    if (this.isSuperAdmin || projectIds.includes('all')) {
-      // Automatically set "all" cameras
+    if (this.isSuperAdmin && projectIds.includes('all')) {
+      // Only set "all" cameras for super admin when "all" projects are selected
       this.userForm.get('accessibleCameras')?.setValue(['all']);
       this.cameras = []; // Disable camera selection
       return;
@@ -202,15 +214,12 @@ export class UserFormComponent implements OnInit {
       projectIds.forEach((projectId) => {
         this.cameraService.getCamerasByProject(projectId).subscribe({
           next: (cameras) => {
-            //this.cameras = [...this.cameras, ...cameras.filter(camera => accessibleCameras.includes(camera._id))]; // Merge new cameras with the existing list
-            
-            if (this.accessibleCamera[0] !== 'all') {
+            if (this.accessibleCamera[0] !== 'all' && !this.isSuperAdmin) {
               this.cameras = [...this.cameras, 
-                ...cameras.filter(cameras => this.accessibleProject.includes(cameras._id))];    // Merge new projects with the existing list       
-              } else {
-                this.cameras = [...this.cameras, ...cameras];
-              }
-          
+                ...cameras.filter(camera => this.accessibleCamera.includes(camera._id))];    // Filter cameras by accessible cameras       
+            } else {
+              this.cameras = [...this.cameras, ...cameras];
+            }
           },
           error: (error) => console.error('Error fetching cameras:', error),
         });
@@ -226,7 +235,22 @@ export class UserFormComponent implements OnInit {
       this.userService.getUserById(this.userId).subscribe((user) => {
         console.log(user);
         this.loadProjectsByDevelopers(user.accessibleDevelopers);
-        this.userForm.patchValue(user);
+        
+        // For editing, preserve the email even if user is not super admin
+        if (!this.isSuperAdmin) {
+          // Temporarily enable email field to set the value
+          this.userForm.get('email')?.enable();
+          this.userForm.patchValue(user);
+          this.userForm.get('email')?.disable();
+        } else {
+          this.userForm.patchValue(user);
+        }
+        
+        // Ensure accessible services defaults to "All" if not set
+        if (!user.accessibleServices || user.accessibleServices.length === 0) {
+          this.userForm.get('accessibleServices')?.setValue(['all']);
+        }
+        
         this.resetEmail = user.email;
       });
     }
@@ -263,6 +287,8 @@ export class UserFormComponent implements OnInit {
         // When "All" is selected
         this.isAllProjSelected = true;
         this.userForm.get('accessibleProjects')?.setValue(['all']);
+        // Automatically set "all" for cameras
+        this.userForm.get('accessibleCameras')?.setValue(['all']);
         this.cameras = []; // Clear cameras since "all" projects are selected
       } else {
         // When "All" is deselected
@@ -347,7 +373,7 @@ export class UserFormComponent implements OnInit {
     this.userForm.get('accessibleDevelopers')?.setValue([]);
     this.userForm.get('accessibleProjects')?.setValue([]);
     this.userForm.get('accessibleCameras')?.setValue([]);
-    this.userForm.get('accessibleServices')?.setValue([]);
+    this.userForm.get('accessibleServices')?.setValue(['all']); // Keep "All" as default
   }
 
   clearPermissions(): void {

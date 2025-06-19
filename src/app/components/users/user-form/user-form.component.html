@@ -13,7 +13,7 @@
         </div>
         <div class="col-4">
           <label>Email:</label>
-          <input type="email" formControlName="email" />
+          <input type="email" formControlName="email" [disabled]="isEditing && !isSuperAdmin" />
         </div>
         <div class="col-4">
           <label>Phone:</label>
@@ -60,7 +60,7 @@
           multiple
           (selectionChange)="onSelectionChange('accessibleProjects', $event)"
         >
-          <mat-option [value]="'all'">All</mat-option>
+          <mat-option *ngIf="isSuperAdmin || accessibleProject[0] === 'all'" [value]="'all'">All</mat-option>
           <mat-option *ngFor="let proj of projects" [value]="proj._id" [disabled]="isAllProjSelected">
             {{ proj.projectName }}
           </mat-option>
@@ -92,7 +92,7 @@
             multiple
             (selectionChange)="onSelectionChange('accessibleCameras', $event)"
           >
-            <mat-option [value]="'all'">All</mat-option>
+            <mat-option *ngIf="isSuperAdmin || accessibleCamera[0] === 'all'" [value]="'all'">All</mat-option>
             <mat-option *ngFor="let cam of cameras" [value]="cam._id" [disabled]="isAllCameraSelected">
               {{ cam.cameraDescription }}
             </mat-option>
