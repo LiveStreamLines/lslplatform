@@ -66,7 +66,7 @@ export class SalesOrderViewComponent implements OnInit {
   errorMessage = '';
   showInvoices = false;
   installationForm: FormGroup;
-  cameraDetailsMap: { [cameraId: string]: Camera } = {};
+  cameraDetailsMap: { [cameraId: string]: Camera | undefined } = {};
 
   // Table columns for invoices
   invoiceColumns: string[] = ['invoiceNumber', 'invoiceSequence', 'dueDate', 'amount', 'status', 'generatedDate'];
