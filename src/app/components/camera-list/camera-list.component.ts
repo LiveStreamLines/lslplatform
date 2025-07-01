@@ -62,6 +62,7 @@ export class CameraListComponent implements OnInit {
   ngOnInit(): void {
     // Get user role
     this.userRole = this.authService.getUserRole();
+    console.log('Current user role:', this.userRole); // Debug log to see actual role value
 
     // Get the project ID from the route parameters
     this.developerTag = this.route.snapshot.paramMap.get('developerTag')!;

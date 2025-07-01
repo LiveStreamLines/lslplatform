@@ -86,6 +86,7 @@ export class ProjectListComponent implements OnInit {
     });
 
     this.userRole = this.authService.getUserRole();
+    console.log('Current user role in project-list:', this.userRole); // Debug log to see actual role value
     this.accessibleProjects = this.authService.getAccessibleProjects();    
 
   }

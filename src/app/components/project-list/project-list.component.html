@@ -7,11 +7,11 @@
 
     <div *ngIf="!loading && projects.length > 0" class="projects-container">
       <mat-card class="project-card" 
-      [ngClass]="{ 'blocked': project.blocked && userRole !== 'Super Admin' }"
-      (click)="!project.blocked || userRole === 'Super Admin' ? onProjectClick(project) : null"
-      [style.pointer-events]="project.blocked && userRole !== 'Super Admin' ? 'none' : 'auto'"
+      [ngClass]="{ 'blocked': project.blocked && userRole !== 'Super Admin' && userRole !== 'Admin' }"
+      (click)="!project.blocked || userRole === 'Super Admin' || userRole === 'Admin' ? onProjectClick(project) : null"
+      [style.pointer-events]="project.blocked && userRole !== 'Super Admin' && userRole !== 'Admin' ? 'none' : 'auto'"
       *ngFor="let project of filteredProjects" (click)="onProjectClick(project)">
-        <ng-container *ngIf="!project.blocked || userRole === 'Super Admin'; else blockedTemplate">
+        <ng-container *ngIf="!project.blocked || userRole === 'Super Admin' || userRole === 'Admin'; else blockedTemplate">
           <mat-card-title>
             {{ project.projectName }}
             <span *ngIf="project.blocked" class="blocked-badge">(Blocked)</span>
