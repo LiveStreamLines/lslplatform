@@ -23,13 +23,16 @@
     
         <!-- Developer Dropdown -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Select Developer</mat-label>
-          <mat-select formControlName="developerId" required>
+          <mat-label>Developer</mat-label>
+          <mat-select formControlName="developerId" [disabled]="isEditMode || (data?.developerId && !isEditMode)">
             <mat-option *ngFor="let developer of developers" [value]="developer._id">
               {{ developer.developerName }}
             </mat-option>
           </mat-select>
           <mat-error *ngIf="projectForm.get('developerId')?.hasError('required')">Developer is required</mat-error>
+          <mat-hint *ngIf="isEditMode || (data?.developerId && !isEditMode)">
+            {{ isEditMode ? 'Developer cannot be changed in edit mode' : 'Developer is pre-selected' }}
+          </mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">

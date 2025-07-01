@@ -11,11 +11,11 @@
 
         <div *ngIf="!loading && cameras.length > 0" class="cameras-container">
           <mat-card class="cameras-card" 
-          [ngClass]="{ 'blocked': camera.blocked && userRole !== 'Super Admin' }"
-          (click)="!camera.blocked || userRole === 'Super Admin' ? viewCameraDetails(camera) : null"
-          [style.pointer-events]="camera.blocked && userRole !== 'Super Admin' ? 'none' : 'auto'"
+          [ngClass]="{ 'blocked': camera.blocked && userRole !== 'Super Admin' && userRole !== 'admin' }"
+          (click)="!camera.blocked || userRole === 'Super Admin' || userRole === 'admin' ? viewCameraDetails(camera) : null"
+          [style.pointer-events]="camera.blocked && userRole !== 'Super Admin' && userRole !== 'admin' ? 'none' : 'auto'"
           *ngFor="let camera of cameras">
-            <ng-container *ngIf="!camera.blocked || userRole === 'Super Admin'; else blockedTemplate">
+            <ng-container *ngIf="!camera.blocked || userRole === 'Super Admin' || userRole === 'admin'; else blockedTemplate">
               <img mat-card-image [src]="getPictureUrl(camera.path, camera.lastPhoto)" alt="Last Photo"/>          
               <mat-card-title>
                 {{ camera.cameraDescription }}

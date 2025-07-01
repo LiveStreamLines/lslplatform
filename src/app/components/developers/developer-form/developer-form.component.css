@@ -1,32 +1,121 @@
+h2 {
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
 
-  h2 {
-    text-align: center;
-    font-weight: 500;
-    margin-bottom: 24px;
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.half-width {
+  width: 48%;
+  margin-bottom: 16px;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+h3 {
+  color: #333;
+  margin: 24px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e0e0e0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+h3:first-child {
+  margin-top: 0;
+}
+
+.logo-upload {
+  margin: 16px 0;
+  padding: 16px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.logo-upload mat-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.logo-preview {
+  max-width: 200px;
+  max-height: 100px;
+  margin-top: 12px;
+  border-radius: 4px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+    gap: 0;
   }
   
-  .full-width {
+  .half-width {
     width: 100%;
-    margin-top: 10px;
-    margin-bottom: 10px;
   }
   
-  .logo-upload {
-    margin: 16px 0;
+  .dialog-content {
+    padding: 16px;
   }
   
-  .logo-preview {
-    display: block;
-    max-width: 100px;
-    margin-top: 10px;
-    border-radius: 50%;
+  h3 {
+    font-size: 16px;
   }
+}
 
- /* Dialog content with scrolling and custom scrollbar */
+/* Form field styling */
+mat-form-field {
+  margin-bottom: 8px;
+}
+
+mat-checkbox {
+  margin: 16px 0;
+  display: block;
+}
+
+/* Error styling */
+.mat-error {
+  color: #f44336;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Success styling */
+.mat-success {
+  color: #4caf50;
+}
+
+/* Loading state */
+.dialog-content.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Dialog content with scrolling and custom scrollbar */
 .dialog-content {
-  max-height: 400px; /* Adjust as needed */
+  padding: 20px;
+  max-height: 80vh;
   overflow-y: auto;
-  padding-right: 8px;
 }
 
 /* Custom thin, red scrollbar styling */
@@ -47,7 +136,7 @@
   background-color: #d50000; /* Darker red on hover */
 } 
 
-  /* Dialog background */
+/* Dialog background */
 .mat-dialog-container {
   background-color: #000000; /* Black background */
   color: #ffffff; /* White font color */

@@ -37,6 +37,9 @@ import { CameraHistoryComponent } from './components/camera-history/camera-histo
 import { CameraSelectionComponent } from './components/camera-selection/camera-selection.component';
 import { Liveview2Component } from './components/liveview2/liveview2.component';
 import { SalesOrderFormComponent } from './components/sales-order/sales-order-form.component';
+import { SalesOrderListComponent } from './components/sales-order/sales-order-list/sales-order-list.component';
+import { SalesOrderViewComponent } from './components/sales-order/sales-order-view.component';
+import { InvoicesListComponent } from './components/sales-order/invoices-list/invoices-list.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -93,7 +96,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard], 
     data: {roles: ['Super Admin', 'Admin']}
   },
+  { path: 'sales-orders', component: SalesOrderListComponent, canActivate: [AuthGuard], data: {roles: ['Super Admin', 'Admin']} },
   { path: 'sales-orders/new', component: SalesOrderFormComponent, canActivate: [AuthGuard], data: {roles: ['Super Admin', 'Admin']} },
+  { path: 'sales-orders/edit/:id', component: SalesOrderFormComponent, canActivate: [AuthGuard], data: {roles: ['Super Admin', 'Admin']} },
+  { path: 'sales-orders/view/:id', component: SalesOrderViewComponent, canActivate: [AuthGuard], data: {roles: ['Super Admin', 'Admin']} },
+  { path: 'invoices', component: InvoicesListComponent, canActivate: [AuthGuard], data: {roles: ['Super Admin', 'Admin']} },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }  // Use the NotFoundComponent for 404
 ];

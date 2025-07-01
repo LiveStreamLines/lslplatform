@@ -47,10 +47,15 @@ export class ProjectFormComponent implements OnInit {
     private developerService: DeveloperService,
     private dialogRef: MatDialogRef<ProjectFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
+      console.log('ProjectFormComponent constructor - data received:', data);
       this.isEditMode = data.isEditMode;
+      console.log('isEditMode set to:', this.isEditMode);
     }
 
   ngOnInit(): void {
+    console.log('ProjectFormComponent ngOnInit - data:', this.data);
+    console.log('isEditMode in ngOnInit:', this.isEditMode);
+    
     this.projectForm = this.fb.group({
       projectName: ['', Validators.required],
       projectTag: ['', Validators.required],
@@ -64,11 +69,23 @@ export class ProjectFormComponent implements OnInit {
     this.fetchDevelopers();
 
     if (!this.isEditMode && this.data.developerId) {
-      this.projectForm.patchValue({ developerId: this.data.developerId })
+      console.log('Setting developerId in create mode:', this.data.developerId);
+      this.projectForm.patchValue({ developerId: this.data.developerId });
+      // Disable developer field when pre-selected in create mode
+      this.projectForm.get('developerId')?.disable();
     }
 
     if (this.isEditMode && this.data.project) {
+      console.log('Populating form with project data:', this.data.project);
       this.populateForm(this.data.project);
+      // Disable developer field in edit mode to prevent changing the relationship
+      this.projectForm.get('developerId')?.disable();
+      
+      // If developerId is also passed, ensure the field is disabled
+      if (this.data.developerId) {
+        console.log('Developer field disabled due to developerId:', this.data.developerId);
+        this.projectForm.get('developerId')?.disable();
+      }
     }
   }
 
@@ -112,6 +129,13 @@ export class ProjectFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.projectForm.valid) {
+      // Temporarily enable disabled fields to get their values
+      const developerIdControl = this.projectForm.get('developerId');
+      const wasDisabled = developerIdControl?.disabled;
+      if (wasDisabled) {
+        developerIdControl?.enable();
+      }
+
       const projectData = this.projectForm.value;
   
       const formData = new FormData();
@@ -128,6 +152,11 @@ export class ProjectFormComponent implements OnInit {
       } else if (this.isEditMode && this.data.project.logo) {
         formData.append('logo', this.data.project.logo);
       }
+
+      // Re-disable the field if it was disabled
+      if (wasDisabled) {
+        developerIdControl?.disable();
+      }
   
       console.log(formData.getAll.toString());
       // Call service method to submit the data
@@ -135,7 +164,11 @@ export class ProjectFormComponent implements OnInit {
       {
         next: (response) => {
           console.log('Project submitted successfully:', response);
-          this.dialogRef.close(response); // Close dialog on success
+          // Return proper format for the sales order form
+          this.dialogRef.close({
+            success: true,
+            project: response
+          });
         },
         error: (error) => {
           console.error('Error submitting project:', error);

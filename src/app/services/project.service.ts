@@ -115,6 +115,16 @@ export class ProjectService {
 
   }
 
+  // Get available projects for sales orders (status "new" and no sales orders associated)
+  getAvailableProjectsForSalesOrder(developerId: string): Observable<Project[]> {
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+
+    return this.http.get<Project[]>(`${this.baseUrl}/available-for-sales-order/${developerId}`, { headers });
+  }
+
   addOrUpdateProject(formData: FormData, isEditMode: boolean, projectId?: string): Observable<any> {
     const authh = this.authService.getAuthToken(); 
     const headers = new HttpHeaders({ 

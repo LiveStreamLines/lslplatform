@@ -3,28 +3,36 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environments';
 import { AuthService } from './auth.service';
+import { map } from 'rxjs/operators';
 
 export interface SalesOrder {
     _id: string;
     orderNumber: string;
     customerId: string;
     customerName: string;
-    contractStartDate: Date;
-    contractEndDate: Date;
-    contractDuration: number;
-    monthlyFee: number;
-    totalContractValue: number;
-    status: 'Draft' | 'Confirmed' | 'Active' | 'Completed' | 'Cancelled';
+    developerTag?: string;
+    projectId?: string;
+    projectName?: string;
+    projectTag?: string;
+    orderDate: Date;
+    status: 'Draft' | 'Confirmed' | 'Invoiced' | 'Partially Invoiced' | 'Fully Invoiced';
     cameras: {
         cameraId: string;
         cameraName: string;
-        installationDate?: Date;
+        contractDuration: number;
+        monthlyFee: number;
         status: 'Pending' | 'Installed' | 'Active' | 'Removed';
+        invoicedDuration?: number;
+        installedDate?: string | null;
     }[];
-    paymentSchedule: {
+    invoices: {
+        invoiceNumber: string;
+        invoiceSequence: number;
         dueDate: Date;
         amount: number;
         status: 'Pending' | 'Paid' | 'Overdue';
+        description: string;
+        generatedDate: Date;
     }[];
     billingAddress: {
         street: string;
@@ -83,5 +91,24 @@ export class SalesOrderService {
 
     getSalesOrdersByCustomer(customerId: string): Observable<SalesOrder[]> {
         return this.http.get<SalesOrder[]>(`${this.apiUrl}/customer/${customerId}`, { headers: this.getHeaders() });
+    }
+
+    generateNextOrderNumber(): Observable<string> {
+        return this.http.get<{ nextNumber: string }>(`${this.apiUrl}/next-number`, { headers: this.getHeaders() })
+            .pipe(
+                map(response => response.nextNumber)
+            );
+    }
+
+    generateNextInvoiceNumber(): Observable<string> {
+        return this.http.get<{ nextNumber: string }>(`${this.apiUrl}/next-invoice-number`, { headers: this.getHeaders() })
+            .pipe(
+                map(response => response.nextNumber)
+            );
+    }
+
+    generateInvoiceNumber(salesOrderId: string, invoiceSequence: number): string {
+        const currentYear = new Date().getFullYear();
+        return `INV-${currentYear}-${invoiceSequence.toString().padStart(4, '0')}`;
     }
 } 

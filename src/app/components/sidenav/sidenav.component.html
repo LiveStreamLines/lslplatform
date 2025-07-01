@@ -43,6 +43,14 @@
     <mat-icon>videocam</mat-icon>
     <span>Cameras</span>
   </a>
+  <a mat-list-item *ngIf="(isSuper$ | async)" routerLink="/sales-orders" routerLinkActive="active">
+    <mat-icon>receipt</mat-icon>
+    <span>Sales Orders</span>
+  </a>
+  <a mat-list-item *ngIf="(isSuper$ | async)" routerLink="/invoices" routerLinkActive="active">
+    <mat-icon>description</mat-icon>
+    <span>Invoices</span>
+  </a>
   <a mat-list-item *ngIf="(isSuper$ | async) || ((isAdmin$ | async) && (hasInventoryRole$ | async) && inventoryRole !== null)" routerLink="/inventory">
     <mat-icon>inventory</mat-icon>
     <span>Inventory</span>

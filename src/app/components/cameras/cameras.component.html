@@ -70,6 +70,34 @@
         <td mat-cell *matCellDef="let camera" [class.blocked]="camera.blocked"> {{ camera.createdDate | date }} </td>
       </ng-container>
 
+      <ng-container matColumnDef="installedDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Installation Date </th>
+        <td mat-cell *matCellDef="let camera" [class.blocked]="camera.blocked"> 
+          {{ camera.installedDate ? (camera.installedDate | date) : 'Not Installed' }} 
+        </td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+        <td mat-cell *matCellDef="let camera" [class.blocked]="camera.blocked"> 
+          <div class="status-container">
+            <span class="status-badge {{ camera.status?.toLowerCase() }}">
+              {{ camera.status || 'Pending' }}
+            </span>
+            <button 
+              *ngIf="camera.status === 'Pending'"
+              mat-icon-button 
+              color="primary" 
+              class="install-icon-btn"
+              (click)="openCameraInstallationDialog(camera)"
+              matTooltip="Install Camera">
+              <mat-icon>build</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
       <!-- Block/Unblock Column -->
       <ng-container matColumnDef="blockUnblock">
         <th mat-header-cell *matHeaderCellDef> Block/Unblock </th>

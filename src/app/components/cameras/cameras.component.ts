@@ -9,6 +9,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSortModule, MatSort } from '@angular/material/sort';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
 import { DeveloperService } from '../../services/developer.service';
 import { ProjectService } from '../../services/project.service';
 import { CameraService } from '../../services/camera.service';
@@ -16,6 +19,7 @@ import { Developer } from '../../models/developer.model';
 import { Project } from '../../models/project.model';
 import { Camera } from '../../models/camera.model';
 import { Router } from '@angular/router';
+import { CameraInstallationDialogComponent } from '../sales-order/camera-installation-dialog/camera-installation-dialog.component';
 
 @Component({
   selector: 'app-camera',
@@ -31,6 +35,9 @@ import { Router } from '@angular/router';
     MatInputModule,
     MatSortModule,
     MatPaginatorModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    MatButtonModule,
   ],
   templateUrl: './cameras.component.html',
   styleUrls: ['./cameras.component.css']
@@ -51,15 +58,17 @@ export class CameraComponent implements OnInit, AfterViewChecked {
 
   // Table data source for sorting and pagination
   dataSource = new MatTableDataSource<Camera>();
-  displayedColumns: string[] = ['name', 'country', 'serverFolder', 'createdDate', 'blockUnblock', 'actions', 'download'];
-  allDevelopersDisplayedColumns: string[] = ['name', 'developer', 'project', 'country', 'serverFolder', 'createdDate', 'blockUnblock', 'actions', 'download'];
+  displayedColumns: string[] = ['name', 'country', 'serverFolder', 'createdDate', 'installedDate', 'status', 'blockUnblock', 'actions', 'download'];
+  allDevelopersDisplayedColumns: string[] = ['name', 'developer', 'project', 'country', 'serverFolder', 'createdDate', 'installedDate', 'status', 'blockUnblock', 'actions', 'download'];
 
   constructor(
     private developerService: DeveloperService,
     private projectService: ProjectService,
     private router: Router, 
     private cameraService: CameraService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {
     // Set up custom sort function for dates
     this.dataSource.sortingDataAccessor = (item, property) => {
@@ -312,5 +321,26 @@ export class CameraComponent implements OnInit, AfterViewChecked {
   // Method to get current displayed columns based on selection
   getCurrentDisplayedColumns(): string[] {
     return this.selectedDeveloperId ? this.displayedColumns : this.allDevelopersDisplayedColumns;
+  }
+
+  openCameraInstallationDialog(camera: Camera): void {
+    const dialogRef = this.dialog.open(CameraInstallationDialogComponent, {
+      data: { camera },
+      width: '300px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.success) {
+        this.snackBar.open('Camera installation date updated successfully!', 'Close', {
+          duration: 3000
+        });
+        // Refresh the camera list to show updated data
+        if (this.selectedDeveloperId) {
+          this.loadCameras();
+        } else {
+          this.loadAllCameras();
+        }
+      }
+    });
   }
 }

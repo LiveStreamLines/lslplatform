@@ -146,4 +146,34 @@ export class CameraService {
     return this.http.put(`${this.apiUrl}/${cameraId}`, data, { headers });
   }
 
+  updateCameraInstallationDate(cameraId: string, installedDate: Date): Observable<any> {
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    return this.http.put(`${this.apiUrl}/${cameraId}/install`, { installedDate }, { headers });
+  }
+
+  updateCameraInvoiceInfo(cameraId: string, invoiceData: {
+    invoiceNumber: string;
+    invoiceSequence: number;
+    amount: number;
+    duration: number;
+    generatedDate: Date;
+    status: 'Pending' | 'Paid' | 'Overdue';
+  }): Observable<any> {
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    return this.http.put(`${this.apiUrl}/${cameraId}/invoice`, invoiceData, { headers });
+  }
+
+  updateCameraInvoicedDuration(cameraId: string, invoicedDuration: number): Observable<any> {
+    const authh = this.authService.getAuthToken(); 
+    const headers = new HttpHeaders({ 
+      'Authorization': authh ? `Bearer ${authh}` : ''  // Send authh header
+    });
+    return this.http.put(`${this.apiUrl}/${cameraId}/invoiced-duration`, { invoicedDuration }, { headers });
+  }
 }

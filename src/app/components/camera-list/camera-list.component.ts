@@ -56,7 +56,7 @@ export class CameraListComponent implements OnInit {
     private developerService: DeveloperService,
     private breadcrumbService: BreadcrumbService,
     private route: ActivatedRoute, 
-    private authService: AuthService  // Add AuthService
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {

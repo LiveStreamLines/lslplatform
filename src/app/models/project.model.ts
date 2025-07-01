@@ -4,7 +4,7 @@ export interface Project {
   projectTag: string,
   description: string,
   developer: string,
-  index: string
+  index: string,
   isActive: true,
   createdDate: string,
   logo: string,
