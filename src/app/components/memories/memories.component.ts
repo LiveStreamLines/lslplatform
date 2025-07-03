@@ -87,6 +87,7 @@ export class MemoriesComponent implements OnInit {
     'camera',
     'dateRange',
     'pictures',
+    'shuttercount',
     'memoryUsed',
     'memoryAvailable',
     'status',

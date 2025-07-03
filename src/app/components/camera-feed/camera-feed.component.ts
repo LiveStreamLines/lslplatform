@@ -32,6 +32,7 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
   private isResizing = false;
   private retryCount = 0;
   private readonly MAX_RETRIES = 3;
+  private isInitialized = false;
 
   // Minimum dimensions for different screen sizes
   private readonly MIN_DIMENSIONS = {
@@ -61,32 +62,157 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     if (!this.projectTag) {
       console.error("ProjectTag is missing!");
+      this.showError("Project tag is required");
       return;
     }
 
     const projectData = this.projectTagMap[this.projectTag];
     if (!projectData) {
-      console.error("Invalid projectTag!");
+      console.error("Invalid projectTag:", this.projectTag);
+      this.showError(`Invalid project tag: ${this.projectTag}`);
       return;
     }
     this.secretKey = projectData.secretKey;
     this.serialNumber = projectData.serialNumber;
 
-    this.tokenService.getAllTokens().subscribe(tokens => {
-      this.accessToken = tokens.accessToken;
-      this.accessTokenExpiry = tokens.accessTokenExpiry;
-      this.streamToken = tokens.streamToken;
-      this.streamTokenExpiry = tokens.streamTokenExpiry;
-      
-      console.log("Tokens Received:", tokens);
+    console.log("Initializing camera feed for project:", this.projectTag);
+    console.log("Camera details:", { serialNumber: this.serialNumber, secretKey: this.secretKey });
 
-      if (this.isTokenExpired(this.accessTokenExpiry) || this.isTokenExpired(this.streamTokenExpiry)) {
-        console.log("Tokens expired, fetching new ones...");
-      } else {
+    this.logDebugInfo();
+    this.initializeCameraFeed();
+  }
+
+  private initializeCameraFeed(): void {
+    console.log("Starting camera feed initialization...");
+    this.showLoading();
+    
+    this.tokenService.getAllTokens().subscribe({
+      next: (tokens) => {
+        console.log("Tokens Received:", tokens);
+        
+        // Validate tokens
+        if (!tokens || !tokens.accessToken || !tokens.streamToken) {
+          console.error("Invalid tokens received:", tokens);
+          this.showError("Failed to get valid tokens");
+          return;
+        }
+
+        this.accessToken = tokens.accessToken;
+        this.accessTokenExpiry = tokens.accessTokenExpiry;
+        this.streamToken = tokens.streamToken;
+        this.streamTokenExpiry = tokens.streamTokenExpiry;
+        
+        console.log("Token validation passed");
+        console.log("Access token expiry:", new Date(this.accessTokenExpiry).toLocaleString());
+        console.log("Stream token expiry:", new Date(this.streamTokenExpiry).toLocaleString());
+        
+        if (this.isTokenExpired(this.accessTokenExpiry) || this.isTokenExpired(this.streamTokenExpiry)) {
+          console.log("Tokens expired, attempting to refresh...");
+          this.showError("Tokens expired. Please refresh the page or contact support.");
+          return;
+        }
+
         console.log("Tokens are valid, proceeding with Live View.");
-        this.loadScript().then(() => this.initializeLiveView());
+        this.loadScript()
+          .then(() => {
+            console.log("Script loaded successfully, initializing live view...");
+            return this.initializeLiveView();
+          })
+          .catch(error => {
+            console.error("Failed to load plugin script:", error);
+            this.showError("Failed to load camera plugin");
+          });
+      },
+      error: (error) => {
+        console.error("Error fetching tokens:", error);
+        this.showError("Failed to connect to camera service");
       }
     });
+  }
+
+  private showError(message: string, showRetry: boolean = true): void {
+    const container = this.elRef.nativeElement.querySelector("#playWind");
+    if (container) {
+      const retryButton = showRetry ? `
+        <button onclick="window.retryCameraFeed && window.retryCameraFeed()" 
+                style="
+                  margin-top: 15px; 
+                  padding: 8px 16px; 
+                  background: #4CAF50; 
+                  color: white; 
+                  border: none; 
+                  border-radius: 4px; 
+                  cursor: pointer;
+                  font-size: 12px;
+                ">
+          Retry
+        </button>
+      ` : '';
+
+      container.innerHTML = `
+        <div style="
+          display: flex; 
+          flex-direction: column; 
+          justify-content: center; 
+          align-items: center; 
+          height: 100%; 
+          color: #ff6b6b; 
+          text-align: center;
+          padding: 20px;
+        ">
+          <div style="font-size: 24px; margin-bottom: 10px;">⚠️</div>
+          <div style="font-size: 14px; margin-bottom: 5px;">Camera Feed Error</div>
+          <div style="font-size: 12px; color: #ccc; margin-bottom: 10px;">${message}</div>
+          <div style="font-size: 10px; color: #888;">Project: ${this.projectTag}</div>
+          ${retryButton}
+        </div>
+      `;
+
+      // Add retry function to window for button access
+      if (showRetry) {
+        (window as any).retryCameraFeed = () => {
+          console.log("Retrying camera feed...");
+          this.retryCount = 0;
+          this.initializeCameraFeed();
+        };
+      }
+    }
+  }
+
+  private showLoading(): void {
+    const container = this.elRef.nativeElement.querySelector("#playWind");
+    if (container) {
+      container.innerHTML = `
+        <div style="
+          display: flex; 
+          flex-direction: column; 
+          justify-content: center; 
+          align-items: center; 
+          height: 100%; 
+          color: #4CAF50;
+        ">
+          <div style="font-size: 24px; margin-bottom: 10px;">📹</div>
+          <div style="font-size: 14px;">Loading Camera Feed...</div>
+          <div style="font-size: 10px; color: #888; margin-top: 5px;">Project: ${this.projectTag}</div>
+        </div>
+      `;
+    }
+  }
+
+  private logDebugInfo(): void {
+    console.log("=== Camera Feed Debug Info ===");
+    console.log("Project Tag:", this.projectTag);
+    console.log("Camera ID:", this.cameraId);
+    console.log("Serial Number:", this.serialNumber);
+    console.log("Secret Key:", this.secretKey ? "***" : "Not set");
+    console.log("Access Token:", this.accessToken ? "***" : "Not set");
+    console.log("Stream Token:", this.streamToken ? "***" : "Not set");
+    console.log("Access Token Expiry:", new Date(this.accessTokenExpiry).toLocaleString());
+    console.log("Stream Token Expiry:", new Date(this.streamTokenExpiry).toLocaleString());
+    console.log("Plugin Script URL:", this.pluginScriptUrl);
+    console.log("JSPlugin Available:", !!(window as any).JSPlugin);
+    console.log("Container Found:", !!this.elRef.nativeElement.querySelector("#playWind"));
+    console.log("=============================");
   }
 
   ngAfterViewInit() {
@@ -265,13 +391,22 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (!container) {
       console.error("Live View container not found!");
+      this.showError("Camera container not found");
       return;
     }
+
+    // Show loading state
+    this.showLoading();
 
     try {
       await this.forceContainerSize();
       const dimensions = this.getContainerDimensions();
       console.log('Initializing LiveView with dimensions:', dimensions);
+
+      // Check if JSPlugin is available
+      if (!(window as any).JSPlugin) {
+        throw new Error("JSPlugin not loaded");
+      }
 
       this.oPlugin = new (window as any).JSPlugin({
         szId: "playWind",
@@ -293,6 +428,8 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
       const url = `ezopen://open.ezviz.com/${this.serialNumber}/${this.channelNumber}`;
       const finalUrl = this.videoResolution === "hd" ? `${url}.hd.live` : `${url}.live`;
 
+      console.log("Attempting to play URL:", finalUrl);
+
       if (this.secretKey) {
         await this.oPlugin.JS_SetSecretKey(0, this.secretKey);
         console.log("JS_SetSecretKey success");
@@ -307,8 +444,15 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
       }, 0);
       
       console.log("LiveView initialized successfully");
-    } catch (error) {
+      this.isInitialized = true;
+
+      // Add event listeners for plugin events
+      this.setupPluginEventListeners();
+      
+    } catch (error: any) {
       console.error("Error initializing LiveView:", error);
+      this.showError(`Camera initialization failed: ${error?.message || 'Unknown error'}`);
+      
       if (this.retryCount < this.MAX_RETRIES) {
         this.retryCount++;
         console.log(`Retrying initialization (${this.retryCount}/${this.MAX_RETRIES})...`);
@@ -316,6 +460,31 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         console.error("Max retries reached for initialization");
         this.retryCount = 0;
+        this.showError("Failed to initialize camera after multiple attempts");
+      }
+    }
+  }
+
+  private setupPluginEventListeners(): void {
+    if (this.oPlugin) {
+      try {
+        // Listen for play events
+        this.oPlugin.JS_AddEventListener("play", () => {
+          console.log("Camera feed started playing");
+        });
+
+        // Listen for error events
+        this.oPlugin.JS_AddEventListener("error", (error: any) => {
+          console.error("Camera plugin error:", error);
+          this.showError("Camera feed error occurred");
+        });
+
+        // Listen for stop events
+        this.oPlugin.JS_AddEventListener("stop", () => {
+          console.log("Camera feed stopped");
+        });
+      } catch (error) {
+        console.error("Error setting up plugin event listeners:", error);
       }
     }
   }

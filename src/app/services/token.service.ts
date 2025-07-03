@@ -21,12 +21,13 @@ export class TokenService {
    // const headers = new HttpHeaders({ 'Authorization': authh ? `Bearer ${authh}` : '' });
 
     const body = {
-      accessToken,
-      accessTokenExpiry,
-      streamToken,
-      streamTokenExpiry
+      token1: accessToken,
+      token1Exp: accessTokenExpiry.toString(),
+      token2: streamToken,
+      token2Exp: streamTokenExpiry.toString()
     };
 
+    console.log("Saving tokens with body:", body);
 //    return this.http.post(`${this.apiUrl}/save`, body, { headers });
     return this.http.post(`${this.apiUrl}/save`, body);
 
@@ -38,12 +39,26 @@ export class TokenService {
 
     return this.http.get<any>(`${this.apiUrl}/all`).pipe(
       tap(response => console.log("All Tokens Fetched:", response)),
-      map(response => ({
-        accessToken: response[0].accessToken,
-        accessTokenExpiry: response[0].accessTokenExpiry,
-        streamToken: response[0].streamToken,
-        streamTokenExpiry: response[0].streamTokenExpiry
-      }))
+      map(response => {
+        if (!response || !response[0]) {
+          throw new Error('No tokens found in response');
+        }
+        
+        const tokenData = response[0];
+        console.log("Token data mapping:", {
+          token1: tokenData.token1,
+          token1Exp: tokenData.token1Exp,
+          token2: tokenData.token2,
+          token2Exp: tokenData.token2Exp
+        });
+        
+        return {
+          accessToken: tokenData.token1,
+          accessTokenExpiry: parseInt(tokenData.token1Exp),
+          streamToken: tokenData.token2,
+          streamTokenExpiry: parseInt(tokenData.token2Exp)
+        };
+      })
     );
   }
 }
