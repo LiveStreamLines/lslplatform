@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 import { SalesOrderService, SalesOrder } from '../../../services/sales-order.service';
 
@@ -48,6 +49,7 @@ interface InvoiceDisplay {
     MatInputModule,
     MatSelectModule,
     MatExpansionModule,
+    MatTooltipModule,
     FormsModule
   ],
   templateUrl: './invoices-list.component.html',
@@ -68,7 +70,10 @@ export class InvoicesListComponent implements OnInit {
   // Table columns for line items
   lineItemColumns: string[] = ['description', 'orderNumber', 'amount'];
 
-  constructor(private salesOrderService: SalesOrderService) {}
+  constructor(
+    private salesOrderService: SalesOrderService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     console.log('InvoicesListComponent initialized');
@@ -226,6 +231,10 @@ export class InvoicesListComponent implements OnInit {
   viewSalesOrder(salesOrderId: string): void {
     // Navigate to sales order view
     window.open(`/sales-orders/view/${salesOrderId}`, '_blank');
+  }
+
+  viewInvoice(invoiceNumber: string): void {
+    this.router.navigate(['/invoices/view', invoiceNumber]);
   }
 
   getTotalInvoicedAmount(): number {

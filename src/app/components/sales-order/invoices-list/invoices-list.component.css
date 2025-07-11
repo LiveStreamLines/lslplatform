@@ -401,6 +401,13 @@
   color: #888;
 }
 
+.invoice-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
 /* Line Items Section */
 .line-items-section {
   margin-top: 16px;
