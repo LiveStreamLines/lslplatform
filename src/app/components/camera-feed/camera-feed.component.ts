@@ -50,7 +50,8 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
     prime: { secretKey: "primeHGCC24", serialNumber: "AW6953961" },
     puredc: { secretKey: "LOpuredata", serialNumber: "J73296798" },
     proj: { secretKey: "Lsl12345", serialNumber: "FD3699842" },
-    awj1: { secretKey: "Lsl12345", serialNumber: "AF6098120" }
+    awj1: { secretKey: "Lsl12345", serialNumber: "AF6098120" },
+    awj2: { secretKey: "Lsl12345", serialNumber: "AF6098106" },
   };
 
   constructor(
@@ -65,6 +66,13 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
       console.error("ProjectTag is missing!");
       this.showError("Project tag is required");
       return;
+    }
+
+    if (this.projectTag === 'abna' && this.cameraId === 'camera1') {
+      this.projectTag = 'awj1';
+      return;
+    } else if (this.projectTag === 'abna' && this.cameraId === 'camera2') {
+      this.projectTag = 'awj2';
     }
 
     const projectData = this.projectTagMap[this.projectTag];

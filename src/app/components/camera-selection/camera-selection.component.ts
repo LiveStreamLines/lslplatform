@@ -164,17 +164,27 @@ export class CameraSelectionComponent implements OnInit {
   cameras = [
     {
       id: 'camera1',
+      projectTag: 'all',
       name: 'Live View Camera 1',
       description: 'Live view camera with full pan, tilt, and zoom control. Located at the main entrance.',
       image: 'assets/liveview.png'
+    },
+
+    {
+      id: 'camera1',
+      projectTag: 'abna',
+      name: 'Live View Camera 1',
+      description: 'Live view camera with full pan, tilt, and zoom control. Located at the main entrance.',
+      image: 'assets/liveview.png'
+    },
+    {
+      id: 'camera2',
+      projectTag: 'abna',
+      name: 'Live View Camera 2',
+      description: 'Live view camera with full pan, tilt, and zoom control. Located at the main entrance.',
+      image: 'assets/liveview.png'
     }
-    // },
-    // {
-    //   id: 'camera2',
-    //   name: 'Secondary Fixed Camera',
-    //   description: 'Fixed position camera providing a wide-angle view of the construction site.',
-    //   image: 'assets/liveview.png'
-    // }
+  
   ];
 
   constructor(
@@ -187,6 +197,12 @@ export class CameraSelectionComponent implements OnInit {
       this.developerTag = params['developerTag'];
       this.projectTag = params['projectTag'];
     });
+
+    if (this.projectTag === 'abna') {
+      this.cameras = this.cameras.filter(camera => camera.projectTag === 'abna');
+    } else if (this.projectTag !== 'abna') {
+      this.cameras = this.cameras.filter(camera => camera.projectTag === 'all');
+    }
   }
 
   selectCamera(camera: any) {
