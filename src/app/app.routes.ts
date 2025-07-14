@@ -43,6 +43,7 @@ import { InvoicesListComponent } from './components/sales-order/invoices-list/in
 import { InvoiceDetailComponent } from './components/sales-order/invoice-detail/invoice-detail.component';
 import { InvoiceEditComponent } from './components/sales-order/invoice-edit/invoice-edit.component';
 import { PrintableInvoiceComponent } from './components/sales-order/printable-invoice/printable-invoice.component';
+import { DroneShootingComponent } from './components/drone-shooting/drone-shooting.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -53,7 +54,7 @@ export const routes: Routes = [
   { path: 'home/:developerTag/:projectTag/timelapse', component: CameraListComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
   { path: 'home/:developerTag/:projectTag/camera-selection', component: CameraSelectionComponent, canActivate: [AuthGuard]},
   { path: 'home/:developerTag/:projectTag/liveview/:cameraId', component: LiveviewComponent, canActivate:[AuthGuard]},
-  { path: 'home/:developerTag/:projectTag/drone-shooting', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
+  { path: 'home/:developerTag/:projectTag/drone-shooting', component: DroneShootingComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
   { path: 'home/:developerTag/:projectTag/site-photography', component: SitePhotoComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
   { path: 'home/:developerTag/:projectTag/360-photography', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project
   { path: 'home/:developerTag/:projectTag/satellite-imagery', component: ServiceDetailComponent, canActivate: [AuthGuard] },  // Camera list for a specific project

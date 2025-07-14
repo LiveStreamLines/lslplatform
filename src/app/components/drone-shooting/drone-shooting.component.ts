@@ -9,7 +9,7 @@ import { environment } from '../../../environment/environments';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-site-photo',
+  selector: 'app-drone-shooting',
   standalone: true,
   imports: [
     CommonModule,
@@ -18,10 +18,10 @@ import { AuthService } from '../../services/auth.service';
     MatInputModule, // For matInput inside form fields
     MatIcon
   ],
-  templateUrl: './site-photo.component.html',
-  styleUrl: './site-photo.component.css'
+  templateUrl: './drone-shooting.component.html',
+  styleUrl: './drone-shooting.component.css'
 })
-export class SitePhotoComponent implements OnInit {
+export class DroneShootingComponent implements OnInit {
   media: any[] = []; 
   isLoading: boolean = false;
   errorMessage: string | null = null;
@@ -47,7 +47,7 @@ export class SitePhotoComponent implements OnInit {
         .filter(request => 
           (this.accessibleDevelopers.includes(request.developerId) || this.accessibleDevelopers.includes('all') || this.userRole === 'Super Admin')  &&
           (this.accessibleProjects.includes(request.projectId) || this.accessibleProjects.includes('all') || this.userRole === 'Super Admin') &&
-          request.service === 'Site Photography'
+          request.service === 'Drone Shooting'
         )
         .sort((a, b) => new Date(b.RequestTime).getTime() - new Date(a.RequestTime).getTime()) // Sort by RequestTime desc
         .map((request) => ({
@@ -58,7 +58,7 @@ export class SitePhotoComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Failed to load site photography requests.';
+        this.errorMessage = 'Failed to load drone shooting requests.';
         console.error(error);
         this.isLoading = false;
       },
@@ -79,4 +79,4 @@ export class SitePhotoComponent implements OnInit {
   //   const filterValue = (event.target as HTMLInputElement).value;
   //   this.media.filter = filterValue.trim().toLowerCase();
   // }
-}
+} 

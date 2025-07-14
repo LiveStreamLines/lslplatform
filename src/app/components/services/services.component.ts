@@ -35,6 +35,7 @@ export class ServicesComponent implements OnInit {
 
   allowedTags: string[] = ['prime', 'stg', 'gugg1', 'puredc', 'proj', 'abna']; // Add all allowed tags here
   allowedSite: string[] =['gugg1'];
+  allowedDrone: string[] =['yasbay'];
 
 
   services = [
@@ -136,8 +137,9 @@ export class ServicesComponent implements OnInit {
       this.router.navigate([`home/${this.developerTag}/${this.projectTag}/camera-selection`]);  
     } else if (this.allowedSite.includes(this.projectTag) && serviceRoute === "/site-photography") {
       this.router.navigate([`home/${this.developerTag}/${this.projectTag}/${serviceRoute}`]);   
-    }
-     else {
+    } else if (this.allowedDrone.includes(this.projectTag) && serviceRoute === "/drone-shooting") {
+      this.router.navigate([`home/${this.developerTag}/${this.projectTag}/${serviceRoute}`]);
+    } else {
       const videoUrl = video;
       this.dialog.open(ServiceVideoDialogComponent, {
         data: { title: title, videoUrl },
