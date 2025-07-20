@@ -31,8 +31,8 @@ export class LiveviewComponent {
     gugg1: "f2148e9d059b4ba29cc75885c36e424f",
     puredc: "56f4ef2cd0b44e4eb83d8a0b3d5a10f6",
     proj: "bc07467acc1b4cd9bada264fab118e66",
-    awj1: "bc07467acc1b4cd9bada264fab118e66",
-    awj2: "bc07467acc1b4cd9bada264fab118e66",
+    awj1: "3a70d32ba9a3458abde16211e46f082f",
+    awj2: "1c9df8697f474882ac6f8bdb409705c9",
   };
 
   constructor(
