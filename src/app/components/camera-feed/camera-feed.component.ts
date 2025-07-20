@@ -75,6 +75,8 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
       this.projectTag = 'awj2';
     }
 
+    console.log("Project Tag:", this.projectTag);
+    
     const projectData = this.projectTagMap[this.projectTag];
     if (!projectData) {
       console.error("Invalid projectTag:", this.projectTag);
