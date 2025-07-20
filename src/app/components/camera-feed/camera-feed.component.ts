@@ -50,8 +50,8 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
     prime: { secretKey: "primeHGCC24", serialNumber: "AW6953961" },
     puredc: { secretKey: "LOpuredata", serialNumber: "J73296798" },
     proj: { secretKey: "Lsl12345", serialNumber: "FD3699842" },
-    awj1: { secretKey: "Lsl12345", serialNumber: "AF6098120" },
-    awj2: { secretKey: "Lsl12345", serialNumber: "AF6098106" },
+    awj1: { secretKey: "Lsl12345", serialNumber: "FC3863714" },
+    awj2: { secretKey: "Lsl12345", serialNumber: "FW7219999" },
   };
 
   constructor(
