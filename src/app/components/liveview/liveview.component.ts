@@ -46,6 +46,11 @@ export class LiveviewComponent {
       this.projectTag = params['projectTag'];
       this.cameraId = params['cameraId'];
 
+      if (this.projectTag === 'abna' && this.cameraId === 'camera1') {
+        this.projectTag = 'awj1';
+      } else if (this.projectTag === 'abna' && this.cameraId === 'camera2') {
+        this.projectTag = 'awj2';
+      }
       // Assign ID based on projectTag
       this.id = this.projectTagMap[this.projectTag] || "";
     });
