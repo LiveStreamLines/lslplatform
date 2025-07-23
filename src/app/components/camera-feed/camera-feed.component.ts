@@ -13,6 +13,7 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() projectTag!: string;
   @Input() cameraId: string = 'main'; // Default to main camera if not specified
 
+  codematch!: string;
   private appKey = "itwwm7benooi6li6p4p1xrz5rsgy1l9e";
   private appSecret = "kpivtt3r0bfv4eb2dl7apv1icyl8z48z";
 
@@ -68,24 +69,28 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    this.codematch = this.projectTag;
+
     if (this.projectTag === 'abna' && this.cameraId === 'camera1') {
-      this.projectTag = 'awj1';
+      this.codematch = 'awj1';
     } else if (this.projectTag === 'abna' && this.cameraId === 'camera2') {
-      this.projectTag = 'awj2';
+      this.codematch = 'awj2';
     }
 
-    console.log("Project Tag:", this.projectTag);
+    
 
-    const projectData = this.projectTagMap[this.projectTag];
+    console.log("code Match:", this.codematch);
+
+    const projectData = this.projectTagMap[this.codematch];
     if (!projectData) {
-      console.error("Invalid projectTag:", this.projectTag);
-      this.showError(`Invalid project tag: ${this.projectTag}`);
+      console.error("Invalid projectTag:", this.codematch);
+      this.showError(`Invalid project tag: ${this.codematch}`);
       return;
     }
     this.secretKey = projectData.secretKey;
     this.serialNumber = projectData.serialNumber;
 
-    console.log("Initializing camera feed for project:", this.projectTag);
+    console.log("Initializing camera feed for project:", this.codematch);
     console.log("Camera details:", { serialNumber: this.serialNumber, secretKey: this.secretKey });
 
     this.logDebugInfo();

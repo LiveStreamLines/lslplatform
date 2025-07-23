@@ -174,14 +174,14 @@ export class CameraSelectionComponent implements OnInit {
       id: 'camera1',
       projectTag: 'abna',
       name: 'Live View Camera 1',
-      description: 'Live view camera with full pan, tilt, and zoom control. Located at the main entrance.',
+      description: 'Live view camera 1',
       image: 'assets/liveview.png'
     },
     {
       id: 'camera2',
       projectTag: 'abna',
       name: 'Live View Camera 2',
-      description: 'Live view camera with full pan, tilt, and zoom control. Located at the main entrance.',
+      description: 'Live view camera 2',
       image: 'assets/liveview.png'
     }
   

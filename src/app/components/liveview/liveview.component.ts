@@ -23,6 +23,8 @@ export class LiveviewComponent {
   projectTag!: string;
   cameraId!: string;
 
+  codematch!: string;
+
   id: string = "";
 
   private projectTagMap: { [key: string]: string } = {
@@ -46,13 +48,15 @@ export class LiveviewComponent {
       this.projectTag = params['projectTag'];
       this.cameraId = params['cameraId'];
 
+      this.codematch = this.projectTag;
+
       if (this.projectTag === 'abna' && this.cameraId === 'camera1') {
-        this.projectTag = 'awj1';
+        this.codematch = 'awj1';
       } else if (this.projectTag === 'abna' && this.cameraId === 'camera2') {
-        this.projectTag = 'awj2';
+        this.codematch = 'awj2';
       }
       // Assign ID based on projectTag
-      this.id = this.projectTagMap[this.projectTag] || "";
+      this.id = this.projectTagMap[this.codematch] || "";
     });
 
     this.getCurrentPTZ();
