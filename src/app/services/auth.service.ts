@@ -60,6 +60,10 @@ export class AuthService {
   private inventoryRole: string | null = null;
   private LastLoginTime: string | null = null;
 
+  // Token expiration tracking
+  private tokenExpirationTime: number | null = null;
+  private expirationCheckInterval: any = null;
+
   private accessibleDevelopers: string[] = [];
   private accessibleProjects: string[] = [];
   private accessibleCameras: string[] = [];
@@ -79,6 +83,10 @@ export class AuthService {
     this.memoryRole = localStorage.getItem('memoryRole');
     this.inventoryRole = localStorage.getItem('inventoryRole');
 
+    // Initialize token expiration
+    const storedExpiration = localStorage.getItem('tokenExpirationTime');
+    this.tokenExpirationTime = storedExpiration ? parseInt(storedExpiration, 10) : null;
+
     this.accessibleDevelopers = JSON.parse(localStorage.getItem('accessibleDevelopers') || '[]');
     this.accessibleProjects = JSON.parse(localStorage.getItem('accessibleProjects') || '[]');
     this.accessibleCameras = JSON.parse(localStorage.getItem('accessibleCameras') || '[]');
@@ -89,6 +97,9 @@ export class AuthService {
     this.canAddUserSubject.next(this.canAddUser === 'true');
     this.inventoryRoleSubject.next(this.inventoryRole);
     this.memoryRoleSubject.next(this.memoryRole);
+
+    // Start expiration check if token exists and has expiration
+    this.startExpirationCheck();
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
@@ -136,6 +147,10 @@ export class AuthService {
     this.accessibleCameras = [];
     this.accessibleServices = [];
 
+    // Clear token expiration
+    this.tokenExpirationTime = null;
+    this.stopExpirationCheck();
+
     localStorage.clear();
     this.userRoleSubject.next(null);
     this.canAddUserSubject.next(null);
@@ -153,6 +168,11 @@ export class AuthService {
       inventoryRole: response.inventoryRole,
       rawResponse: response
     });
+
+    // Clear any existing token expiration on new login
+    this.tokenExpirationTime = null;
+    localStorage.removeItem('tokenExpirationTime');
+    this.stopExpirationCheck();
 
     this.userId = response._id;
     this.username = response.name;
@@ -199,6 +219,87 @@ export class AuthService {
     localStorage.setItem('inventoryRole', this.inventoryRole || '');
   }
 
+  // Token expiration methods
+  /**
+   * Set token expiration for the current user
+   * @param expirationMinutes Number of minutes until token expires (default: 60 minutes)
+   */
+  setTokenExpiration(expirationMinutes: number = 60): void {
+    this.tokenExpirationTime = Date.now() + (expirationMinutes * 60 * 1000);
+    localStorage.setItem('tokenExpirationTime', this.tokenExpirationTime.toString());
+    this.startExpirationCheck();
+  }
+
+  /**
+   * Set token expiration for a specific user by email
+   * Only applies if the current user matches the specified email
+   * @param userEmail Email of the user to set expiration for
+   * @param expirationMinutes Number of minutes until token expires
+   */
+  setTokenExpirationForUser(userEmail: string, expirationMinutes: number = 60): void {
+    if (this.useremail === userEmail) {
+      this.setTokenExpiration(expirationMinutes);
+      console.log(`Token expiration set for user: ${userEmail} (${expirationMinutes} minutes)`);
+    }
+  }
+
+  /**
+   * Remove token expiration (make token permanent until logout)
+   */
+  removeTokenExpiration(): void {
+    this.tokenExpirationTime = null;
+    localStorage.removeItem('tokenExpirationTime');
+    this.stopExpirationCheck();
+  }
+
+  /**
+   * Check if current token is expired
+   */
+  private isTokenExpired(): boolean {
+    if (!this.tokenExpirationTime) {
+      return false; // No expiration set
+    }
+    return Date.now() > this.tokenExpirationTime;
+  }
+
+  /**
+   * Start the expiration check interval
+   */
+  private startExpirationCheck(): void {
+    this.stopExpirationCheck(); // Clear any existing interval
+    
+    if (this.tokenExpirationTime) {
+      this.expirationCheckInterval = setInterval(() => {
+        if (this.isTokenExpired()) {
+          console.log('Token expired, logging out user');
+          this.logout();
+        }
+      }, 60000); // Check every minute
+    }
+  }
+
+  /**
+   * Stop the expiration check interval
+   */
+  private stopExpirationCheck(): void {
+    if (this.expirationCheckInterval) {
+      clearInterval(this.expirationCheckInterval);
+      this.expirationCheckInterval = null;
+    }
+  }
+
+  /**
+   * Get remaining time until token expires (in minutes)
+   */
+  getTokenTimeRemaining(): number | null {
+    if (!this.tokenExpirationTime) {
+      return null; // No expiration set
+    }
+    
+    const remaining = this.tokenExpirationTime - Date.now();
+    return remaining > 0 ? Math.ceil(remaining / (60 * 1000)) : 0;
+  }
+
   // Public getters
   getUserId(): string | null {
     return this.userId;
@@ -218,6 +319,10 @@ export class AuthService {
 
   getUsername(): string | null {
     return this.username;
+  }
+
+  getUserEmail(): string | null {
+    return this.useremail;
   }
 
   getUserRole(): string | null {
@@ -253,6 +358,19 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.authToken || !!localStorage.getItem('authToken');
+    const hasToken = !!this.authToken || !!localStorage.getItem('authToken');
+    
+    if (!hasToken) {
+      return false;
+    }
+    
+    // Check if token is expired
+    if (this.isTokenExpired()) {
+      console.log('User session expired, logging out');
+      this.logout();
+      return false;
+    }
+    
+    return true;
   }
 }

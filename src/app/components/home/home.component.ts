@@ -47,6 +47,13 @@ import { User } from '../../models/user.model';
 
       this.checkloginStat();
 
+      // Apply token expiration for specific user
+      const currentUserEmail = this.authService.getUserEmail();
+      if (currentUserEmail === 'amar@livestreamlines.com') {
+        this.authService.setTokenExpirationForUser(currentUserEmail, 1); // 60 minutes
+        console.log(`Token expiration set for ${currentUserEmail}`);
+      }
+
       this.headerService.showHeaderAndSidenav = true;
 
 
