@@ -66,6 +66,15 @@ export class CameraMonitorComponent implements OnInit {
   filteredCamerasCount: number = 0;
   projectStatuses: { [key: string]: string } = {};
   selectedStatus: string | null = null;
+  
+  // New properties for hierarchical structure
+  hierarchicalData: { [developerId: string]: { 
+    developer: Developer, 
+    projects: { [projectId: string]: { 
+      project: Project, 
+      cameras: Camera[] 
+    } 
+  } } } = {};
   statusOptions = [
     { value: null, label: 'All Status' },
     { value: 'new', label: 'New' },
@@ -171,6 +180,10 @@ export class CameraMonitorComponent implements OnInit {
         projects.forEach(project => {
           this.projectStatuses[project._id] = project.status;
         });
+        // Re-apply filters if cameras are already loaded
+        if (this.cameras.length > 0) {
+          this.applyFilters();
+        }
       },
       error: (error) => {
         console.error('Error loading all projects:', error);
@@ -347,6 +360,82 @@ export class CameraMonitorComponent implements OnInit {
 
     this.filteredCameras = filtered;
     this.filteredCamerasCount = filtered.length;
+    
+    // Organize data hierarchically
+    this.organizeHierarchicalData(filtered);
+  }
+
+  organizeHierarchicalData(cameras: Camera[]): void {
+    // Safety check: ensure developers and projects are loaded
+    if (this.developers.length === 0 || this.allProjects.length === 0) {
+      console.warn('Cannot organize hierarchical data: developers or projects not loaded yet');
+      return;
+    }
+    
+    this.hierarchicalData = {};
+    
+    cameras.forEach(camera => {
+      const developerId = camera.developer;
+      const projectId = camera.project;
+      
+      // Initialize developer if not exists
+      if (!this.hierarchicalData[developerId]) {
+        const developer = this.developers.find(dev => dev._id === developerId);
+        if (developer) {
+          this.hierarchicalData[developerId] = {
+            developer: developer,
+            projects: {}
+          };
+        } else {
+          // Skip this camera if developer is not found
+          console.warn(`Developer with ID ${developerId} not found for camera ${camera.camera}`);
+          return;
+        }
+      }
+      
+      // Initialize project if not exists
+      if (!this.hierarchicalData[developerId]?.projects[projectId]) {
+        const project = this.allProjects.find(proj => proj._id === projectId);
+        if (project) {
+          this.hierarchicalData[developerId].projects[projectId] = {
+            project: project,
+            cameras: []
+          };
+        } else {
+          // Skip this camera if project is not found
+          console.warn(`Project with ID ${projectId} not found for camera ${camera.camera}`);
+          return;
+        }
+      }
+      
+      // Add camera to project
+      if (this.hierarchicalData[developerId]?.projects[projectId]) {
+        this.hierarchicalData[developerId].projects[projectId].cameras.push(camera);
+      }
+    });
+  }
+
+  getHierarchicalDataKeys(): string[] {
+    if (!this.hierarchicalData) {
+      return [];
+    }
+    return Object.keys(this.hierarchicalData).sort((a, b) => {
+      const devA = this.hierarchicalData[a].developer.developerName.toLowerCase();
+      const devB = this.hierarchicalData[b].developer.developerName.toLowerCase();
+      return devA.localeCompare(devB);
+    });
+  }
+
+  getProjectKeys(developerId: string): string[] {
+    if (!this.hierarchicalData || !this.hierarchicalData[developerId]) {
+      return [];
+    }
+    const projects = this.hierarchicalData[developerId].projects || {};
+    return Object.keys(projects).sort((a, b) => {
+      const projA = projects[a].project.projectName.toLowerCase();
+      const projB = projects[b].project.projectName.toLowerCase();
+      return projA.localeCompare(projB);
+    });
   }
 
   getDeveloperName(developerId: string): string {

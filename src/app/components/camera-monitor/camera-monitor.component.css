@@ -417,3 +417,116 @@ mat-card-actions button:hover {
   height: 20px;
   width: 20px;
 }
+
+/* Hierarchical Layout Styles */
+.hierarchical-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.developer-section {
+  background-color: #2d2d2d;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #404040;
+}
+
+.developer-header {
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #404040;
+}
+
+.developer-name {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.developer-tag {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background-color: #404040;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
+}
+
+.project-section {
+  margin-bottom: 24px;
+  background-color: #363636;
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #404040;
+}
+
+.project-header {
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #404040;
+}
+
+.project-name {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #e0e0e0;
+}
+
+.project-tag {
+  color: #b0b0b0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background-color: #404040;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+}
+
+.developer-name mat-icon,
+.project-name mat-icon {
+  font-size: 24px;
+  height: 24px;
+  width: 24px;
+  color: #2196f3;
+}
+
+.developer-name mat-icon {
+  color: #4caf50;
+}
+
+.project-name mat-icon {
+  color: #ff9800;
+}
+
+/* Responsive adjustments for hierarchical layout */
+@media (max-width: 768px) {
+  .hierarchical-container {
+    gap: 16px;
+  }
+  
+  .developer-section {
+    padding: 16px;
+  }
+  
+  .project-section {
+    padding: 12px;
+  }
+  
+  .developer-name {
+    font-size: 1.3rem;
+  }
+  
+  .project-name {
+    font-size: 1.1rem;
+  }
+}
