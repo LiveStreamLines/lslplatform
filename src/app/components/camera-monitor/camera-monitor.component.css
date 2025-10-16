@@ -472,6 +472,13 @@ mat-card-actions button:hover {
   border-bottom: 1px solid #404040;
 }
 
+.project-title-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
 .project-name {
   display: flex;
   align-items: center;
@@ -480,6 +487,26 @@ mat-card-actions button:hover {
   font-size: 1.2rem;
   font-weight: 500;
   color: #e0e0e0;
+  flex: 1;
+}
+
+.project-info-button {
+  color: #2196f3;
+  background-color: rgba(33, 150, 243, 0.1);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  transition: all 0.3s ease;
+}
+
+.project-info-button:hover {
+  background-color: rgba(33, 150, 243, 0.2);
+  border-color: rgba(33, 150, 243, 0.5);
+  transform: scale(1.05);
+}
+
+.project-info-button mat-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .project-tag {

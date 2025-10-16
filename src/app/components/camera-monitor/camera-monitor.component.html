@@ -163,14 +163,22 @@
       <!-- Projects under this developer -->
       <div *ngFor="let projectId of getProjectKeys(developerId)" class="project-section">
         <div class="project-header">
-          <h3 class="project-name">
-            <mat-icon>folder</mat-icon>
-            {{hierarchicalData[developerId]?.projects?.[projectId]?.project?.projectName || 'Unknown Project'}}
-            <span class="project-tag">[{{hierarchicalData[developerId]?.projects?.[projectId]?.project?.projectTag || 'No Tag'}}]</span>
-            <span class="status-badge" [ngClass]="getStatusClass(getProjectStatus(projectId))">
-              {{getProjectStatus(projectId)}}
-            </span>
-          </h3>
+          <div class="project-title-section">
+            <h3 class="project-name">
+              <mat-icon>folder</mat-icon>
+              {{hierarchicalData[developerId]?.projects?.[projectId]?.project?.projectName || 'Unknown Project'}}
+              <span class="project-tag">[{{hierarchicalData[developerId]?.projects?.[projectId]?.project?.projectTag || 'No Tag'}}]</span>
+              <span class="status-badge" [ngClass]="getStatusClass(getProjectStatus(projectId))">
+                {{getProjectStatus(projectId)}}
+              </span>
+            </h3>
+            <button mat-icon-button 
+                    class="project-info-button" 
+                    (click)="openProjectInfo(projectId)"
+                    matTooltip="View Project Information">
+              <mat-icon>info</mat-icon>
+            </button>
+          </div>
         </div>
         
         <!-- Cameras under this project -->

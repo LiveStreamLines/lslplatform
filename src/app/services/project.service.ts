@@ -145,6 +145,37 @@ export class ProjectService {
     return this.http.put(`${this.baseUrl}/${projectId}`, data, {headers});
   }
 
+  // Attachment methods
+  uploadProjectAttachment(projectId: string, file: File): Observable<any> {
+    const authh = this.authService.getAuthToken();
+    const headers = new HttpHeaders({
+      'Authorization': authh ? `Bearer ${authh}` : ''
+    });
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    return this.http.post(`${this.baseUrl}/${projectId}/attachments`, formData, { headers });
+  }
+
+  getProjectAttachments(projectId: string): Observable<any[]> {
+    const authh = this.authService.getAuthToken();
+    const headers = new HttpHeaders({
+      'Authorization': authh ? `Bearer ${authh}` : ''
+    });
+    
+    return this.http.get<any[]>(`${this.baseUrl}/${projectId}/attachments`, { headers });
+  }
+
+  deleteProjectAttachment(projectId: string, attachmentId: string): Observable<any> {
+    const authh = this.authService.getAuthToken();
+    const headers = new HttpHeaders({
+      'Authorization': authh ? `Bearer ${authh}` : ''
+    });
+    
+    return this.http.delete(`${this.baseUrl}/${projectId}/attachments/${attachmentId}`, { headers });
+  }
+
 
   
   // Helper function to find the project ID by tag

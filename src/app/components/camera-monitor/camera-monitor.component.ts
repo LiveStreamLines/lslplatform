@@ -26,6 +26,7 @@ import { Maintenance, TASK_TYPES } from '../../models/maintenance.model';
 import { Router } from '@angular/router';
 import { environment } from '../../../environment/environments';
 import { TaskCreationDialogComponent } from '../camera-monitor/task-creation-dialog.component';
+import { ProjectInfoDialogComponent } from '../camera-monitor/project-info-dialog.component';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -45,7 +46,8 @@ import { AuthService } from '../../services/auth.service';
     MatTooltipModule,
     MatDialogModule,
     MatSnackBarModule,
-    TaskCreationDialogComponent
+    TaskCreationDialogComponent,
+    ProjectInfoDialogComponent
   ],
   templateUrl: './camera-monitor.component.html',
   styleUrls: ['./camera-monitor.component.css']
@@ -653,5 +655,28 @@ export class CameraMonitorComponent implements OnInit {
 
   openCameraHistory(cameraId: string): void {
     this.router.navigate(['/camera-history', cameraId]);
+  }
+
+  openProjectInfo(projectId: string): void {
+    const project = this.allProjects.find(proj => proj._id === projectId);
+    if (project) {
+      const dialogRef = this.dialog.open(ProjectInfoDialogComponent, {
+        width: '800px',
+        maxWidth: '90vw',
+        data: { project: project }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          // Handle saved attachments if needed
+          console.log('Project attachments saved:', result);
+        }
+      });
+    } else {
+      this.snackBar.open('Project not found', 'Close', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
+      });
+    }
   }
 }
