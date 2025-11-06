@@ -87,6 +87,13 @@ export class AuthService {
     const storedExpiration = localStorage.getItem('tokenExpirationTime');
     this.tokenExpirationTime = storedExpiration ? parseInt(storedExpiration, 10) : null;
 
+    // If token exists but no expiration is set, set expiration (24 hours = 1440 minutes)
+    // This handles existing logged-in users who don't have expiration set
+    if (this.authToken && !this.tokenExpirationTime) {
+      console.log('Setting expiration for existing token without expiration');
+      this.setTokenExpiration(1440); // 24 hours
+    }
+
     this.accessibleDevelopers = JSON.parse(localStorage.getItem('accessibleDevelopers') || '[]');
     this.accessibleProjects = JSON.parse(localStorage.getItem('accessibleProjects') || '[]');
     this.accessibleCameras = JSON.parse(localStorage.getItem('accessibleCameras') || '[]');
@@ -170,8 +177,6 @@ export class AuthService {
     });
 
     // Clear any existing token expiration on new login
-    this.tokenExpirationTime = null;
-    localStorage.removeItem('tokenExpirationTime');
     this.stopExpirationCheck();
 
     this.userId = response._id;
@@ -217,6 +222,9 @@ export class AuthService {
     localStorage.setItem('manual', this.manual);
     localStorage.setItem('memoryRole', this.memoryRole);
     localStorage.setItem('inventoryRole', this.inventoryRole || '');
+
+    // Set token expiration (24 hours = 1440 minutes) to match backend JWT expiration
+    this.setTokenExpiration(1440);
   }
 
   // Token expiration methods

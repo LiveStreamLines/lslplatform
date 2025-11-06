@@ -155,8 +155,8 @@
       <div class="developer-header">
         <h2 class="developer-name">
           <mat-icon>person</mat-icon>
-          {{hierarchicalData[developerId]?.developer?.developerName || 'Unknown Developer'}}
-          <span class="developer-tag">[{{hierarchicalData[developerId]?.developer?.developerTag || 'No Tag'}}]</span>
+          {{hierarchicalData[developerId].developer.developerName || 'Unknown Developer'}}
+          <span class="developer-tag">[{{hierarchicalData[developerId].developer.developerTag || 'No Tag'}}]</span>
         </h2>
       </div>
       
@@ -166,8 +166,8 @@
           <div class="project-title-section">
             <h3 class="project-name">
               <mat-icon>folder</mat-icon>
-              {{hierarchicalData[developerId]?.projects?.[projectId]?.project?.projectName || 'Unknown Project'}}
-              <span class="project-tag">[{{hierarchicalData[developerId]?.projects?.[projectId]?.project?.projectTag || 'No Tag'}}]</span>
+              {{hierarchicalData[developerId].projects[projectId].project.projectName || 'Unknown Project'}}
+              <span class="project-tag">[{{hierarchicalData[developerId].projects[projectId].project.projectTag || 'No Tag'}}]</span>
               <span class="status-badge" [ngClass]="getStatusClass(getProjectStatus(projectId))">
                 {{getProjectStatus(projectId)}}
               </span>
@@ -183,7 +183,7 @@
         
         <!-- Cameras under this project -->
         <div class="camera-grid">
-          <mat-card *ngFor="let camera of hierarchicalData[developerId]?.projects?.[projectId]?.cameras || []" class="camera-card">
+          <mat-card *ngFor="let camera of hierarchicalData[developerId].projects[projectId].cameras" class="camera-card">
             <div class="camera-header">
               <h3 class="camera-title">{{camera.camera}}</h3>
               <span [class.status-active]="isUpdated(camera.lastPhoto)"
