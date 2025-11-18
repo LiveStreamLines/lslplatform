@@ -183,8 +183,24 @@ export class CameraSelectionComponent implements OnInit {
       name: 'Live View Camera 2',
       description: 'Live view camera 2',
       image: 'assets/liveview.png'
+    }, 
+
+    {
+      id: 'camera1',
+      projectTag: 'jhc',
+      name: 'Live View Camera 1',
+      description: 'Live view camera 1',
+      image: 'assets/liveview.png'
+    },
+    
+    {
+      id: 'camera2',
+      projectTag: 'jhc',
+      name: 'Live View Camera 2',
+      description: 'Live view camera 2',
+      image: 'assets/liveview.png'
     }
-  
+
   ];
 
   constructor(
@@ -200,10 +216,12 @@ export class CameraSelectionComponent implements OnInit {
 
     if (this.projectTag === 'abna') {
       this.cameras = this.cameras.filter(camera => camera.projectTag === 'abna');
-    } else if (this.projectTag !== 'abna') {
+    } else if (this.projectTag === 'jhc') {
+      this.cameras = this.cameras.filter(camera => camera.projectTag === 'jhc');
+    } else {
       this.cameras = this.cameras.filter(camera => camera.projectTag === 'all');
     }
-  }
+  } 
 
   selectCamera(camera: any) {
     this.router.navigate([`home/${this.developerTag}/${this.projectTag}/liveview/${camera.id}`]);

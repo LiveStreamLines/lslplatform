@@ -33,7 +33,7 @@ export class ServicesComponent implements OnInit {
   userRole: string | null = null;
   isMobile: boolean = false;
 
-  allowedTags: string[] = ['prime', 'stg', 'gugg1', 'puredc', 'proj', 'abna']; // Add all allowed tags here
+  allowedTags: string[] = ['prime', 'stg', 'gugg1', 'puredc', 'proj', 'abna', 'jhc']; // Add all allowed tags here
   allowedSite: string[] =['gugg1'];
   allowedDrone: string[] =['yasbay'];
 

@@ -35,6 +35,8 @@ export class LiveviewComponent {
     proj: "bc07467acc1b4cd9bada264fab118e66",
     awj1: "3a70d32ba9a3458abde16211e46f082f",
     awj2: "1c9df8697f474882ac6f8bdb409705c9",
+    moc1: "9cb818a2033a4c8ebca4f8eb0769a5c1",
+    moc2: "b0296c16d8bf4203bce3d145d2473e29"
   };
 
   constructor(
@@ -54,6 +56,11 @@ export class LiveviewComponent {
         this.codematch = 'awj1';
       } else if (this.projectTag === 'abna' && this.cameraId === 'camera2') {
         this.codematch = 'awj2';
+      }
+      else if (this.projectTag === 'jhc' && this.cameraId === 'camera1') {
+        this.codematch = 'moc1';
+      } else if (this.projectTag === 'hhc' && this.cameraId === 'camera2') {
+        this.codematch = 'moc2';
       }
       // Assign ID based on projectTag
       this.id = this.projectTagMap[this.codematch] || "";
