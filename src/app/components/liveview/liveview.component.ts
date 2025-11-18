@@ -62,6 +62,8 @@ export class LiveviewComponent {
       } else if (this.projectTag === 'jhc' && this.cameraId === 'camera2') {
         this.codematch = 'moc2';
       }
+
+      console.log("code Match:", this.codematch);
       // Assign ID based on projectTag
       this.id = this.projectTagMap[this.codematch] || "";
     });
