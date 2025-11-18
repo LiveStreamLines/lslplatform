@@ -53,6 +53,8 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
     proj: { secretKey: "Lsl12345", serialNumber: "FD3699842" },
     awj1: { secretKey: "Lsl12345", serialNumber: "FC3863714" },
     awj2: { secretKey: "Lsl12345", serialNumber: "FW7219999" },
+    moc1: { secretKey: "Lsl159", serialNumber: "GA1035772" },
+    moc2: { secretKey: "Lsl159", serialNumber: "GA1035900" },
   };
 
   constructor(
@@ -76,7 +78,11 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
     } else if (this.projectTag === 'abna' && this.cameraId === 'camera2') {
       this.codematch = 'awj2';
     }
-
+    else if (this.projectTag === 'jhc' && this.cameraId === 'camera1') {
+      this.codematch = 'moc1';
+    } else if (this.projectTag === 'jhc' && this.cameraId === 'camera2') {
+      this.codematch = 'moc2';
+    }
     
 
     console.log("code Match:", this.codematch);
