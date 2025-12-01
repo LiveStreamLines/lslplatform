@@ -268,7 +268,7 @@ export class CameraComponent implements OnInit, AfterViewChecked {
       {
         server: "tempcloud",
         folder: "/home/lsl/media/lslcloud1",
-        country: camera.country,
+        country: camera.country === 'Saudi Arabia' ? 'Saudi' : camera.country,
         developer: developer?.developerTag,
         project: project?.projectTag,
         camera: camera.camera
