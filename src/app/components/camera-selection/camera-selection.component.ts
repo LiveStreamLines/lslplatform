@@ -188,17 +188,17 @@ export class CameraSelectionComponent implements OnInit {
     {
       id: 'camera1',
       projectTag: 'jhc',
-      name: 'Live View Camera 1',
-      description: 'Live view camera 1',
-      image: 'assets/liveview.png'
+      name: '40 Lake Camera 1',
+      description: '40 Lake Camera 1',
+      image: 'assets/camera1.png'
     },
     
     {
       id: 'camera2',
       projectTag: 'jhc',
-      name: 'Live View Camera 2',
-      description: 'Live view camera 2',
-      image: 'assets/liveview.png'
+      name: '40 Lake Camera 2',
+      description: '40 Lake Camera 2',
+      image: 'assets/camera2.png'
     }
 
   ];
