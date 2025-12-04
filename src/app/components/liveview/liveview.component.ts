@@ -97,6 +97,7 @@ export class LiveviewComponent implements OnInit {
       error: (err) => console.error("Error fetching PTZ:", err)
     });
   }
+  
   moveLeft(): void {
     this.azimuth = (this.azimuth - 5 + 360) % 360; // Wrap to 355 when reaching 0
     this.updatePTZ();
