@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { LiveCameraService, LiveCamera } from '../../services/live-camera.service';
 
 @Component({
   selector: 'app-camera-selection',
@@ -14,7 +15,15 @@ import { MatIconModule } from '@angular/material/icon';
       <h1 class="title">Live View Cameras</h1>
     </div>
     
-    <div class="camera-grid">
+    <div *ngIf="loading" class="loading-container">
+      <p>Loading cameras...</p>
+    </div>
+    
+    <div *ngIf="error" class="error-container">
+      <p>{{ error }}</p>
+    </div>
+    
+    <div class="camera-grid" *ngIf="!loading && !error">
       <mat-card class="camera-card" *ngFor="let camera of cameras" (click)="selectCamera(camera)">
         <div class="camera-image-container">
           <img [src]="camera.image" alt="{{ camera.name }}" class="camera-image">
@@ -27,6 +36,10 @@ import { MatIconModule } from '@angular/material/icon';
           <p class="camera-description">{{ camera.description }}</p>
         </mat-card-content>
       </mat-card>
+      
+      <div *ngIf="cameras.length === 0" class="no-cameras">
+        <p>No cameras available for this project.</p>
+      </div>
     </div>
   `,
   styles: [`
@@ -155,76 +168,61 @@ import { MatIconModule } from '@angular/material/icon';
         grid-template-columns: 1fr;
       }
     }
+
+    .loading-container, .error-container, .no-cameras {
+      padding: 40px;
+      text-align: center;
+      color: white;
+      font-size: 18px;
+    }
+
+    .error-container {
+      color: #ff6b6b;
+    }
   `]
 })
 export class CameraSelectionComponent implements OnInit {
   developerTag!: string;
   projectTag!: string;
-  
-  cameras = [
-    {
-      id: 'camera1',
-      projectTag: 'all',
-      name: 'Live View Camera 1',
-      description: 'Live view camera with full pan, tilt, and zoom control. Located at the main entrance.',
-      image: 'assets/liveview.png'
-    },
-
-    {
-      id: 'camera1',
-      projectTag: 'abna',
-      name: 'Live View Camera 1',
-      description: 'Live view camera 1',
-      image: 'assets/liveview.png'
-    },
-    {
-      id: 'camera2',
-      projectTag: 'abna',
-      name: 'Live View Camera 2',
-      description: 'Live view camera 2',
-      image: 'assets/liveview.png'
-    }, 
-
-    {
-      id: 'camera1',
-      projectTag: 'jhc',
-      name: '40 Lake Camera 1',
-      description: '40 Lake Camera 1',
-      image: 'assets/camera1.png'
-    },
-    
-    {
-      id: 'camera2',
-      projectTag: 'jhc',
-      name: '40 Lake Camera 2',
-      description: '40 Lake Camera 2',
-      image: 'assets/camera2.png'
-    }
-
-  ];
+  cameras: LiveCamera[] = [];
+  loading = true;
+  error: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private liveCameraService: LiveCameraService
   ) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.developerTag = params['developerTag'];
       this.projectTag = params['projectTag'];
+      this.loadCameras();
     });
+  }
 
-    if (this.projectTag === 'abna') {
-      this.cameras = this.cameras.filter(camera => camera.projectTag === 'abna');
-    } else if (this.projectTag === 'jhc') {
-      this.cameras = this.cameras.filter(camera => camera.projectTag === 'jhc');
-    } else {
-      this.cameras = this.cameras.filter(camera => camera.projectTag === 'all');
-    }
+  loadCameras() {
+    this.loading = true;
+    this.error = null;
+    
+    this.liveCameraService.getAllLiveCameras().subscribe({
+      next: (allCameras) => {
+        // Filter cameras by projectTag
+        this.cameras = allCameras.filter(camera => camera.projectTag === this.projectTag);
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading cameras:', err);
+        this.error = 'Failed to load cameras. Please try again later.';
+        this.loading = false;
+      }
+    });
   } 
 
-  selectCamera(camera: any) {
-    this.router.navigate([`home/${this.developerTag}/${this.projectTag}/liveview/${camera.id}`]);
+  selectCamera(camera: LiveCamera) {
+    const cameraId = camera.id;
+    this.router.navigate([`home/${this.developerTag}/${this.projectTag}/liveview/${cameraId}`]);
   }
 
   goBack() {

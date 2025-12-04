@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
 import { BreadcrumbService } from '../../services/breadcrumb.service';
 import { DeveloperService } from '../../services/developer.service';
 import { ProjectService } from '../../services/project.service';
+import { ServiceConfigService } from '../../services/service-config.service';
 import { Developer } from '../../models/developer.model';
 import { Project } from '../../models/project.model';
 import { MatDialog } from '@angular/material/dialog';
@@ -33,9 +34,9 @@ export class ServicesComponent implements OnInit {
   userRole: string | null = null;
   isMobile: boolean = false;
 
-  allowedTags: string[] = ['prime', 'stg', 'gugg1', 'puredc', 'proj', 'abna', 'jhc']; // Add all allowed tags here
-  allowedSite: string[] =['gugg1'];
-  allowedDrone: string[] =['yasbay'];
+  allowedTags: string[] = [];
+  allowedSite: string[] = [];
+  allowedDrone: string[] = [];
 
 
   services = [
@@ -53,6 +54,7 @@ export class ServicesComponent implements OnInit {
     private router: Router, 
     private developerService: DeveloperService,
     private projectService: ProjectService,
+    private serviceConfigService: ServiceConfigService,
     private dialog: MatDialog, // Inject MatDialog here
     private authService: AuthService) {
     // Retrieve the route parameters
@@ -100,6 +102,27 @@ export class ServicesComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkScreenSize(); // Initial check for screen size
+    
+    // Fetch service config from backend
+    this.serviceConfigService.getServiceConfig().subscribe({
+      next: (config) => {
+        this.allowedTags = config.allowedTags || [];
+        this.allowedSite = config.allowedSite || [];
+        this.allowedDrone = config.allowedDrone || [];
+        this.initializeComponent();
+      },
+      error: (err) => {
+        console.error('Error fetching service config:', err);
+        // Fallback to empty arrays if API fails
+        this.allowedTags = [];
+        this.allowedSite = [];
+        this.allowedDrone = [];
+        this.initializeComponent();
+      }
+    });
+  }
+
+  private initializeComponent(): void {
     this.developerService.getDeveloperIdByTag(this.developerTag).subscribe({
         next: (developer: Developer[]) => {
           this.developerName = developer[0].developerName;

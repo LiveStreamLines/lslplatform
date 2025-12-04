@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '../../../environment/environments';
 import { CameraFeedComponent } from '../camera-feed/camera-feed.component';
+import { LiveCameraService, LiveCamera } from '../../services/live-camera.service';
 
 @Component({
   selector: 'app-liveview',
@@ -12,7 +13,7 @@ import { CameraFeedComponent } from '../camera-feed/camera-feed.component';
   templateUrl: './liveview.component.html',
   styleUrls: ['./liveview.component.css'],
 })
-export class LiveviewComponent {
+export class LiveviewComponent implements OnInit {
   private apiUrl = environment.proxy;
 
   elevation = 0; // Starts at 0, range [0, 3600]
@@ -23,52 +24,57 @@ export class LiveviewComponent {
   projectTag!: string;
   cameraId!: string;
 
-  codematch!: string;
-
   id: string = "";
-
-  private projectTagMap: { [key: string]: string } = {
-    stg: "3d24d5d6a0614efaa8c6f389ef5231e6",
-    prime: "21d65e8a39414135a3a9b29b1a0471e2",
-    gugg1: "f2148e9d059b4ba29cc75885c36e424f",
-    puredc: "56f4ef2cd0b44e4eb83d8a0b3d5a10f6",
-    proj: "bc07467acc1b4cd9bada264fab118e66",
-    awj1: "3a70d32ba9a3458abde16211e46f082f",
-    awj2: "1c9df8697f474882ac6f8bdb409705c9",
-    moc1: "9cb818a2033a4c8ebca4f8eb0769a5c1",
-    moc2: "b0296c16d8bf4203bce3d145d2473e29"
-  };
+  loading = true;
+  cameraData: LiveCamera | null = null;
 
   constructor(
     private http: HttpClient,     
     private route: ActivatedRoute, 
     private router: Router,
-    private sanitizer: DomSanitizer
-  ) {
+    private sanitizer: DomSanitizer,
+    private liveCameraService: LiveCameraService
+  ) {}
+
+  ngOnInit() {
     this.route.params.subscribe(params => {
       this.developerTag = params['developerTag'];
       this.projectTag = params['projectTag'];
       this.cameraId = params['cameraId'];
-
-      this.codematch = this.projectTag;
-
-      if (this.projectTag === 'abna' && this.cameraId === 'camera1') {
-        this.codematch = 'awj1';
-      } else if (this.projectTag === 'abna' && this.cameraId === 'camera2') {
-        this.codematch = 'awj2';
-      }
-      else if (this.projectTag === 'jhc' && this.cameraId === 'camera1') {
-        this.codematch = 'moc1';
-      } else if (this.projectTag === 'jhc' && this.cameraId === 'camera2') {
-        this.codematch = 'moc2';
-      }
-
-      console.log("code Match:", this.codematch);
-      // Assign ID based on projectTag
-      this.id = this.projectTagMap[this.codematch] || "";
+      
+      this.loadCameraData();
     });
+  }
 
-    this.getCurrentPTZ();
+  loadCameraData() {
+    this.loading = true;
+    
+    // Fetch all cameras and filter by projectTag and cameraId
+    this.liveCameraService.getAllLiveCameras().subscribe({
+      next: (cameras) => {
+        // Find the camera matching projectTag and cameraId
+        const camera = cameras.find(c => 
+          c.projectTag === this.projectTag && c.id === this.cameraId
+        );
+        
+        if (camera && camera.hikcameraId) {
+          this.cameraData = camera;
+          this.id = camera.hikcameraId;
+          console.log("Camera data loaded:", camera);
+          console.log("Hikvision Camera ID:", this.id);
+          
+          // Load PTZ data after camera data is loaded
+          this.getCurrentPTZ();
+        } else {
+          console.error("Camera not found or missing hikcameraId:", { projectTag: this.projectTag, cameraId: this.cameraId });
+        }
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error("Error loading camera data:", err);
+        this.loading = false;
+      }
+    });
   }
 
   getCurrentPTZ(): void {
@@ -129,6 +135,11 @@ export class LiveviewComponent {
   }
 
   updatePTZ(): void {
+    if (!this.id) {
+      console.error('Camera ID not available for PTZ update');
+      return;
+    }
+
     const payload = {
       method: "PUT",
       url: "/ISAPI/PTZCtrl/channels/1/absoluteEx",
@@ -138,8 +149,14 @@ export class LiveviewComponent {
     };
 
     this.http.post(`${this.apiUrl}`, payload).subscribe({
-      next: () => console.log(`PTZ updated successfully. Project: ${this.projectTag} id: ${this.id} Url: ${this.apiUrl} Ele:${this.elevation}, Azi:${this.azimuth}, zoom:${this.zoom}`),
-      error: (err) => console.error('Error updating PTZ:', err),
+      next: () => {
+        console.log(`PTZ updated successfully. Project: ${this.projectTag} id: ${this.id} Url: ${this.apiUrl} Ele:${this.elevation}, Azi:${this.azimuth}, zoom:${this.zoom}`);
+        // Refresh PTZ values after update to ensure sync
+        setTimeout(() => this.getCurrentPTZ(), 500);
+      },
+      error: (err) => {
+        console.error('Error updating PTZ:', err);
+      },
     });
   }
   

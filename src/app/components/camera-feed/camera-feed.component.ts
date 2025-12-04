@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, Renderer2, Input, HostListener, AfterViewInit, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TokenService } from '../../services/token.service';
+import { LiveCameraService, LiveCamera } from '../../services/live-camera.service';
 
 @Component({
   selector: 'app-camera-feed',
@@ -13,7 +14,6 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() projectTag!: string;
   @Input() cameraId: string = 'main'; // Default to main camera if not specified
 
-  codematch!: string;
   private appKey = "itwwm7benooi6li6p4p1xrz5rsgy1l9e";
   private appSecret = "kpivtt3r0bfv4eb2dl7apv1icyl8z48z";
 
@@ -34,6 +34,7 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
   private retryCount = 0;
   private readonly MAX_RETRIES = 3;
   private isInitialized = false;
+  private cameraData: LiveCamera | null = null;
 
   // Minimum dimensions for different screen sizes
   private readonly MIN_DIMENSIONS = {
@@ -45,23 +46,12 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
     verySmall: { width: 200, height: 112.5 }
   };
 
-  private projectTagMap: { [key: string]: { secretKey: string, serialNumber: string } } = {
-    gugg1: { secretKey: "guggenheim12", serialNumber: "AF5940863" },
-    stg: { secretKey: "Gcc12345", serialNumber: "L20487325" },
-    prime: { secretKey: "primeHGCC24", serialNumber: "AW6953961" },
-    puredc: { secretKey: "LOpuredata", serialNumber: "J73296798" },
-    proj: { secretKey: "Lsl12345", serialNumber: "FD3699842" },
-    awj1: { secretKey: "Lsl12345", serialNumber: "FC3863714" },
-    awj2: { secretKey: "Lsl12345", serialNumber: "FW7219999" },
-    moc1: { secretKey: "Lsl159", serialNumber: "GA1035772" },
-    moc2: { secretKey: "Lsl159", serialNumber: "GA1035900" },
-  };
-
   constructor(
     private elRef: ElementRef, 
     private renderer: Renderer2, 
     private http: HttpClient,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private liveCameraService: LiveCameraService
   ) {}
 
   ngOnInit(): void {
@@ -71,36 +61,46 @@ export class CameraFeedComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    this.codematch = this.projectTag;
+    this.loadCameraData();
+  }
 
-    if (this.projectTag === 'abna' && this.cameraId === 'camera1') {
-      this.codematch = 'awj1';
-    } else if (this.projectTag === 'abna' && this.cameraId === 'camera2') {
-      this.codematch = 'awj2';
-    }
-    else if (this.projectTag === 'jhc' && this.cameraId === 'camera1') {
-      this.codematch = 'moc1';
-    } else if (this.projectTag === 'jhc' && this.cameraId === 'camera2') {
-      this.codematch = 'moc2';
-    }
-    
+  private loadCameraData(): void {
+    // Fetch all cameras and filter by projectTag and cameraId
+    this.liveCameraService.getAllLiveCameras().subscribe({
+      next: (cameras) => {
+        // Find the camera matching projectTag and cameraId
+        const camera = cameras.find(c => 
+          c.projectTag === this.projectTag && c.id === this.cameraId
+        );
+        
+        if (camera && camera.secretKey && camera.serialNumber) {
+          this.cameraData = camera;
+          this.secretKey = camera.secretKey;
+          this.serialNumber = camera.serialNumber;
+          
+          console.log("Camera data loaded:", camera);
+          console.log("Camera details:", { 
+            projectTag: this.projectTag, 
+            cameraId: this.cameraId,
+            serialNumber: this.serialNumber, 
+            secretKey: this.secretKey ? "***" : "Not set" 
+          });
 
-    console.log("code Match:", this.codematch);
-
-    const projectData = this.projectTagMap[this.codematch];
-    if (!projectData) {
-      console.error("Invalid projectTag:", this.codematch);
-      this.showError(`Invalid project tag: ${this.codematch}`);
-      return;
-    }
-    this.secretKey = projectData.secretKey;
-    this.serialNumber = projectData.serialNumber;
-
-    console.log("Initializing camera feed for project:", this.codematch);
-    console.log("Camera details:", { serialNumber: this.serialNumber, secretKey: this.secretKey });
-
-    this.logDebugInfo();
-    this.initializeCameraFeed();
+          this.logDebugInfo();
+          this.initializeCameraFeed();
+        } else {
+          console.error("Camera not found or missing secretKey/serialNumber:", { 
+            projectTag: this.projectTag, 
+            cameraId: this.cameraId 
+          });
+          this.showError(`Camera not found for project: ${this.projectTag}, camera: ${this.cameraId}`);
+        }
+      },
+      error: (err) => {
+        console.error("Error loading camera data:", err);
+        this.showError("Failed to load camera configuration");
+      }
+    });
   }
 
   private initializeCameraFeed(): void {
