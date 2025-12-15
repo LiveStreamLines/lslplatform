@@ -96,4 +96,34 @@ mat-toolbar {
   }
 }
 
+/* Snackbar styles */
+::ng-deep .success-snackbar {
+  background: #4caf50;
+  color: white;
+}
+
+::ng-deep .error-snackbar {
+  background: #f44336;
+  color: white;
+}
+
+::ng-deep .mat-simple-snackbar-action {
+  color: white;
+}
+
+/* Multiline snackbar text support */
+::ng-deep .success-snackbar .mat-simple-snackbar,
+::ng-deep .error-snackbar .mat-simple-snackbar {
+  white-space: pre-line;
+  max-width: 600px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+::ng-deep .success-snackbar .mat-simple-snackbar-content,
+::ng-deep .error-snackbar .mat-simple-snackbar-content {
+  white-space: pre-line;
+  word-wrap: break-word;
+  line-height: 1.5;
+}
 

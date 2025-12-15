@@ -26,6 +26,11 @@
       <mat-icon>video_library</mat-icon>
       Manual
     </button>
+    <!-- Sync Button (only for Admin and Super Admin) -->
+    <button *ngIf="isAdminOrSuperAdmin" mat-button class="sync-button" (click)="triggerSync()">
+      <mat-icon>sync</mat-icon>
+      Sync
+    </button>
     <span>{{ username }}</span>
     <mat-icon>account_circle</mat-icon>
     <button mat-button (click)="logout()">

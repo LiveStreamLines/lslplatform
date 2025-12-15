@@ -5,7 +5,11 @@
   background: #1a1d24;
   color: #e0e6ed;
   min-height: 100vh;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
+}
+
+.sales-order-form-container *,
+.sales-order-form-container *::before,
+.sales-order-form-container *::after {
 }
 
 .header {
@@ -30,7 +34,6 @@
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   border: 1px solid #353a45;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .form-section {
@@ -40,7 +43,6 @@
   border-radius: 8px;
   border: 1px solid #353a45;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .form-section h3 {
@@ -67,7 +69,6 @@
 .form-group {
   flex: 1;
   margin-bottom: 20px;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .form-group label {
@@ -129,7 +130,6 @@
   border-radius: 6px;
   border-left: 4px solid #d32f2f;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .info-row {
@@ -165,7 +165,6 @@
 .project-input {
   cursor: pointer;
   background: #2a2e36 !important;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .project-input:hover {
@@ -204,7 +203,6 @@
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .line-items-table th {
@@ -224,7 +222,6 @@
   padding: 12px;
   border-bottom: 1px solid #353a45;
   vertical-align: middle;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .line-items-table input {
@@ -368,7 +365,6 @@
   color: #b0b6c3;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .total-row span {
@@ -413,7 +409,6 @@
   margin-top: 30px;
   padding-top: 20px;
   border-top: 1px solid #353a45;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .error-message {
@@ -425,7 +420,6 @@
   border: 1px solid #d32f2f;
   box-shadow: 0 2px 8px rgba(211, 47, 47, 0.2);
   animation: slideIn 0.3s ease;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 /* Responsive Design */
@@ -597,7 +591,6 @@ form {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 input, select, textarea {
@@ -608,7 +601,6 @@ input, select, textarea {
   border-radius: 4px;
   font-size: 14px;
   transition: all 0.3s ease;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 input:focus, select:focus, textarea:focus {
@@ -629,7 +621,6 @@ textarea {
   resize: vertical;
   min-height: 100px;
   line-height: 1.5;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 button {
@@ -642,7 +633,6 @@ button {
   font-size: 14px;
   font-weight: 600;
   transition: all 0.3s ease;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 button:hover:not(:disabled) {
@@ -662,7 +652,6 @@ button[disabled]:hover {
 
 div[formArrayName], div[formGroupName] {
   margin-bottom: 15px;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .total-value-display {
@@ -671,12 +660,10 @@ div[formArrayName], div[formGroupName] {
   border-radius: 6px;
   border: 1px solid #353a45;
   margin-top: 20px;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .total-value-display strong {
   color: #d32f2f !important;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .payment-preview {
@@ -685,7 +672,6 @@ div[formArrayName], div[formGroupName] {
   border-radius: 6px;
   border: 1px solid #353a45;
   margin-top: 20px;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .payment-preview h4 {
@@ -693,7 +679,6 @@ div[formArrayName], div[formGroupName] {
   margin: 0 0 15px 0;
   border-bottom: 1px solid #353a45;
   padding-bottom: 10px;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 @media (max-width: 600px) {
@@ -776,19 +761,6 @@ div[formArrayName], div[formGroupName] {
 .camera-remove-cell {
   text-align: center;
   width: 60px;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
-}
-
-.error-message {
-  background: linear-gradient(135deg, #2d1515, #1a0f0f);
-  color: #c62828 !important;
-  padding: 15px;
-  border-radius: 6px;
-  margin: 20px 0;
-  border: 1px solid #d32f2f;
-  box-shadow: 0 2px 8px rgba(211, 47, 47, 0.2);
-  animation: slideIn 0.3s ease;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .error-message button {
@@ -801,7 +773,6 @@ div[formArrayName], div[formGroupName] {
   margin-left: 10px;
   font-size: 12px;
   transition: all 0.3s ease;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .error-message button:hover {
@@ -821,13 +792,6 @@ div[formArrayName], div[formGroupName] {
   }
 }
 
-.validation-error {
-  color: #c62828 !important;
-  font-size: 12px;
-  margin-top: 5px;
-  animation: fadeIn 0.3s ease;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
-}
 
 @keyframes fadeIn {
   from {
@@ -842,7 +806,6 @@ div[formArrayName], div[formGroupName] {
 table {
   border-collapse: collapse;
   width: 100%;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 table th {
@@ -852,14 +815,12 @@ table th {
   text-align: left;
   font-weight: 600;
   border-bottom: 2px solid #353a45;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 table td {
   padding: 8px;
   border-bottom: 1px solid #353a45;
   vertical-align: middle;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 table tr:hover td {
@@ -894,7 +855,6 @@ table tr:hover td {
   border: 1px solid #353a45;
   margin-top: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .developer-info h4 {
@@ -956,7 +916,6 @@ table tr:hover td {
   border-left: 4px solid #d32f2f;
   margin-top: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .status-badge {
@@ -1016,12 +975,10 @@ table tr:hover td {
   display: flex;
   gap: 10px;
   align-items: flex-end;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .customer-selection select {
   flex: 1;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .add-customer-btn {
@@ -1056,7 +1013,6 @@ table tr:hover td {
 .add-customer-btn span {
   font-size: 20px;
   font-weight: bold;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 @media (max-width: 768px) {
@@ -1076,7 +1032,6 @@ table tr:hover td {
   display: flex;
   gap: 10px;
   align-items: flex-end;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .project-selection input {
@@ -1088,7 +1043,6 @@ table tr:hover td {
   border-radius: 6px;
   font-size: 14px;
   transition: all 0.3s ease;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .project-selection input:hover {
@@ -1133,7 +1087,6 @@ table tr:hover td {
 .add-project-btn span {
   font-size: 20px;
   font-weight: bold;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .project-help-text {
@@ -1141,7 +1094,6 @@ table tr:hover td {
   font-size: 12px;
   margin-top: 5px;
   font-style: italic;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 @media (max-width: 768px) {
@@ -1163,7 +1115,6 @@ table tr:hover td {
   border: 1px solid #353a45 !important;
   font-weight: 600;
   cursor: not-allowed;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .readonly-input:focus {
@@ -1180,7 +1131,6 @@ table tr:hover td {
   border-radius: 4px;
   border: 1px solid #353a45;
   text-align: center;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
 .no-data-message {
@@ -1192,60 +1142,9 @@ table tr:hover td {
   border: 1px solid #d32f2f;
   text-align: center;
   margin-top: 10px;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
 }
 
-.help-text {
-  color: #b0b6c3;
-  font-size: 12px;
-  margin-top: 5px;
-  font-style: italic;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
-}
 
-.selected-project-info {
-  background: #2a2e36;
-  padding: 15px;
-  border-radius: 6px;
-  border-left: 4px solid #d32f2f;
-  margin-top: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  font-family: 'Segoe UI', Arial, sans-serif !important;
-}
-
-.status-badge {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-family: 'Segoe UI', Arial, sans-serif !important;
-}
-
-.status-badge.new {
-  background: #2d1515;
-  color: #d32f2f;
-  border: 1px solid #d32f2f;
-}
-
-.status-badge.active {
-  background: #1a3d1a;
-  color: #4CAF50;
-  border: 1px solid #4CAF50;
-}
-
-.status-badge.hold {
-  background: #3d3d1a;
-  color: #FFC107;
-  border: 1px solid #FFC107;
-}
-
-.status-badge.finished {
-  background: #1a1a3d;
-  color: #2196F3;
-  border: 1px solid #2196F3;
-}
 
 /* Table Header Enhancements for Value and VAT columns */
 .line-items-table th:nth-child(5),
