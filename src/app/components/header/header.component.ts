@@ -32,6 +32,7 @@ export class HeaderComponent implements OnInit {
   username: string | null = null;  // You can replace this with dynamic user data
   breadcrumbs: { label: string; url?: string }[] = [];
   isAdminOrSuperAdmin: boolean = false;
+  isSyncing: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -69,6 +70,11 @@ export class HeaderComponent implements OnInit {
   }
 
   triggerSync() {
+    if (this.isSyncing) {
+      return; // Prevent multiple simultaneous requests
+    }
+
+    this.isSyncing = true;
     const authToken = this.authService.getAuthToken();
     const headers = new HttpHeaders({
       'Authorization': authToken ? `Bearer ${authToken}` : ''
@@ -78,6 +84,7 @@ export class HeaderComponent implements OnInit {
 
     this.http.post(apiUrl, {}, { headers }).subscribe({
       next: (response: any) => {
+        this.isSyncing = false;
         const output = response.output || '';
         // Format the output: replace \n with line breaks, trim extra whitespace
         const formattedOutput = output
@@ -96,6 +103,7 @@ export class HeaderComponent implements OnInit {
         });
       },
       error: (error) => {
+        this.isSyncing = false;
         const errorMessage = error.error?.message || error.message || 'Failed to trigger sync';
         const errorOutput = error.error?.output || '';
         let fullErrorMessage = `Error: ${errorMessage}`;

@@ -27,9 +27,9 @@
       Manual
     </button>
     <!-- Sync Button (only for Admin and Super Admin) -->
-    <button *ngIf="isAdminOrSuperAdmin" mat-button class="sync-button" (click)="triggerSync()">
+    <button *ngIf="isAdminOrSuperAdmin" mat-button class="sync-button" (click)="triggerSync()" [disabled]="isSyncing">
       <mat-icon>sync</mat-icon>
-      Sync
+      {{ isSyncing ? 'Syncing...' : 'Sync' }}
     </button>
     <span>{{ username }}</span>
     <mat-icon>account_circle</mat-icon>
